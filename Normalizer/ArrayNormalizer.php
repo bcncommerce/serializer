@@ -6,30 +6,30 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Serializer;
+namespace Bcn\Component\Serializer\Normalizer;
 
-class ArraySerializer implements SerializerInterface
+class ArrayNormalizer implements NormalizerInterface
 {
-    /** @var SerializerInterface */
-    protected $serializer;
+    /** @var NormalizerInterface */
+    protected $normalizer;
 
     /**
-     * @param SerializerInterface $serializer
+     * @param NormalizerInterface $normalizer
      */
-    public function __construct(SerializerInterface $serializer)
+    public function __construct(NormalizerInterface $normalizer)
     {
-        $this->serializer = $serializer;
+        $this->normalizer = $normalizer;
     }
 
     /**
      * @param  object $object
      * @return $this
      */
-    public function serialize($object)
+    public function normalize($object)
     {
         $data = array();
         foreach ($object as $key => $value) {
-            $data[] = $this->serializer->serialize($value);
+            $data[] = $this->normalizer->normalize($value);
         }
 
         return $data;
@@ -40,24 +40,24 @@ class ArraySerializer implements SerializerInterface
      * @param  object       $object
      * @return object|array
      */
-    public function unserialize($data, &$object = null)
+    public function denormalize($data, &$object = null)
     {
         if (!$object) {
             $object = array();
         }
 
         foreach ($data as $key => $value) {
-            $object[] = $this->serializer->unserialize($value);
+            $object[] = $this->normalizer->denormalize($value);
         }
 
         return $object;
     }
 
     /**
-     * @return SerializerInterface
+     * @return NormalizerInterface
      */
-    public function getItemSerializer()
+    public function getItemNormalizer()
     {
-        return $this->serializer;
+        return $this->normalizer;
     }
 }

@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 
 class TypeFactory
 {
@@ -18,7 +18,7 @@ class TypeFactory
     /**
      * @param  TypeInterface|string $type
      * @param  array                $options
-     * @return SerializerInterface
+     * @return NormalizerInterface
      */
     public function create($type, array $options = array())
     {

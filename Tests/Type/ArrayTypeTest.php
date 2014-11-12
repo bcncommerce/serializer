@@ -14,7 +14,7 @@ use Bcn\Component\Serializer\Type\ArrayType;
 class ArrayTypeTest extends TestCase
 {
     const TYPE_NAME        = 'array';
-    const SERIALIZER_CLASS = 'Bcn\Component\Serializer\Serializer\ArraySerializer';
+    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\ArrayNormalizer';
 
     public function testGetName()
     {
@@ -25,20 +25,20 @@ class ArrayTypeTest extends TestCase
 
     public function testBuild()
     {
-        $itemSerializer = $this->getSerializerMock();
+        $itemNoermalizer = $this->getNormalizerMock();
 
         $factory = $this->getFactoryMock();
         $factory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('text'))
-            ->will($this->returnValue($itemSerializer));
+            ->will($this->returnValue($itemNoermalizer));
 
         $options = array('item_type' => 'text', 'item_options' => array());
 
         $type = new ArrayType();
-        $serializer = $type->build($factory, $options);
+        $normalizer = $type->build($factory, $options);
 
-        $this->assertInstanceOf(self::SERIALIZER_CLASS, $serializer);
-        $this->assertSame($itemSerializer, $serializer->getItemSerializer());
+        $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
+        $this->assertSame($itemNoermalizer, $normalizer->getItemNormalizer());
     }
 }

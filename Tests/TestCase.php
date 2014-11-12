@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Tests;
 
-use Bcn\Component\Serializer\Serializer;
+use Bcn\Component\Serializer\Normalizer;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -83,9 +83,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    public function getSerializerMock()
+    public function getNormalizerMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Serializer')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Normalizer')
                 ->disableOriginalConstructor()
                 ->getMock();
     }

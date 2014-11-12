@@ -1,6 +1,6 @@
 {
-    "name": "bcncommerce/serializer",
-    "description": "Serializer",
+    "name": "bcncommerce/normalizer",
+    "description": "Normalizer",
     "license": "MIT",
     "authors": [
         {
@@ -9,7 +9,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "target-dir": "Bcn/Component/Serializer",
+    "target-dir": "Bcn/Component/Normalizer",
     "autoload": {
         "psr-0": { "Bcn\\Component\\Serializer\\": "" }
     },

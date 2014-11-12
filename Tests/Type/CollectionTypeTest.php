@@ -14,7 +14,7 @@ use Bcn\Component\Serializer\Type\CollectionType;
 class CollectionTypeTest extends TestCase
 {
     const TYPE_NAME        = 'collection';
-    const SERIALIZER_CLASS = 'Bcn\Component\Serializer\Serializer\CollectionSerializer';
+    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\CollectionNormalizer';
 
     public function testGetName()
     {
@@ -25,20 +25,20 @@ class CollectionTypeTest extends TestCase
 
     public function testBuild()
     {
-        $itemSerializer = $this->getSerializerMock();
+        $itemNormalizer = $this->getNormalizerMock();
 
         $factory = $this->getFactoryMock();
         $factory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('text'))
-            ->will($this->returnValue($itemSerializer));
+            ->will($this->returnValue($itemNormalizer));
 
         $options = array('item_type' => 'text', 'item_options' => array());
 
         $type = new CollectionType();
-        $serializer = $type->build($factory, $options);
+        $normalizer = $type->build($factory, $options);
 
-        $this->assertInstanceOf(self::SERIALIZER_CLASS, $serializer);
-        $this->assertSame($itemSerializer, $serializer->getItemSerializer());
+        $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
+        $this->assertSame($itemNormalizer, $normalizer->getItemNormalizer());
     }
 }

@@ -8,19 +8,19 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
-use Bcn\Component\Serializer\Serializer\CollectionSerializer;
+use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Normalizer\CollectionNormalizer;
 
 class CollectionType implements TypeInterface
 {
     /**
      * @param  TypeFactory                              $factory
      * @param  array                                    $options
-     * @return CollectionSerializer|SerializerInterface
+     * @return CollectionNormalizer|NormalizerInterface
      */
     public function build(TypeFactory $factory, array $options = array())
     {
-        return new CollectionSerializer(
+        return new CollectionNormalizer(
             $factory->create($options['item_type'], $options['item_options'])
         );
     }

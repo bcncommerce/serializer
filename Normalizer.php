@@ -10,11 +10,11 @@ namespace Bcn\Component\Serializer;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 
-class Serializer implements SerializerInterface
+class Normalizer implements NormalizerInterface
 {
-    /** @var SerializerInterface[] */
+    /** @var NormalizerInterface[] */
     protected $properties = array();
 
     /** @var string|callback */
@@ -34,12 +34,12 @@ class Serializer implements SerializerInterface
 
     /**
      * @param  string              $name
-     * @param  SerializerInterface $serializer
+     * @param  NormalizerInterface $normalizer
      * @return $this
      */
-    public function add($name, SerializerInterface $serializer)
+    public function add($name, NormalizerInterface $normalizer)
     {
-        $this->properties[$name] = $serializer;
+        $this->properties[$name] = $normalizer;
 
         return $this;
     }
@@ -48,7 +48,7 @@ class Serializer implements SerializerInterface
      * @param $object
      * @return array
      */
-    public function serialize($object)
+    public function normalize($object)
     {
         if ($object === null) {
             return $object;
@@ -59,8 +59,8 @@ class Serializer implements SerializerInterface
         }
 
         $data = array();
-        foreach ($this->properties as $name => $serializer) {
-            $data[$name] = $serializer->serialize($this->getProperty($object, $name));
+        foreach ($this->properties as $name => $normalizer) {
+            $data[$name] = $normalizer->normalize($this->getProperty($object, $name));
         }
 
         return $data;
@@ -71,12 +71,12 @@ class Serializer implements SerializerInterface
      * @param  null       $object
      * @return array|null
      */
-    public function unserialize($data, &$object = null)
+    public function denormalize($data, &$object = null)
     {
         $object = $object ?: $this->newInstance();
-        foreach ($this->properties as $name => $serializer) {
+        foreach ($this->properties as $name => $normalizer) {
             if ($value = isset($data[$name]) ? $data[$name] : null) {
-                $value = $serializer->unserialize($value);
+                $value = $normalizer->denormalize($value);
             }
             $this->setProperty($object, $name, $value);
         }

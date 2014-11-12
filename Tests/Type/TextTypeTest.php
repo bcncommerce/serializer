@@ -14,7 +14,7 @@ use Bcn\Component\Serializer\Type\TextType;
 class TextTypeTest extends TestCase
 {
     const TYPE_NAME        = 'text';
-    const SERIALIZER_CLASS = 'Bcn\Component\Serializer\Serializer\ScalarSerializer';
+    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\ScalarNormalizer';
 
     public function testGetName()
     {
@@ -28,8 +28,8 @@ class TextTypeTest extends TestCase
         $factory = $this->getFactoryMock();
 
         $type = new TextType();
-        $serializer = $type->build($factory);
+        $normalizer = $type->build($factory);
 
-        $this->assertInstanceOf(self::SERIALIZER_CLASS, $serializer);
+        $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
     }
 }

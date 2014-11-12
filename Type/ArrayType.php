@@ -8,19 +8,19 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Serializer\ArraySerializer;
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\Normalizer\ArrayNormalizer;
+use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ArrayType implements TypeInterface
 {
     /**
      * @param  TypeFactory                         $factory
      * @param  array                               $options
-     * @return ArraySerializer|SerializerInterface
+     * @return ArrayNormalizer|NormalizerInterface
      */
     public function build(TypeFactory $factory, array $options = array())
     {
-        return new ArraySerializer(
+        return new ArrayNormalizer(
             $factory->create($options['item_type'], $options['item_options'])
         );
     }

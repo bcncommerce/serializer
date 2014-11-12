@@ -6,68 +6,68 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Tests\Serializer;
+namespace Bcn\Component\Serializer\Tests\Normalizer;
 
-use Bcn\Component\Serializer\Serializer\ArraySerializer;
+use Bcn\Component\Serializer\Normalizer\ArrayNormalizer;
 use Bcn\Component\Serializer\Tests\TestCase;
 
-class ArraySerializerTest extends TestCase
+class ArrayNormalizerTest extends TestCase
 {
-    public function testArraySerialize()
+    public function testArrayNormalize()
     {
         $documents = $this->getDocumentObjectCollection();
-        $itemSerializer = $this->getSerializerMock();
+        $itemNormalizer = $this->getNormalizerMock();
 
         $index = 0;
         foreach ($documents as $key => $item) {
-            $itemSerializer->expects($this->at($index++))
-                ->method('serialize')
+            $itemNormalizer->expects($this->at($index++))
+                ->method('normalize')
                 ->with($this->equalTo($item))
                 ->will($this->returnValue($key));
         }
 
-        $serializer = new ArraySerializer($itemSerializer);
-        $data = $serializer->serialize($documents);
+        $normalizer = new ArrayNormalizer($itemNormalizer);
+        $data = $normalizer->normalize($documents);
 
         $this->assertEquals(array_keys($documents), $data);
     }
 
-    public function testArrayUnserialize()
+    public function testArrayDenormalize()
     {
         $items = $this->getDocumentDataCollection();
-        $itemSerializer = $this->getSerializerMock();
+        $itemNormalizer = $this->getNormalizerMock();
 
         $index = 0;
         foreach ($items as $key => $entry) {
-            $itemSerializer->expects($this->at($index++))
-                ->method('unserialize')
+            $itemNormalizer->expects($this->at($index++))
+                ->method('denormalize')
                 ->with($this->equalTo($entry))
                 ->will($this->returnValue($key));
         }
 
-        $serializer = new ArraySerializer($itemSerializer);
-        $data = $serializer->unserialize($items);
+        $normalizer = new ArrayNormalizer($itemNormalizer);
+        $data = $normalizer->denormalize($items);
 
         $this->assertEquals(array_keys($items), $data);
     }
 
-    public function testArrayUnserializeToObject()
+    public function testArrayDenormalizeToObject()
     {
         $items = $this->getDocumentDataCollection();
-        $itemSerializer = $this->getSerializerMock();
+        $itemNormalizer = $this->getNormalizerMock();
 
         $index = 0;
         foreach ($items as $key => $entry) {
-            $itemSerializer->expects($this->at($index++))
-                ->method('unserialize')
+            $itemNormalizer->expects($this->at($index++))
+                ->method('denormalize')
                 ->with($this->equalTo($entry))
                 ->will($this->returnValue($key));
         }
 
         $data = new \ArrayObject();
 
-        $serializer = new ArraySerializer($itemSerializer);
-        $serializer->unserialize($items, $data);
+        $normalizer = new ArrayNormalizer($itemNormalizer);
+        $normalizer->denormalize($items, $data);
 
         $this->assertEquals(array_keys($items), $data->getArrayCopy());
     }

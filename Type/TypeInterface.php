@@ -8,14 +8,14 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 
 interface TypeInterface
 {
     /**
      * @param  TypeFactory         $factory
      * @param  array               $options
-     * @return SerializerInterface
+     * @return NormalizerInterface
      */
     public function build(TypeFactory $factory, array $options = array());
 

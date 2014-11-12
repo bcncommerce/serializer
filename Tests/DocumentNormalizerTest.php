@@ -12,34 +12,34 @@ use Bcn\Component\Serializer\Type\TextType;
 use Bcn\Component\Serializer\Type\TypeFactory;
 use Bcn\Component\Serializer\Tests\Type\DocumentType;
 
-class DocumentSerializerTest extends TestCase
+class DocumentNormalizerTest extends TestCase
 {
     /**
-     * Serialize Document
+     * Normalize Document
      */
-    public function testDocumentSerialize()
+    public function testDocumentNormalize()
     {
         $document = $this->getNestedDocumentObject();
 
-        $serializer = $this->getFactory()
+        $normalizer = $this->getFactory()
             ->create('document');
 
-        $data = $serializer->serialize($document);
+        $data = $normalizer->normalize($document);
 
         $this->assertEquals($this->getNestedDocumentData(), $data);
     }
 
     /**
-     * Unserialize Document
+     * Denormalize Document
      */
-    public function testDocumentUnserialize()
+    public function testDocumentDenormalize()
     {
         $data = $this->getNestedDocumentData();
 
-        $serializer = $this->getFactory()
+        $normalizer = $this->getFactory()
             ->create('document');
 
-        $document = $serializer->unserialize($data);
+        $document = $normalizer->denormalize($data);
 
         $this->assertEquals($this->getNestedDocumentObject(), $document);
     }
