@@ -107,4 +107,13 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $this->getMockBuilder('Bcn\Component\Serializer\Type\TypeFactory')
                 ->getMock();
     }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getEncoderMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Encoder\EncoderInterface')
+                ->getMock();
+    }
 }
