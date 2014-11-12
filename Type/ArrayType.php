@@ -12,7 +12,7 @@ use Bcn\Component\Serializer\Normalizer\ArrayNormalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ArrayType implements TypeInterface
+class ArrayType extends AbstractType
 {
     /**
      * @param  TypeFactory                         $factory

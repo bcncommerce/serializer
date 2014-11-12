@@ -28,6 +28,6 @@ class TextNormalizer implements NormalizerInterface
     {
         $object = (string) $data;
 
-        return $data;
+        return $object;
     }
 }

@@ -14,6 +14,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 interface TypeInterface
 {
     /**
+     * @return string
+     */
+    public function getName();
+
+    /**
      * @param  TypeFactory         $factory
      * @param  array               $options
      * @return NormalizerInterface
@@ -24,9 +29,4 @@ interface TypeInterface
      * @param OptionsResolverInterface $optionsResolver
      */
     public function setDefaultOptions(OptionsResolverInterface $optionsResolver);
-
-    /**
-     * @return string
-     */
-    public function getName();
 }

@@ -10,11 +10,10 @@ namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Normalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Type\AbstractType;
 use Bcn\Component\Serializer\Type\TypeFactory;
-use Bcn\Component\Serializer\Type\TypeInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DocumentType implements TypeInterface
+class DocumentType extends AbstractType
 {
     /**
      * @param  TypeFactory         $factory
@@ -33,13 +32,6 @@ class DocumentType implements TypeInterface
         ;
 
         return $normalizer;
-    }
-
-    /**
-     * @param OptionsResolverInterface $optionsResolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
-    {
     }
 
     /**

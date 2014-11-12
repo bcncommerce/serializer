@@ -12,7 +12,7 @@ use Bcn\Component\Serializer\Normalizer\NumberNormalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class NumberType implements TypeInterface
+class NumberType extends AbstractType
 {
     /**
      * @param  TypeFactory                          $factory

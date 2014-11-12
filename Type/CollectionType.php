@@ -12,7 +12,7 @@ use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 use Bcn\Component\Serializer\Normalizer\CollectionNormalizer;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CollectionType implements TypeInterface
+class CollectionType extends AbstractType
 {
     /**
      * @param  TypeFactory                              $factory
