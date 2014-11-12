@@ -29,7 +29,7 @@ class TextTypeTest extends TestCase
         $factory = $this->getTypeFactoryMock();
 
         $type = new TextType();
-        $normalizer = $type->build($factory);
+        $normalizer = $type->getNormalizer($factory);
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
     }

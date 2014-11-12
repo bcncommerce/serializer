@@ -18,7 +18,7 @@ interface TypeInterface
      * @param  array               $options
      * @return NormalizerInterface
      */
-    public function build(TypeFactory $factory, array $options = array());
+    public function getNormalizer(TypeFactory $factory, array $options = array());
 
     /**
      * @param OptionsResolverInterface $optionsResolver

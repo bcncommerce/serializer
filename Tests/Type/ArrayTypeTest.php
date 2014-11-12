@@ -37,7 +37,7 @@ class ArrayTypeTest extends TestCase
         $options = array('item_type' => 'text', 'item_options' => array());
 
         $type = new ArrayType();
-        $normalizer = $type->build($factory, $options);
+        $normalizer = $type->getNormalizer($factory, $options);
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
         $this->assertSame($itemNoermalizer, $normalizer->getItemNormalizer());

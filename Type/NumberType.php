@@ -19,7 +19,7 @@ class NumberType implements TypeInterface
      * @param  array                                $options
      * @return NumberNormalizer|NormalizerInterface
      */
-    public function build(TypeFactory $factory, array $options = array())
+    public function getNormalizer(TypeFactory $factory, array $options = array())
     {
         return new NumberNormalizer(
             $options['decimals'],

@@ -28,7 +28,7 @@ class TypeFactory
         $resolved = $this->resolveType($type);
         $resolved->setDefaultOptions($optionsResolver);
 
-        return $resolved->build($this, $optionsResolver->resolve($options));
+        return $resolved->getNormalizer($this, $optionsResolver->resolve($options));
     }
 
     /**

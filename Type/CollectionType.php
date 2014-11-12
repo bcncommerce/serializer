@@ -19,7 +19,7 @@ class CollectionType implements TypeInterface
      * @param  array                                    $options
      * @return CollectionNormalizer|NormalizerInterface
      */
-    public function build(TypeFactory $factory, array $options = array())
+    public function getNormalizer(TypeFactory $factory, array $options = array())
     {
         return new CollectionNormalizer(
             $factory->create($options['item_type'], $options['item_options'])

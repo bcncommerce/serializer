@@ -30,7 +30,7 @@ class NumberTypeTest extends TestCase
         $factory = $this->getTypeFactoryMock();
 
         $type = new NumberType();
-        $normalizer = $type->build($factory, $options);
+        $normalizer = $type->getNormalizer($factory, $options);
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
     }

@@ -19,7 +19,7 @@ class ArrayType implements TypeInterface
      * @param  array                               $options
      * @return ArrayNormalizer|NormalizerInterface
      */
-    public function build(TypeFactory $factory, array $options = array())
+    public function getNormalizer(TypeFactory $factory, array $options = array())
     {
         return new ArrayNormalizer(
             $factory->create($options['item_type'], $options['item_options'])

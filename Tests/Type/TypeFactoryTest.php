@@ -24,7 +24,7 @@ class TypeFactoryTest extends TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
         $type->expects($this->once())
-            ->method('build')
+            ->method('getNormalizer')
             ->with($this->equalTo($factory), $this->equalTo($options))
             ->will($this->returnValue($normalizer));
 
@@ -43,7 +43,7 @@ class TypeFactoryTest extends TestCase
 
         $type = $this->getTypeMock();
         $type->expects($this->once())
-            ->method('build')
+            ->method('getNormalizer')
             ->with($this->equalTo($factory), $this->equalTo($options))
             ->will($this->returnValue($normalizer));
 

@@ -19,7 +19,7 @@ class TextType implements TypeInterface
      * @param  array                              $options
      * @return TextNormalizer|NormalizerInterface
      */
-    public function build(TypeFactory $factory, array $options = array())
+    public function getNormalizer(TypeFactory $factory, array $options = array())
     {
         return new TextNormalizer();
     }
