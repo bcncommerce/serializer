@@ -8,14 +8,14 @@
 
 namespace Bcn\Component\Serializer\Tests\Normalizer;
 
-use Bcn\Component\Serializer\Normalizer\ScalarNormalizer;
+use Bcn\Component\Serializer\Normalizer\TextNormalizer;
 use Bcn\Component\Serializer\Tests\TestCase;
 
-class ScalarNormalizerTest extends TestCase
+class TextNormalizerTest extends TestCase
 {
     public function testNormalize()
     {
-        $normalizer = new ScalarNormalizer();
+        $normalizer = new TextNormalizer();
         $actual = $normalizer->normalize('foo');
 
         $this->assertEquals('foo', $actual);
@@ -23,7 +23,7 @@ class ScalarNormalizerTest extends TestCase
 
     public function testDenormalize()
     {
-        $normalizer = new ScalarNormalizer();
+        $normalizer = new TextNormalizer();
         $actual = $normalizer->denormalize('foo');
 
         $this->assertEquals('foo', $actual);
@@ -31,7 +31,7 @@ class ScalarNormalizerTest extends TestCase
 
     public function testDenormalizeToVariable()
     {
-        $normalizer = new ScalarNormalizer();
+        $normalizer = new TextNormalizer();
         $actual = null;
         $normalizer->denormalize('foo', $actual);
 

@@ -27,7 +27,7 @@ class CollectionTypeTest extends TestCase
     {
         $itemNormalizer = $this->getNormalizerMock();
 
-        $factory = $this->getFactoryMock();
+        $factory = $this->getTypeFactoryMock();
         $factory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('text'))

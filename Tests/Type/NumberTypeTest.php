@@ -9,16 +9,16 @@
 namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Tests\TestCase;
-use Bcn\Component\Serializer\Type\TextType;
+use Bcn\Component\Serializer\Type\NumberType;
 
-class TextTypeTest extends TestCase
+class NumberTypeTest extends TestCase
 {
-    const TYPE_NAME        = 'text';
-    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\TextNormalizer';
+    const TYPE_NAME        = 'number';
+    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\NumberNormalizer';
 
     public function testGetName()
     {
-        $type = new TextType();
+        $type = new NumberType();
 
         $this->assertEquals(self::TYPE_NAME, $type->getName());
     }
@@ -27,7 +27,7 @@ class TextTypeTest extends TestCase
     {
         $factory = $this->getTypeFactoryMock();
 
-        $type = new TextType();
+        $type = new NumberType();
         $normalizer = $type->build($factory);
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);

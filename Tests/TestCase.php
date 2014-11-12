@@ -102,7 +102,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    public function getFactoryMock()
+    public function getTypeFactoryMock()
     {
         return $this->getMockBuilder('Bcn\Component\Serializer\Type\TypeFactory')
                 ->getMock();

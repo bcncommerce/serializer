@@ -27,7 +27,7 @@ class ArrayTypeTest extends TestCase
     {
         $itemNoermalizer = $this->getNormalizerMock();
 
-        $factory = $this->getFactoryMock();
+        $factory = $this->getTypeFactoryMock();
         $factory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('text'))

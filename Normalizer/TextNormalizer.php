@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Normalizer;
 
-class ScalarNormalizer implements NormalizerInterface
+class TextNormalizer implements NormalizerInterface
 {
     /**
      * @param  mixed $object
@@ -16,7 +16,7 @@ class ScalarNormalizer implements NormalizerInterface
      */
     public function normalize($object)
     {
-        return $object;
+        return (string) $object;
     }
 
     /**
@@ -26,7 +26,7 @@ class ScalarNormalizer implements NormalizerInterface
      */
     public function denormalize($data, &$object = null)
     {
-        $object = $data;
+        $object = (string) $data;
 
         return $data;
     }

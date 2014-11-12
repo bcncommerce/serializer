@@ -8,19 +8,19 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\ScalarNormalizer;
+use Bcn\Component\Serializer\Normalizer\TextNormalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 
 class TextType implements TypeInterface
 {
     /**
-     * @param  TypeFactory                          $factory
-     * @param  array                                $options
-     * @return ScalarNormalizer|NormalizerInterface
+     * @param  TypeFactory                        $factory
+     * @param  array                              $options
+     * @return TextNormalizer|NormalizerInterface
      */
     public function build(TypeFactory $factory, array $options = array())
     {
-        return new ScalarNormalizer();
+        return new TextNormalizer();
     }
 
     /**

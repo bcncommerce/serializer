@@ -9,7 +9,7 @@
 namespace Bcn\Component\Serializer\Tests;
 
 use Bcn\Component\Serializer\Normalizer;
-use Bcn\Component\Serializer\Normalizer\ScalarNormalizer;
+use Bcn\Component\Serializer\Normalizer\TextNormalizer;
 
 class NormalizerTest extends TestCase
 {
@@ -18,8 +18,8 @@ class NormalizerTest extends TestCase
         $document = $this->getDocumentObject();
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
         $data = $normalizer->normalize($document);
 
         $this->assertEquals($this->getDocumentData(), $data);
@@ -28,8 +28,8 @@ class NormalizerTest extends TestCase
     public function testNullNormalize()
     {
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
         $data = $normalizer->normalize(null);
 
         $this->assertNull($data);
@@ -40,8 +40,8 @@ class NormalizerTest extends TestCase
         $this->setExpectedException('InvalidArgumentException');
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
         $normalizer->normalize(array());
     }
 
@@ -50,8 +50,8 @@ class NormalizerTest extends TestCase
         $document = $this->getNestedDocumentObject();
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
         $normalizer->add('parent', $normalizer);
 
         $data = $normalizer->normalize($document);
@@ -64,8 +64,8 @@ class NormalizerTest extends TestCase
         $data = $this->getDocumentData();
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
 
         $document = $normalizer->denormalize($data);
 
@@ -77,8 +77,8 @@ class NormalizerTest extends TestCase
         $data = $this->getNestedDocumentData();
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
         $normalizer->add('parent', $normalizer);
 
         $document = $normalizer->denormalize($data);
@@ -91,8 +91,8 @@ class NormalizerTest extends TestCase
         $data = $this->getDocumentData();
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
 
         $document = new Document();
         $normalizer->denormalize($data, $document);
@@ -105,8 +105,8 @@ class NormalizerTest extends TestCase
         $data = $this->getDocumentData();
 
         $normalizer = new Normalizer(function () { return new Document(); });
-        $normalizer->add('name', new ScalarNormalizer());
-        $normalizer->add('description', new ScalarNormalizer());
+        $normalizer->add('name', new TextNormalizer());
+        $normalizer->add('description', new TextNormalizer());
 
         $document = $normalizer->denormalize($data);
 

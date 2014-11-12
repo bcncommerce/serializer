@@ -12,7 +12,6 @@ use Bcn\Component\Serializer\Serializer;
 
 class SerializerTest extends TestCase
 {
-
     public function testSerialize()
     {
         $document    = $this->getDocumentObject();
@@ -25,7 +24,7 @@ class SerializerTest extends TestCase
             ->with($this->equalTo($document))
             ->will($this->returnValue($normalized));
 
-        $typeFactory = $this->getFactoryMock();
+        $typeFactory = $this->getTypeFactoryMock();
         $typeFactory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('foo-type'))
@@ -60,7 +59,7 @@ class SerializerTest extends TestCase
             ->with($this->equalTo($normalized))
             ->will($this->returnValue($this->getDocumentObject()));
 
-        $typeFactory = $this->getFactoryMock();
+        $typeFactory = $this->getTypeFactoryMock();
         $typeFactory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('foo-type'))
@@ -71,5 +70,4 @@ class SerializerTest extends TestCase
 
         $this->assertInstanceOf(self::DOCUMENT_CLASS, $document);
     }
-
 }

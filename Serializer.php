@@ -8,8 +8,9 @@
 
 namespace Bcn\Component\Serializer;
 
-use Bcn\Component\Serializer\Encoder\EncoderInterface;
 use Bcn\Component\Serializer\Type\TypeFactory;
+use Bcn\Component\Serializer\Encoder\EncoderInterface;
+use Bcn\Component\Serializer\Serializer\SerializerInterface;
 
 class Serializer implements SerializerInterface
 {

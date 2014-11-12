@@ -6,7 +6,7 @@
  *
  */
 
-namespace Bcn\Component\Serializer;
+namespace Bcn\Component\Serializer\Serializer;
 
 interface SerializerInterface
 {
