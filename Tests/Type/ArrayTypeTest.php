@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Tests\TestCase;
 use Bcn\Component\Serializer\Type\ArrayType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArrayTypeTest extends TestCase
 {
@@ -40,5 +41,28 @@ class ArrayTypeTest extends TestCase
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
         $this->assertSame($itemNoermalizer, $normalizer->getItemNormalizer());
+    }
+
+    public function testAllowedOptions()
+    {
+        $resolver = new OptionsResolver();
+        $type = new ArrayType();
+        $type->setDefaultOptions($resolver);
+
+        $resolver->resolve(array(
+            'item_type'    => 'text',
+            'item_options' => array(),
+        ));
+    }
+
+    public function testDefaultOptions()
+    {
+        $resolver = new OptionsResolver();
+        $type = new ArrayType();
+        $type->setDefaultOptions($resolver);
+
+        $options = $resolver->resolve(array('item_type' => 'text'));
+
+        $this->assertEquals(array('item_options', 'item_type'), array_keys($options));
     }
 }

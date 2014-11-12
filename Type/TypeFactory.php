@@ -9,6 +9,7 @@
 namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TypeFactory
 {
@@ -22,8 +23,12 @@ class TypeFactory
      */
     public function create($type, array $options = array())
     {
-        return $this->resolveType($type)
-            ->build($this, $options);
+        $optionsResolver = new OptionsResolver();
+
+        $resolved = $this->resolveType($type);
+        $resolved->setDefaultOptions($optionsResolver);
+
+        return $resolved->build($this, $optionsResolver->resolve($options));
     }
 
     /**

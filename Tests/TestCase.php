@@ -21,8 +21,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
     protected function getDocumentData($suffix = '')
     {
         $data = array(
-            'name' => 'Test name '.$suffix,
+            'name'        => 'Test name '.$suffix,
             'description' => 'Test description '.$suffix,
+            'rank'        => 11,
+            'rating'      => 93.31,
         );
 
         return $data;
@@ -49,6 +51,8 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $document = new Document();
         $document->setName('Test name '.$suffix);
         $document->setDescription('Test description '.$suffix);
+        $document->setRank(11);
+        $document->setRating(93.31);
 
         return $document;
     }

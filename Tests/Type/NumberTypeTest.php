@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Tests\TestCase;
 use Bcn\Component\Serializer\Type\NumberType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NumberTypeTest extends TestCase
 {
@@ -25,11 +26,36 @@ class NumberTypeTest extends TestCase
 
     public function testBuild()
     {
+        $options = array('decimals' => 0, 'decimal_point' => '.', 'thousand_separator' => '');
         $factory = $this->getTypeFactoryMock();
 
         $type = new NumberType();
-        $normalizer = $type->build($factory);
+        $normalizer = $type->build($factory, $options);
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
+    }
+
+    public function testAllowedOptions()
+    {
+        $resolver = new OptionsResolver();
+        $type = new NumberType();
+        $type->setDefaultOptions($resolver);
+
+        $resolver->resolve(array(
+            'decimals'           => 4,
+            'decimal_point'      => '.',
+            'thousand_separator' => ' ',
+        ));
+    }
+
+    public function testDefaultOptions()
+    {
+        $resolver = new OptionsResolver();
+        $type = new NumberType();
+        $type->setDefaultOptions($resolver);
+
+        $options = $resolver->resolve(array());
+
+        $this->assertEquals(array('decimals', 'decimal_point', 'thousand_separator'), array_keys($options));
     }
 }

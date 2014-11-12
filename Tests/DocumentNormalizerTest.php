@@ -8,6 +8,7 @@
 
 namespace Bcn\Component\Serializer\Tests;
 
+use Bcn\Component\Serializer\Type\NumberType;
 use Bcn\Component\Serializer\Type\TextType;
 use Bcn\Component\Serializer\Type\TypeFactory;
 use Bcn\Component\Serializer\Tests\Type\DocumentType;
@@ -52,6 +53,7 @@ class DocumentNormalizerTest extends TestCase
     {
         $factory = new TypeFactory();
         $factory->addType(new TextType());
+        $factory->addType(new NumberType());
         $factory->addType(new DocumentType());
 
         return $factory;

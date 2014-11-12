@@ -9,6 +9,7 @@
 namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 interface TypeInterface
 {
@@ -18,6 +19,11 @@ interface TypeInterface
      * @return NormalizerInterface
      */
     public function build(TypeFactory $factory, array $options = array());
+
+    /**
+     * @param OptionsResolverInterface $optionsResolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $optionsResolver);
 
     /**
      * @return string

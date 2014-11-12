@@ -13,7 +13,8 @@
         "psr-0": { "Bcn\\Component\\Serializer\\": "" }
     },
     "require": {
-        "symfony/property-access": "~2.5"
+        "symfony/property-access": "~2.5",
+        "symfony/options-resolver": "@stable"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7",

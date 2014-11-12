@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Normalizer\TextNormalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TextType implements TypeInterface
 {
@@ -21,6 +22,13 @@ class TextType implements TypeInterface
     public function build(TypeFactory $factory, array $options = array())
     {
         return new TextNormalizer();
+    }
+
+    /**
+     * @param OptionsResolverInterface $optionsResolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    {
     }
 
     /**

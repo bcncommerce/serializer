@@ -16,11 +16,14 @@ class Document
     /** @var string */
     protected $description;
 
+    /** @var integer */
+    protected $rank;
+
+    /** @var float */
+    protected $rating;
+
     /** @var Document */
     protected $parent;
-
-    /** @var array */
-    protected $links = array();
 
     /**
      * @return string
@@ -56,6 +59,44 @@ class Document
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRank()
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param  int   $rank
+     * @return $this
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * @param  float $rating
+     * @return $this
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
 
         return $this;
     }

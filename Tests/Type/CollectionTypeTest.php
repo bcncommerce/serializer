@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Tests\TestCase;
 use Bcn\Component\Serializer\Type\CollectionType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CollectionTypeTest extends TestCase
 {
@@ -40,5 +41,28 @@ class CollectionTypeTest extends TestCase
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
         $this->assertSame($itemNormalizer, $normalizer->getItemNormalizer());
+    }
+
+    public function testAllowedOptions()
+    {
+        $resolver = new OptionsResolver();
+        $type = new CollectionType();
+        $type->setDefaultOptions($resolver);
+
+        $resolver->resolve(array(
+            'item_type'    => 'text',
+            'item_options' => array(),
+        ));
+    }
+
+    public function testDefaultOptions()
+    {
+        $resolver = new OptionsResolver();
+        $type = new CollectionType();
+        $type->setDefaultOptions($resolver);
+
+        $options = $resolver->resolve(array('item_type' => 'text'));
+
+        $this->assertEquals(array('item_options', 'item_type'), array_keys($options));
     }
 }

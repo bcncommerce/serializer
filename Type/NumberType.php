@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Normalizer\NumberNormalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class NumberType implements TypeInterface
 {
@@ -21,10 +22,29 @@ class NumberType implements TypeInterface
     public function build(TypeFactory $factory, array $options = array())
     {
         return new NumberNormalizer(
-            isset($options['decimals']) ? $options['decimals']                       : 0,
-            isset($options['decimal_point']) ? $options['decimal_point']             : '.',
-            isset($options['thousands_separator']) ? $options['thousands_separator'] : ''
+            $options['decimals'],
+            $options['decimal_point'],
+            $options['thousand_separator']
         );
+    }
+
+    /**
+     * @param OptionsResolverInterface $optionsResolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    {
+        $optionsResolver
+            ->setDefaults(array(
+                'decimals'           => 0,
+                'decimal_point'      => '.',
+                'thousand_separator' => '',
+            ))
+            ->setAllowedTypes(array(
+                'decimals'           => 'numeric',
+                'decimal_point'      => 'string',
+                'thousand_separator' => 'string',
+            ))
+        ;
     }
 
     /**

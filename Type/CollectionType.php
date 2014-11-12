@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 use Bcn\Component\Serializer\Normalizer\CollectionNormalizer;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CollectionType implements TypeInterface
 {
@@ -23,6 +24,21 @@ class CollectionType implements TypeInterface
         return new CollectionNormalizer(
             $factory->create($options['item_type'], $options['item_options'])
         );
+    }
+
+    /**
+     * @param OptionsResolverInterface $optionsResolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    {
+        $optionsResolver
+            ->setRequired(array('item_type'))
+            ->setDefaults(array('item_options' => array()))
+            ->setAllowedTypes(array(
+                'item_type' => array('string', 'Bcn\Component\Serializer\Normalizer\NormalizerInterface'),
+                'item_options' => 'array',
+            ))
+        ;
     }
 
     /**
