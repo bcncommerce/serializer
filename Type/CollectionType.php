@@ -21,9 +21,10 @@ class CollectionType extends AbstractType
      */
     public function getNormalizer(TypeFactory $factory, array $options = array())
     {
-        return new CollectionNormalizer(
-            $factory->create($options['item_type'], $options['item_options'])
-        );
+        $itemNormalizer = $factory->create($options['item_type'], $options['item_options']);
+        $normalizer = new CollectionNormalizer($itemNormalizer);
+
+        return $normalizer;
     }
 
     /**

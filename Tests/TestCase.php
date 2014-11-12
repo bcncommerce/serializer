@@ -120,4 +120,14 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $this->getMockBuilder('Bcn\Component\Serializer\Encoder\EncoderInterface')
                 ->getMock();
     }
+
+    /**
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     */
+    public static function assertAvailableOptions($expected, $actual, $message = '')
+    {
+        self::assertEquals(sort($expected), sort($actual), $message);
+    }
 }

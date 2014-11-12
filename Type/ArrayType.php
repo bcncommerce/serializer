@@ -21,9 +21,10 @@ class ArrayType extends AbstractType
      */
     public function getNormalizer(TypeFactory $factory, array $options = array())
     {
-        return new ArrayNormalizer(
-            $factory->create($options['item_type'], $options['item_options'])
-        );
+        $itemNormalizer = $factory->create($options['item_type'], $options['item_options']);
+        $normalizer = new ArrayNormalizer($itemNormalizer);
+
+        return $normalizer;
     }
 
     /**
@@ -39,6 +40,8 @@ class ArrayType extends AbstractType
                 'item_options' => 'array',
             ))
         ;
+
+        parent::setDefaultOptions($optionsResolver);
     }
 
     /**

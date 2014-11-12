@@ -63,6 +63,6 @@ class CollectionTypeTest extends TestCase
 
         $options = $resolver->resolve(array('item_type' => 'text'));
 
-        $this->assertEquals(array('item_options', 'item_type'), array_keys($options));
+        $this->assertAvailableOptions(array('item_options', 'item_type'), $options);
     }
 }

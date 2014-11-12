@@ -56,6 +56,6 @@ class NumberTypeTest extends TestCase
 
         $options = $resolver->resolve(array());
 
-        $this->assertEquals(array('decimals', 'decimal_point', 'thousand_separator'), array_keys($options));
+        $this->assertAvailableOptions(array('decimals', 'decimal_point', 'thousand_separator'), $options);
     }
 }

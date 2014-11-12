@@ -51,6 +51,6 @@ class TextTypeTest extends TestCase
 
         $options = $resolver->resolve(array());
 
-        $this->assertEquals(array(), array_keys($options));
+        $this->assertAvailableOptions(array(), $options);
     }
 }
