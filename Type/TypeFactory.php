@@ -8,8 +8,9 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Type\Extension\TypeExtensionInterface;
 
 class TypeFactory
 {
@@ -71,6 +72,17 @@ class TypeFactory
     public function hasType($type)
     {
         return isset($this->types[$this->resolveTypeName($type)]);
+    }
+
+    /**
+     * @param  TypeExtensionInterface $extension
+     * @throws \Exception
+     */
+    public function extend(TypeExtensionInterface $extension)
+    {
+        foreach ($extension->getTypes() as $type) {
+            $this->addType($type);
+        }
     }
 
     /**

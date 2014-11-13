@@ -9,10 +9,11 @@
 namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Normalizer\ArrayNormalizer;
+use Bcn\Component\Serializer\Normalizer\DatetimeNormalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ArrayType extends AbstractType
+class DatetimeType extends AbstractType
 {
     /**
      * @param  TypeFactory                         $factory
@@ -21,10 +22,7 @@ class ArrayType extends AbstractType
      */
     public function getNormalizer(TypeFactory $factory, array $options = array())
     {
-        $itemNormalizer = $factory->create($options['item_type'], $options['item_options']);
-        $normalizer = new ArrayNormalizer($itemNormalizer);
-
-        return $normalizer;
+        return new DatetimeNormalizer($options['format']);
     }
 
     /**
@@ -33,11 +31,9 @@ class ArrayType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
     {
         $optionsResolver
-            ->setRequired(array('item_type'))
-            ->setDefaults(array('item_options' => array()))
+            ->setDefaults(array('format' => \DateTime::ISO8601))
             ->setAllowedTypes(array(
-                'item_type' => array('string', 'Bcn\Component\Serializer\Normalizer\NormalizerInterface'),
-                'item_options' => 'array',
+                'format' => 'string',
             ))
         ;
     }
@@ -47,6 +43,6 @@ class ArrayType extends AbstractType
      */
     public function getName()
     {
-        return 'array';
+        return 'datetime';
     }
 }
