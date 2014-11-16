@@ -8,11 +8,7 @@
 
 namespace Bcn\Component\Serializer\Encoder;
 
-interface EncoderInterface
+interface EncoderDecoderInterface
+    extends EncoderInterface, DecoderInterface
 {
-    /**
-     * @param  mixed $data
-     * @return mixed
-     */
-    public function encode($data);
 }

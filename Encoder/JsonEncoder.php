@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Encoder;
 
-class JsonEncoder implements EncoderInterface
+class JsonEncoder implements EncoderDecoderInterface
 {
     /** @var integer */
     protected $options;

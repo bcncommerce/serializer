@@ -9,22 +9,22 @@
 namespace Bcn\Component\Serializer;
 
 use Bcn\Component\Serializer\Type\TypeFactory;
-use Bcn\Component\Serializer\Encoder\EncoderInterface;
+use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
 use Bcn\Component\Serializer\Serializer\SerializerInterface;
 
 class Serializer implements SerializerInterface
 {
-    /** @var EncoderInterface */
+    /** @var EncoderDecoderInterface */
     protected $encoder;
 
     /** @var TypeFactory */
     protected $factory;
 
     /**
-     * @param TypeFactory      $factory
-     * @param EncoderInterface $encoder
+     * @param TypeFactory             $factory
+     * @param EncoderDecoderInterface $encoder
      */
-    public function __construct(TypeFactory $factory, EncoderInterface $encoder)
+    public function __construct(TypeFactory $factory, EncoderDecoderInterface $encoder)
     {
         $this->factory = $factory;
         $this->encoder = $encoder;
