@@ -9,6 +9,8 @@
 namespace Bcn\Component\Serializer\Encoder\Json;
 
 use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
+use Bcn\Component\Serializer\Streamer\BufferStreamer;
+use Bcn\Component\Serializer\Streamer\StreamerInterface;
 
 class JsonEncoder implements EncoderDecoderInterface
 {
@@ -24,12 +26,12 @@ class JsonEncoder implements EncoderDecoderInterface
     }
 
     /**
-     * @param  mixed $data
-     * @return mixed
+     * @param  mixed             $data
+     * @return StreamerInterface
      */
     public function encode($data)
     {
-        return json_encode($data, $this->options);
+        return new BufferStreamer(json_encode($data, $this->options));
     }
 
     /**

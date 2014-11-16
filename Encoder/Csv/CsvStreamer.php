@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Encoder\Csv;
 
-use Bcn\Component\Serializer\Encoder\Streamer;
+use Bcn\Component\Serializer\Streamer\Streamer;
 
 class CsvStreamer extends Streamer
 {

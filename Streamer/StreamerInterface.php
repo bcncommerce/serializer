@@ -6,7 +6,7 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Encoder;
+namespace Bcn\Component\Serializer\Streamer;
 
 interface StreamerInterface
 {
@@ -14,4 +14,9 @@ interface StreamerInterface
      * @param callback $output
      */
     public function stream($output);
+
+    /**
+     * @return string
+     */
+    public function __toString();
 }

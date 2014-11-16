@@ -15,34 +15,35 @@ class CsvEncoderTest extends TestCase
 {
     public function testEncode()
     {
-        $string = file_get_contents(__DIR__.'/files/encoding.csv');
-        $data   = json_decode(file_get_contents(__DIR__.'/files/encoding.json'), true);
+        $encoded = file_get_contents(__DIR__.'/files/encoding.csv');
+        $decoded = json_decode(file_get_contents(__DIR__.'/files/encoding.json'), true);
 
         $encoder = new CsvEncoder();
-        $encoded = $encoder->encode($data);
+        $streamer = $encoder->encode($decoded);
 
-        $this->assertEquals((string) $string, (string) $encoded);
+        $this->assertInstanceOf('Bcn\Component\Serializer\Streamer\StreamerInterface', $streamer);
+        $this->assertEquals((string) $encoded, (string) $streamer);
     }
 
     public function testDecodeStream()
     {
-        $stream = fopen(__DIR__.'/files/sample.csv', 'r');
-        $data   = json_decode(file_get_contents(__DIR__.'/files/sample.json'), true);
+        $stream  = fopen(__DIR__.'/files/sample.csv', 'r');
+        $decoded = json_decode(file_get_contents(__DIR__.'/files/sample.json'), true);
 
         $encoder = new CsvEncoder();
         $iterator = $encoder->decode($stream);
 
-        $this->assertEquals($data, iterator_to_array($iterator));
+        $this->assertEquals($decoded, iterator_to_array($iterator));
     }
 
     public function testDecodeString()
     {
-        $string = file_get_contents(__DIR__.'/files/sample.csv');
-        $data   = json_decode(file_get_contents(__DIR__.'/files/sample.json'), true);
+        $encoded = file_get_contents(__DIR__.'/files/sample.csv');
+        $decoded = json_decode(file_get_contents(__DIR__.'/files/sample.json'), true);
 
         $encoder = new CsvEncoder();
-        $iterator = $encoder->decode($string);
+        $iterator = $encoder->decode($encoded);
 
-        $this->assertEquals($data, iterator_to_array($iterator));
+        $this->assertEquals($decoded, iterator_to_array($iterator));
     }
 }

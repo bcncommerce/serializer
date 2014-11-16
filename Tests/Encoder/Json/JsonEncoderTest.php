@@ -21,7 +21,10 @@ class JsonEncoderTest extends TestCase
     public function testEncode($encoded, $decoded)
     {
         $encoder = new JsonEncoder();
-        $this->assertEquals($encoded, $encoder->encode($decoded));
+        $streamer = $encoder->encode($decoded);
+
+        $this->assertInstanceOf('Bcn\Component\Serializer\Streamer\StreamerInterface', $streamer);
+        $this->assertEquals($encoded, (string) $streamer);
     }
 
     /**

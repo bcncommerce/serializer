@@ -8,6 +8,8 @@
 
 namespace Bcn\Component\Serializer\Encoder;
 
+use Bcn\Component\Serializer\Streamer\StreamerInterface;
+
 class CompoundEncoder implements EncoderDecoderInterface
 {
     /** @var EncoderInterface */
@@ -27,8 +29,8 @@ class CompoundEncoder implements EncoderDecoderInterface
     }
 
     /**
-     * @param  mixed $data
-     * @return mixed
+     * @param  mixed             $data
+     * @return StreamerInterface
      */
     public function encode($data)
     {

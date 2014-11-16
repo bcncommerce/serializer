@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer;
 
 use Bcn\Component\Serializer\Type\TypeFactory;
 use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
+use Bcn\Component\Serializer\Streamer\StreamerInterface;
 use Bcn\Component\Serializer\Serializer\SerializerInterface;
 
 class Serializer implements SerializerInterface
@@ -31,10 +32,10 @@ class Serializer implements SerializerInterface
     }
 
     /**
-     * @param  mixed  $object
-     * @param  string $type
-     * @param  array  $options
-     * @return mixed
+     * @param  mixed             $object
+     * @param  string            $type
+     * @param  array             $options
+     * @return StreamerInterface
      */
     public function serialize($object, $type, array $options = array())
     {

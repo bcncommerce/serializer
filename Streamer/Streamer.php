@@ -6,7 +6,7 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Encoder;
+namespace Bcn\Component\Serializer\Streamer;
 
 abstract class Streamer implements StreamerInterface
 {
