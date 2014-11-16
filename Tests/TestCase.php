@@ -132,9 +132,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    public function getEncoderDecoderMock()
+    public function getCodecMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Encoder\EncoderDecoderInterface')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Encoder\CodecInterface')
                 ->getMock();
     }
 

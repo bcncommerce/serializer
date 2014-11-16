@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Tests\Integration;
 
-use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
+use Bcn\Component\Serializer\Encoder\CodecInterface;
 use Bcn\Component\Serializer\Serializer;
 use Bcn\Component\Serializer\Tests\Integration\Type\DocumentArrayType;
 use Bcn\Component\Serializer\Tests\Integration\Type\DocumentNestedType;
@@ -120,7 +120,7 @@ abstract class SerializerTestCase extends TestCase
     }
 
     /**
-     * @return EncoderDecoderInterface
+     * @return CodecInterface
      */
     abstract protected function getEncoder();
 

@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Encoder;
 
-interface EncoderDecoderInterface
+interface CodecInterface
     extends EncoderInterface, DecoderInterface
 {
 }

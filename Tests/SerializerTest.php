@@ -30,7 +30,7 @@ class SerializerTest extends TestCase
             ->with($this->equalTo('foo-type'))
             ->will($this->returnValue($normalizer));
 
-        $encoder = $this->getEncoderDecoderMock();
+        $encoder = $this->getCodecMock();
         $encoder->expects($this->once())
             ->method('encode')
             ->with($this->equalTo($normalized))
@@ -47,7 +47,7 @@ class SerializerTest extends TestCase
         $normalized  = $this->getDocumentData();
         $options     = array('foo' => 'moo');
 
-        $encoder = $this->getEncoderDecoderMock();
+        $encoder = $this->getCodecMock();
         $encoder->expects($this->once())
             ->method('decode')
             ->with($this->equalTo('encoded'))

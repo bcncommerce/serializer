@@ -8,11 +8,11 @@
 
 namespace Bcn\Component\Serializer\Encoder\Json;
 
-use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
+use Bcn\Component\Serializer\Encoder\CodecInterface;
 use Bcn\Component\Serializer\Streamer\BufferStreamer;
 use Bcn\Component\Serializer\Streamer\StreamerInterface;
 
-class JsonEncoder implements EncoderDecoderInterface
+class JsonEncoder implements CodecInterface
 {
     /** @var integer */
     protected $options;

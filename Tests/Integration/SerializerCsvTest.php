@@ -9,13 +9,13 @@
 namespace Bcn\Component\Serializer\Tests\Integration;
 
 use Bcn\Component\Serializer\Encoder\Csv\CsvEncoder;
-use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
+use Bcn\Component\Serializer\Encoder\CodecInterface;
 use Bcn\Component\Serializer\Serializer;
 
 class SerializerCsvTest extends SerializerTestCase
 {
     /**
-     * @return EncoderDecoderInterface
+     * @return CodecInterface
      */
     protected function getEncoder()
     {

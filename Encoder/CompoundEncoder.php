@@ -10,7 +10,7 @@ namespace Bcn\Component\Serializer\Encoder;
 
 use Bcn\Component\Serializer\Streamer\StreamerInterface;
 
-class CompoundEncoder implements EncoderDecoderInterface
+class CompoundEncoder implements CodecInterface
 {
     /** @var EncoderInterface */
     protected $encoder;

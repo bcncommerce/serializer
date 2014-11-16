@@ -8,14 +8,14 @@
 
 namespace Bcn\Component\Serializer\Tests\Integration;
 
-use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
+use Bcn\Component\Serializer\Encoder\CodecInterface;
 use Bcn\Component\Serializer\Encoder\Json\JsonEncoder;
 use Bcn\Component\Serializer\Serializer;
 
 class SerializerJsonTest extends SerializerTestCase
 {
     /**
-     * @return EncoderDecoderInterface
+     * @return CodecInterface
      */
     protected function getEncoder()
     {

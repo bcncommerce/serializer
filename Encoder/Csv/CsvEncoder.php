@@ -8,9 +8,9 @@
 
 namespace Bcn\Component\Serializer\Encoder\Csv;
 
-use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
+use Bcn\Component\Serializer\Encoder\CodecInterface;
 
-class CsvEncoder implements EncoderDecoderInterface
+class CsvEncoder implements CodecInterface
 {
     /** @var string */
     protected $delimiter;
