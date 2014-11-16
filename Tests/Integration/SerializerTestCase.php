@@ -67,6 +67,23 @@ abstract class SerializerTestCase extends TestCase
     }
 
     /**
+     * Unserialize Document
+     *
+     * @dataProvider provideDocumentSerializeTestCases
+     */
+    public function testUnserializeStream($document, $type, $fixture)
+    {
+        $stream = fopen($fixture, 'r');
+
+        $serializer = $this->getSerializer();
+        $unserialized = $serializer->unserialize($stream, $type, array(), $unserialized);
+
+        fclose($stream);
+
+        $this->assertEquals($document, $unserialized);
+    }
+
+    /**
      * @return Serializer
      */
     protected function getSerializer()

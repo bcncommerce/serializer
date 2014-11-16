@@ -40,6 +40,10 @@ class JsonEncoder implements CodecInterface
      */
     public function decode($data)
     {
+        if (is_resource($data)) {
+            $data = stream_get_contents($data);
+        }
+
         return json_decode($data, true);
     }
 }

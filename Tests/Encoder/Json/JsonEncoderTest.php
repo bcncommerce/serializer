@@ -39,6 +39,19 @@ class JsonEncoderTest extends TestCase
     }
 
     /**
+     * @param $encoded
+     * @param $decoded
+     * @dataProvider provideEncodedAndDecodedTestCases
+     */
+    public function testDecodeStream($encoded, $decoded)
+    {
+        $stream = fopen('data://text/plain;base64,'.base64_encode($encoded), 'r');
+        $encoder = new JsonEncoder();
+
+        $this->assertEquals($decoded, $encoder->decode($stream));
+    }
+
+    /**
      *
      */
     public function provideEncodedAndDecodedTestCases()
