@@ -48,13 +48,14 @@ class Serializer implements SerializerInterface
      * @param  mixed  $data
      * @param  string $type
      * @param  array  $options
+     * @param  mixed  $object
      * @return mixed
      */
-    public function unserialize($data, $type, array $options = array())
+    public function unserialize($data, $type, array $options = array(), &$object = null)
     {
         $normalized = $this->encoder->decode($data);
 
         return $this->factory->create($type, $options)
-            ->denormalize($normalized);
+            ->denormalize($normalized, $object);
     }
 }

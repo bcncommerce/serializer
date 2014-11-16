@@ -31,6 +31,15 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param  string $suffix
+     * @return string
+     */
+    protected function getDocumentEncoded($suffix = '')
+    {
+        return json_encode($this->getDocumentData($suffix));
+    }
+
+    /**
      * @return array
      */
     protected function getNestedDocumentData()
@@ -40,6 +49,14 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $data['parent']['parent'] = null;
 
         return $data;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNestedDocumentEncoded()
+    {
+        return json_encode($this->getNestedDocumentData());
     }
 
     /**

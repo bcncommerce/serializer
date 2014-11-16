@@ -6,7 +6,9 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Encoder;
+namespace Bcn\Component\Serializer\Encoder\Json;
+
+use Bcn\Component\Serializer\Encoder\EncoderDecoderInterface;
 
 class JsonEncoder implements EncoderDecoderInterface
 {

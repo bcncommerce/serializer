@@ -6,7 +6,7 @@
  *
  */
 
-namespace Encoder;
+namespace Bcn\Component\Serializer\Tests\Encoder;
 
 use Bcn\Component\Serializer\Encoder\CompoundEncoder;
 use Bcn\Component\Serializer\Tests\TestCase;
