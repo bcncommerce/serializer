@@ -98,9 +98,9 @@ abstract class SerializerTestCase extends TestCase
         $cases = array();
 
         $objects = array(
-            'document'        => $this->getDocumentObject('flat'),
-            'document_nested' => $this->getNestedDocumentObject(),
-            'document_array'  => $this->getDocumentObjectArray(),
+            'document'        => $this->getDocument('flat'),
+            'document_nested' => $this->getNestedDocument(),
+            'document_array'  => $this->getDocuments(),
         );
 
         $types = $this->getSupportedTypes();

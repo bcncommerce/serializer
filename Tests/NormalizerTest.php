@@ -14,7 +14,7 @@ class NormalizerTest extends TestCase
 {
     public function testNormalize()
     {
-        $document = $this->getDocumentObject();
+        $document = $this->getDocument();
 
         $nameNormalizer = $this->getNormalizerMock();
         $nameNormalizer->expects($this->once())
@@ -50,7 +50,7 @@ class NormalizerTest extends TestCase
 
     public function testNormalizeAlias()
     {
-        $document = $this->getDocumentObject();
+        $document = $this->getDocument();
 
         $nameNormalizer = $this->getNormalizerMock();
         $nameNormalizer->expects($this->once())
@@ -75,7 +75,7 @@ class NormalizerTest extends TestCase
 
     public function testDenormalize()
     {
-        $document = $this->getDocumentObject();
+        $document = $this->getDocument();
 
         $factory = function () use ($document) {
             return $document;
@@ -101,7 +101,7 @@ class NormalizerTest extends TestCase
 
     public function testDenormalizeAlias()
     {
-        $document = $this->getDocumentObject();
+        $document = $this->getDocument();
 
         $factory = function () use ($document) {
             return $document;
@@ -127,7 +127,7 @@ class NormalizerTest extends TestCase
 
     public function testDenormalizeToObject()
     {
-        $document = $this->getDocumentObject();
+        $document = $this->getDocument();
 
         $nameNormalizer = $this->getNormalizerMock();
         $nameNormalizer->expects($this->once())

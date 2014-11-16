@@ -9,17 +9,17 @@
 namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Tests\TestCase;
-use Bcn\Component\Serializer\Type\CollectionType;
+use Bcn\Component\Serializer\Type\IteratorType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CollectionTypeTest extends TestCase
+class IteratorTypeTest extends TestCase
 {
-    const TYPE_NAME        = 'collection';
-    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\CollectionNormalizer';
+    const TYPE_NAME        = 'iterator';
+    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\IteratorNormalizer';
 
     public function testGetName()
     {
-        $type = new CollectionType();
+        $type = new IteratorType();
 
         $this->assertEquals(self::TYPE_NAME, $type->getName());
     }
@@ -36,7 +36,7 @@ class CollectionTypeTest extends TestCase
 
         $options = array('item_type' => 'text', 'item_options' => array());
 
-        $type = new CollectionType();
+        $type = new IteratorType();
         $normalizer = $type->getNormalizer($factory, $options);
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
@@ -46,7 +46,7 @@ class CollectionTypeTest extends TestCase
     public function testAllowedOptions()
     {
         $resolver = new OptionsResolver();
-        $type = new CollectionType();
+        $type = new IteratorType();
         $type->setDefaultOptions($resolver);
 
         $resolver->resolve(array(
@@ -58,7 +58,7 @@ class CollectionTypeTest extends TestCase
     public function testDefaultOptions()
     {
         $resolver = new OptionsResolver();
-        $type = new CollectionType();
+        $type = new IteratorType();
         $type->setDefaultOptions($resolver);
 
         $options = $resolver->resolve(array('item_type' => 'text'));

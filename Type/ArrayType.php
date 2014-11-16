@@ -9,15 +9,14 @@
 namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Normalizer\ArrayNormalizer;
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ArrayType extends AbstractType
 {
     /**
-     * @param  TypeFactory                         $factory
-     * @param  array                               $options
-     * @return ArrayNormalizer|NormalizerInterface
+     * @param  TypeFactory     $factory
+     * @param  array           $options
+     * @return ArrayNormalizer
      */
     public function getNormalizer(TypeFactory $factory, array $options = array())
     {

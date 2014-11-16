@@ -8,21 +8,21 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
-use Bcn\Component\Serializer\Normalizer\CollectionNormalizer;
+use Bcn\Component\Serializer\Normalizer\ArrayNormalizer;
+use Bcn\Component\Serializer\Normalizer\IteratorNormalizer;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CollectionType extends AbstractType
+class IteratorType extends AbstractType
 {
     /**
-     * @param  TypeFactory                              $factory
-     * @param  array                                    $options
-     * @return CollectionNormalizer|NormalizerInterface
+     * @param  TypeFactory     $factory
+     * @param  array           $options
+     * @return ArrayNormalizer
      */
     public function getNormalizer(TypeFactory $factory, array $options = array())
     {
         $itemNormalizer = $factory->create($options['item_type'], $options['item_options']);
-        $normalizer = new CollectionNormalizer($itemNormalizer);
+        $normalizer = new IteratorNormalizer($itemNormalizer);
 
         return $normalizer;
     }
@@ -47,6 +47,6 @@ class CollectionType extends AbstractType
      */
     public function getName()
     {
-        return 'collection';
+        return 'iterator';
     }
 }

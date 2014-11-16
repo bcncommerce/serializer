@@ -14,7 +14,7 @@ class SerializerTest extends TestCase
 {
     public function testSerialize()
     {
-        $document    = $this->getDocumentObject();
+        $document    = $this->getDocument();
         $normalized  = $this->getDocumentData();
         $options     = array('foo' => 'moo');
 
@@ -57,7 +57,7 @@ class SerializerTest extends TestCase
         $normalizer->expects($this->once())
             ->method('denormalize')
             ->with($this->equalTo($normalized))
-            ->will($this->returnValue($this->getDocumentObject()));
+            ->will($this->returnValue($this->getDocument()));
 
         $typeFactory = $this->getTypeFactoryMock();
         $typeFactory->expects($this->once())

@@ -15,7 +15,7 @@ class ArrayNormalizerTest extends TestCase
 {
     public function testArrayNormalize()
     {
-        $documents = $this->getDocumentObjectCollection();
+        $documents = $this->getDocuments();
         $itemNormalizer = $this->getNormalizerMock();
 
         $index = 0;
@@ -23,18 +23,18 @@ class ArrayNormalizerTest extends TestCase
             $itemNormalizer->expects($this->at($index++))
                 ->method('normalize')
                 ->with($this->equalTo($item))
-                ->will($this->returnValue($key));
+                ->will($this->returnValue("Normalized $key"));
         }
 
         $normalizer = new ArrayNormalizer($itemNormalizer);
         $data = $normalizer->normalize($documents);
 
-        $this->assertEquals(array_keys($documents), $data);
+        $this->assertEquals(array('Normalized 0', 'Normalized 1'), $data);
     }
 
     public function testArrayDenormalize()
     {
-        $items = $this->getDocumentDataCollection();
+        $items = $this->getDocumentsData();
         $itemNormalizer = $this->getNormalizerMock();
 
         $index = 0;
@@ -42,18 +42,18 @@ class ArrayNormalizerTest extends TestCase
             $itemNormalizer->expects($this->at($index++))
                 ->method('denormalize')
                 ->with($this->equalTo($entry))
-                ->will($this->returnValue($key));
+                ->will($this->returnValue("Denormalized $key"));
         }
 
         $normalizer = new ArrayNormalizer($itemNormalizer);
         $data = $normalizer->denormalize($items);
 
-        $this->assertEquals(array_keys($items), $data);
+        $this->assertEquals(array('Denormalized 0', 'Denormalized 1'), $data);
     }
 
     public function testArrayDenormalizeToObject()
     {
-        $items = $this->getDocumentDataCollection();
+        $items = $this->getDocumentsData();
         $itemNormalizer = $this->getNormalizerMock();
 
         $index = 0;
@@ -61,7 +61,7 @@ class ArrayNormalizerTest extends TestCase
             $itemNormalizer->expects($this->at($index++))
                 ->method('denormalize')
                 ->with($this->equalTo($entry))
-                ->will($this->returnValue($key));
+                ->will($this->returnValue("Denormalized $key"));
         }
 
         $data = new \ArrayObject();
@@ -69,6 +69,6 @@ class ArrayNormalizerTest extends TestCase
         $normalizer = new ArrayNormalizer($itemNormalizer);
         $normalizer->denormalize($items, $data);
 
-        $this->assertEquals(array_keys($items), $data->getArrayCopy());
+        $this->assertEquals(array('Denormalized 0', 'Denormalized 1'), $data->getArrayCopy());
     }
 }

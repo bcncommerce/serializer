@@ -47,7 +47,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
      * @param  string   $suffix
      * @return Document
      */
-    protected function getDocumentObject($suffix = '')
+    protected function getDocument($suffix = '')
     {
         $document = new Document();
         $document->setName('Test name '.$suffix);
@@ -61,10 +61,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return Document
      */
-    protected function getNestedDocumentObject()
+    protected function getNestedDocument()
     {
-        $document = $this->getDocumentObject();
-        $document->setParent($this->getDocumentObject("parent"));
+        $document = $this->getDocument();
+        $document->setParent($this->getDocument("parent"));
 
         return $document;
     }
@@ -72,33 +72,17 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    protected function getDocumentDataCollection()
+    protected function getDocumentsData()
     {
-        return array('one' => $this->getDocumentData('one'), 'two' => $this->getDocumentData('two'));
-    }
-
-    /**
-     * @return array
-     */
-    protected function getDocumentDataArray()
-    {
-        return array_values($this->getDocumentDataCollection());
+        return array($this->getDocumentData('one'), $this->getDocumentData('two'));
     }
 
     /**
      * @return Document[]
      */
-    protected function getDocumentObjectCollection()
+    protected function getDocuments()
     {
-        return array('one' => $this->getDocumentObject('one'), 'two' => $this->getDocumentObject('two'));
-    }
-
-    /**
-     * @return Document[]
-     */
-    protected function getDocumentObjectArray()
-    {
-        return array_values($this->getDocumentObjectCollection());
+        return array($this->getDocument('one'), $this->getDocument('two'));
     }
 
     /**

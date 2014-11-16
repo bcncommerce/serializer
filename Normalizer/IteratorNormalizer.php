@@ -8,7 +8,10 @@
 
 namespace Bcn\Component\Serializer\Normalizer;
 
-class CollectionNormalizer implements NormalizerInterface
+use Bcn\Component\Serializer\Normalizer\Iterator\DenormalizeIterator;
+use Bcn\Component\Serializer\Normalizer\Iterator\NormalizeIterator;
+
+class IteratorNormalizer implements NormalizerInterface
 {
     /** @var NormalizerInterface */
     protected $normalizer;
@@ -22,33 +25,22 @@ class CollectionNormalizer implements NormalizerInterface
     }
 
     /**
-     * @param  object $object
-     * @return $this
+     * @param  object            $object
+     * @return NormalizeIterator
      */
     public function normalize($object)
     {
-        $data = array();
-        foreach ($object as $key => $value) {
-            $data[$key] = $this->normalizer->normalize($value);
-        }
-
-        return $data;
+        return new NormalizeIterator($object, $this->normalizer);
     }
 
     /**
-     * @param  mixed        $data
-     * @param  object       $object
-     * @return object|array
+     * @param  mixed               $data
+     * @param  object              $object
+     * @return DenormalizeIterator
      */
     public function denormalize($data, &$object = null)
     {
-        if (!$object) {
-            $object = array();
-        }
-
-        foreach ($data as $key => $value) {
-            $object[$key] = $this->normalizer->denormalize($value);
-        }
+        $object = new DenormalizeIterator($data, $this->normalizer);
 
         return $object;
     }

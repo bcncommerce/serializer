@@ -21,7 +21,7 @@ class NormalizerTest extends TestCase
      */
     public function testDocumentNormalize()
     {
-        $document = $this->getNestedDocumentObject();
+        $document = $this->getNestedDocument();
 
         $normalizer = $this->getFactory()
             ->create('document_nested');
@@ -43,7 +43,7 @@ class NormalizerTest extends TestCase
 
         $document = $normalizer->denormalize($data);
 
-        $this->assertEquals($this->getNestedDocumentObject(), $document);
+        $this->assertEquals($this->getNestedDocument(), $document);
     }
 
     /**
