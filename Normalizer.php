@@ -35,18 +35,54 @@ class Normalizer implements NormalizerInterface
     /**
      * @param  string              $name
      * @param  NormalizerInterface $normalizer
+     * @throws \Exception
      * @return $this
      */
     public function add($name, NormalizerInterface $normalizer)
     {
+        if ($this->has($name)) {
+            throw new \Exception(sprintf("Property %s already registered", $name));
+        }
+
         $this->properties[$name] = $normalizer;
 
         return $this;
     }
 
     /**
-     * @param $object
-     * @return array
+     * @param  string $name
+     * @return $this
+     */
+    public function remove($name)
+    {
+        unset($this->properties[$name]);
+
+        return $this;
+    }
+
+    /**
+     * @param  string $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        return isset($this->properties[$name]);
+    }
+
+    /**
+     * @param  PropertyAccessorInterface $accessor
+     * @return $this
+     */
+    public function setAccessor(PropertyAccessorInterface $accessor)
+    {
+        $this->accessor = $accessor;
+
+        return $this;
+    }
+
+    /**
+     * @param  mixed $object
+     * @return mixed
      */
     public function normalize($object)
     {
@@ -67,9 +103,9 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * @param $data
-     * @param  null       $object
-     * @return array|null
+     * @param  mixed $data
+     * @param  mixed $object
+     * @return mixed
      */
     public function denormalize($data, &$object = null)
     {
@@ -85,9 +121,9 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * @return array
+     * @return object
      */
-    public function newInstance()
+    protected function newInstance()
     {
         if (is_callable($this->dataClass)) {
             return call_user_func($this->dataClass);
@@ -107,9 +143,9 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
-     * @param $object
-     * @param $property
-     * @param $value
+     * @param object|array $object
+     * @param string       $property
+     * @param mixed        $value
      */
     protected function setProperty($object, $property, $value)
     {

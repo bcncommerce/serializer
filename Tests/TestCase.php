@@ -122,6 +122,15 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getAccessorMock()
+    {
+        return $this->getMockBuilder('Symfony\Component\PropertyAccess\PropertyAccessorInterface')
+            ->getMock();
+    }
+
+    /**
      * @param $expected
      * @param $actual
      * @param string $message
