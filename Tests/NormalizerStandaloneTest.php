@@ -37,6 +37,31 @@ class NormalizerStandaloneTest extends TestCase
         $this->assertEquals(array('name' => 'normalized'), $normalized);
     }
 
+    public function testNormalizeAlias()
+    {
+        $document = $this->getDocumentObject();
+
+        $nameNormalizer = $this->getNormalizerMock();
+        $nameNormalizer->expects($this->once())
+            ->method('normalize')
+            ->with($this->equalTo('denormalized'))
+            ->will($this->returnValue('normalized'));
+
+        $accessor = $this->getAccessorMock();
+        $accessor->expects($this->once())
+            ->method('getValue')
+            ->with($this->equalTo($document), $this->equalTo('name'))
+            ->will($this->returnValue('denormalized'));
+
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+        $normalizer->setAccessor($accessor);
+        $normalizer->alias('name', 'alias-name', $nameNormalizer);
+
+        $normalized = $normalizer->normalize($document);
+
+        $this->assertEquals(array('alias-name' => 'normalized'), $normalized);
+    }
+
     public function testDenormalize()
     {
         $document = $this->getDocumentObject();
@@ -61,6 +86,32 @@ class NormalizerStandaloneTest extends TestCase
         $normalizer->add('name', $nameNormalizer);
 
         $normalizer->denormalize(array('name' => 'normalized'));
+    }
+
+    public function testDenormalizeAlias()
+    {
+        $document = $this->getDocumentObject();
+
+        $factory = function () use ($document) {
+            return $document;
+        };
+
+        $nameNormalizer = $this->getNormalizerMock();
+        $nameNormalizer->expects($this->once())
+            ->method('denormalize')
+            ->with($this->equalTo('normalized'))
+            ->will($this->returnValue('denormalized'));
+
+        $accessor = $this->getAccessorMock();
+        $accessor->expects($this->once())
+            ->method('setValue')
+            ->with($this->equalTo($document), $this->equalTo('name'), $this->equalTo('denormalized'));
+
+        $normalizer = new Normalizer($factory);
+        $normalizer->setAccessor($accessor);
+        $normalizer->alias('name', 'alias-name', $nameNormalizer);
+
+        $normalizer->denormalize(array('alias-name' => 'normalized'));
     }
 
     public function testDenormalizeToObject()
@@ -94,17 +145,16 @@ class NormalizerStandaloneTest extends TestCase
         $normalizer->add('name', $this->getNormalizerMock());
     }
 
-    public function testRemoveProperty()
+    public function testAliasPropertyException()
     {
+        $this->setExpectedException('Exception');
+
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-
         $normalizer->add('name', $this->getNormalizerMock());
-        $normalizer->remove('name');
-
-        $normalizer->add('name', $this->getNormalizerMock());
+        $normalizer->alias('name', 'alias-name', $this->getNormalizerMock());
     }
 
-    public function testHasProperty()
+    public function testRemoveProperty()
     {
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
 
@@ -113,5 +163,15 @@ class NormalizerStandaloneTest extends TestCase
 
         $normalizer->remove('name');
         $this->assertFalse($normalizer->has('name'));
+    }
+
+    public function testHasProperty()
+    {
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+
+        $this->assertFalse($normalizer->has('name'));
+
+        $normalizer->add('name', $this->getNormalizerMock());
+        $this->assertTrue($normalizer->has('name'));
     }
 }

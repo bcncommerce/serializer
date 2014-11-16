@@ -17,6 +17,9 @@ class Normalizer implements NormalizerInterface
     /** @var NormalizerInterface[] */
     protected $properties = array();
 
+    /** @var array */
+    protected $aliases = array();
+
     /** @var string|callback */
     protected $dataClass;
 
@@ -50,12 +53,31 @@ class Normalizer implements NormalizerInterface
     }
 
     /**
+     * Add property mapping with alias
+     *
+     * @param  string              $name
+     * @param  string              $alias
+     * @param  NormalizerInterface $normalizer
+     * @throws \Exception
+     * @return $this
+     */
+    public function alias($name, $alias, NormalizerInterface $normalizer)
+    {
+        $this->add($name, $normalizer);
+
+        $this->aliases[$name] = $alias;
+
+        return $this;
+    }
+
+    /**
      * @param  string $name
      * @return $this
      */
     public function remove($name)
     {
         unset($this->properties[$name]);
+        unset($this->aliases[$name]);
 
         return $this;
     }
@@ -96,7 +118,8 @@ class Normalizer implements NormalizerInterface
 
         $data = array();
         foreach ($this->properties as $name => $normalizer) {
-            $data[$name] = $normalizer->normalize($this->getProperty($object, $name));
+            $alias = isset($this->aliases[$name]) ? $this->aliases[$name] : $name;
+            $data[$alias] = $normalizer->normalize($this->getProperty($object, $name));
         }
 
         return $data;
@@ -110,10 +133,14 @@ class Normalizer implements NormalizerInterface
     public function denormalize($data, &$object = null)
     {
         $object = $object ?: $this->newInstance();
+
         foreach ($this->properties as $name => $normalizer) {
-            if ($value = isset($data[$name]) ? $data[$name] : null) {
-                $value = $normalizer->denormalize($value);
-            }
+            $alias = isset($this->aliases[$name]) ? $this->aliases[$name] : $name;
+
+            $value = isset($data[$alias]) ?
+                $normalizer->denormalize($data[$alias]) :
+                null;
+
             $this->setProperty($object, $name, $value);
         }
 
