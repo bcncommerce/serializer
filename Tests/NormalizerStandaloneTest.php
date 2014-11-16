@@ -84,4 +84,34 @@ class NormalizerStandaloneTest extends TestCase
 
         $normalizer->denormalize(array('name' => 'normalized'), $document);
     }
+
+    public function testAddPropertyException()
+    {
+        $this->setExpectedException('Exception');
+
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+        $normalizer->add('name', $this->getNormalizerMock());
+        $normalizer->add('name', $this->getNormalizerMock());
+    }
+
+    public function testRemoveProperty()
+    {
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+
+        $normalizer->add('name', $this->getNormalizerMock());
+        $normalizer->remove('name');
+
+        $normalizer->add('name', $this->getNormalizerMock());
+    }
+
+    public function testHasProperty()
+    {
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+
+        $normalizer->add('name', $this->getNormalizerMock());
+        $this->assertTrue($normalizer->has('name'));
+
+        $normalizer->remove('name');
+        $this->assertFalse($normalizer->has('name'));
+    }
 }
