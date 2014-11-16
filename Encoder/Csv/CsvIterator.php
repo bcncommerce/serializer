@@ -29,10 +29,10 @@ class CsvIterator implements \Iterator
     protected $escape;
 
     /** @var int */
-    protected $dataPosition = 0;
+    protected $dataPosition;
 
     /** @var int */
-    protected $line = 0;
+    protected $line;
 
     /**
      * @param resource $stream
@@ -42,12 +42,10 @@ class CsvIterator implements \Iterator
      */
     public function __construct($stream, $delimiter = null, $enclosure = null, $escape = null)
     {
-        $this->stream = $stream;
-        $this->delimiter = $delimiter;
-        $this->enclosure = $enclosure;
-        $this->escape    = $escape;
-
-        $this->rewind($stream);
+        $this->stream    = $stream;
+        $this->delimiter = $delimiter ?: ";";
+        $this->enclosure = $enclosure ?: "\"";
+        $this->escape    = $escape    ?: "\\";
     }
 
     /**
@@ -64,10 +62,16 @@ class CsvIterator implements \Iterator
      */
     public function next()
     {
-        $length = count($this->headers);
-        $raw = array_slice(array_pad($this->fetch(), $length, null), 0, $length);
-        $this->row = array_combine($this->headers, $raw);
+        $raw = $this->fetch();
+        if (!is_array($raw)) {
+            $this->row = null;
 
+            return;
+        }
+
+        $length = count($this->headers);
+        $raw = array_slice(array_pad($raw, $length, null), 0, $length);
+        $this->row = array_combine($this->headers, $raw);
         $this->line++;
     }
 
@@ -86,7 +90,7 @@ class CsvIterator implements \Iterator
      */
     public function valid()
     {
-        return !feof($this->stream);
+        return $this->row !== null;
     }
 
     /**
@@ -94,13 +98,15 @@ class CsvIterator implements \Iterator
      */
     public function rewind()
     {
-        fseek($this->stream, $this->dataPosition, SEEK_SET);
-
-        if ($this->dataPosition === 0) {
+        if ($this->dataPosition === null) {
+            fseek($this->stream, 0, SEEK_SET);
             $this->headers = $this->fetch();
             $this->dataPosition = intval(ftell($this->stream));
+        } else {
+            fseek($this->stream, $this->dataPosition, SEEK_SET);
         }
 
+        $this->next();
         $this->line = 0;
     }
 
@@ -109,6 +115,10 @@ class CsvIterator implements \Iterator
      */
     protected function fetch()
     {
-        return fgetcsv($this->stream, 10000, $this->delimiter, $this->enclosure, $this->escape);
+        do {
+            $raw = fgetcsv($this->stream, 10000, $this->delimiter, $this->enclosure, $this->escape);
+        } while ((!is_array($raw) || !count($raw)) && !feof($this->stream));
+
+        return $raw;
     }
 }

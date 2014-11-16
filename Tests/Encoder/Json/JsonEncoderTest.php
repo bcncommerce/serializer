@@ -6,7 +6,7 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Tests\Encoder;
+namespace Bcn\Component\Serializer\Tests\Encoder\Json;
 
 use Bcn\Component\Serializer\Encoder\Json\JsonEncoder;
 use Bcn\Component\Serializer\Tests\TestCase;

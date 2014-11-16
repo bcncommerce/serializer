@@ -34,20 +34,24 @@ class CsvEncoder implements EncoderDecoderInterface
     }
 
     /**
-     * @param  mixed $data
-     * @return mixed
+     * @param  mixed             $data
+     * @return mixed|CsvStreamer
      */
     public function encode($data)
     {
-        return null;
+        return new CsvStreamer($data, $this->delimiter, $this->enclosure, $this->escape);
     }
 
     /**
-     * @param  mixed $data
-     * @return mixed
+     * @param  mixed             $data
+     * @return mixed|CsvIterator
      */
     public function decode($data)
     {
-        return new CsvIterator($data);
+        if (!is_resource($data)) {
+            $data = fopen('data://text/plain;base64,'.base64_encode($data), 'r');
+        }
+
+        return new CsvIterator($data, $this->delimiter, $this->enclosure, $this->escape);
     }
 }

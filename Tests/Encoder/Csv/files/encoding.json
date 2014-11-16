@@ -1,0 +1,14 @@
+[
+    {
+        "name":        "Hello",
+        "description": "World",
+        "rank":        "1",
+        "rating":      "11.901"
+    },
+    {
+        "name":        "Quoted text",
+        "description": "This text \";\" have quotes",
+        "rank":        "2",
+        "rating":      "-11.001"
+    }
+]

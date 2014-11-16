@@ -28,7 +28,7 @@ class ArrayNormalizer implements NormalizerInterface
     public function normalize($object)
     {
         $data = array();
-        foreach ($object as $key => $value) {
+        foreach ($object as $value) {
             $data[] = $this->normalizer->normalize($value);
         }
 
@@ -46,7 +46,7 @@ class ArrayNormalizer implements NormalizerInterface
             $object = array();
         }
 
-        foreach ($data as $key => $value) {
+        foreach ($data as $value) {
             $object[] = $this->normalizer->denormalize($value);
         }
 
