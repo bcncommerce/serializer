@@ -19,7 +19,7 @@ class SerializerJsonTest extends SerializerTestCase
      */
     protected function getEncoder()
     {
-        return new JsonEncoder(JSON_PRETTY_PRINT);
+        return new JsonEncoder();
     }
 
     /**
