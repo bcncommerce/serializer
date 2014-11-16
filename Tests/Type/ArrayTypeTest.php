@@ -26,13 +26,13 @@ class ArrayTypeTest extends TestCase
 
     public function testBuild()
     {
-        $itemNoermalizer = $this->getNormalizerMock();
+        $itemNormalizer = $this->getNormalizerMock();
 
         $factory = $this->getTypeFactoryMock();
         $factory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('text'))
-            ->will($this->returnValue($itemNoermalizer));
+            ->will($this->returnValue($itemNormalizer));
 
         $options = array('item_type' => 'text', 'item_options' => array());
 
@@ -40,7 +40,7 @@ class ArrayTypeTest extends TestCase
         $normalizer = $type->getNormalizer($factory, $options);
 
         $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
-        $this->assertSame($itemNoermalizer, $normalizer->getItemNormalizer());
+        $this->assertSame($itemNormalizer, $normalizer->getItemNormalizer());
     }
 
     public function testAllowedOptions()

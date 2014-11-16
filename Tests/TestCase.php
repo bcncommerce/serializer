@@ -9,10 +9,11 @@
 namespace Bcn\Component\Serializer\Tests;
 
 use Bcn\Component\Serializer\Normalizer;
+use Bcn\Component\Serializer\Tests\Integration\Document;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
-    const DOCUMENT_CLASS = 'Bcn\Component\Serializer\Tests\Document';
+    const DOCUMENT_CLASS = 'Bcn\Component\Serializer\Tests\Integration\Document';
 
     /**
      * @param  string $suffix
@@ -31,15 +32,6 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param  string $suffix
-     * @return string
-     */
-    protected function getDocumentEncoded($suffix = '')
-    {
-        return json_encode($this->getDocumentData($suffix));
-    }
-
-    /**
      * @return array
      */
     protected function getNestedDocumentData()
@@ -49,14 +41,6 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $data['parent']['parent'] = null;
 
         return $data;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getNestedDocumentEncoded()
-    {
-        return json_encode($this->getNestedDocumentData());
     }
 
     /**
@@ -94,11 +78,27 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return array
+     */
+    protected function getDocumentDataArray()
+    {
+        return array_values($this->getDocumentDataCollection());
+    }
+
+    /**
      * @return Document[]
      */
     protected function getDocumentObjectCollection()
     {
         return array('one' => $this->getDocumentObject('one'), 'two' => $this->getDocumentObject('two'));
+    }
+
+    /**
+     * @return Document[]
+     */
+    protected function getDocumentObjectArray()
+    {
+        return array_values($this->getDocumentObjectCollection());
     }
 
     /**
@@ -145,6 +145,26 @@ class TestCase extends \PHPUnit_Framework_TestCase
     {
         return $this->getMockBuilder('Symfony\Component\PropertyAccess\PropertyAccessorInterface')
             ->getMock();
+    }
+
+    /**
+     * @param $file
+     * @return string
+     */
+    protected function getFixturePath($file)
+    {
+        $reflection = new \ReflectionClass($this);
+
+        return dirname($reflection->getFileName()).DIRECTORY_SEPARATOR.$file;
+    }
+
+    /**
+     * @param $file
+     * @return string
+     */
+    public function getFixtureContent($file)
+    {
+        return file_get_contents($this->getFixturePath($file));
     }
 
     /**

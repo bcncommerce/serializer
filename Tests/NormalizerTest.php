@@ -9,8 +9,6 @@
 namespace Bcn\Component\Serializer\Tests;
 
 use Bcn\Component\Serializer\Normalizer;
-use Bcn\Component\Serializer\Normalizer\TextNormalizer;
-use Bcn\Component\Serializer\Normalizer\NumberNormalizer;
 
 class NormalizerTest extends TestCase
 {
@@ -18,26 +16,25 @@ class NormalizerTest extends TestCase
     {
         $document = $this->getDocumentObject();
 
+        $nameNormalizer = $this->getNormalizerMock();
+        $nameNormalizer->expects($this->once())
+            ->method('normalize')
+            ->with($this->equalTo('denormalized'))
+            ->will($this->returnValue('normalized'));
+
+        $accessor = $this->getAccessorMock();
+        $accessor->expects($this->once())
+            ->method('getValue')
+            ->with($this->equalTo($document), $this->equalTo('name'))
+            ->will($this->returnValue('denormalized'));
+
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
-        $data = $normalizer->normalize($document);
+        $normalizer->setAccessor($accessor);
+        $normalizer->add('name', $nameNormalizer);
 
-        $this->assertEquals($this->getDocumentData(), $data);
-    }
+        $normalized = $normalizer->normalize($document);
 
-    public function testNullNormalize()
-    {
-        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
-        $data = $normalizer->normalize(null);
-
-        $this->assertNull($data);
+        $this->assertEquals(array('name' => 'normalized'), $normalized);
     }
 
     public function testNormalizeNonObjectException()
@@ -45,88 +42,147 @@ class NormalizerTest extends TestCase
         $this->setExpectedException('InvalidArgumentException');
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
-        $normalizer->normalize(array());
+        $normalizer->setAccessor($this->getAccessorMock());
+        $normalizer->add('name', $this->getNormalizerMock());
+
+        $normalizer->normalize("not an object");
     }
 
-    public function testNormalizeNested()
+    public function testNormalizeAlias()
     {
-        $document = $this->getNestedDocumentObject();
+        $document = $this->getDocumentObject();
+
+        $nameNormalizer = $this->getNormalizerMock();
+        $nameNormalizer->expects($this->once())
+            ->method('normalize')
+            ->with($this->equalTo('denormalized'))
+            ->will($this->returnValue('normalized'));
+
+        $accessor = $this->getAccessorMock();
+        $accessor->expects($this->once())
+            ->method('getValue')
+            ->with($this->equalTo($document), $this->equalTo('name'))
+            ->will($this->returnValue('denormalized'));
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
-        $normalizer->add('parent', $normalizer);
+        $normalizer->setAccessor($accessor);
+        $normalizer->alias('name', 'alias-name', $nameNormalizer);
 
-        $data = $normalizer->normalize($document);
+        $normalized = $normalizer->normalize($document);
 
-        $this->assertEquals($this->getNestedDocumentData(), $data);
+        $this->assertEquals(array('alias-name' => 'normalized'), $normalized);
     }
 
     public function testDenormalize()
     {
-        $data = $this->getDocumentData();
+        $document = $this->getDocumentObject();
 
-        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
+        $factory = function () use ($document) {
+            return $document;
+        };
 
-        $document = $normalizer->denormalize($data);
+        $nameNormalizer = $this->getNormalizerMock();
+        $nameNormalizer->expects($this->once())
+            ->method('denormalize')
+            ->with($this->equalTo('normalized'))
+            ->will($this->returnValue('denormalized'));
 
-        $this->assertEquals($this->getDocumentObject(), $document);
+        $accessor = $this->getAccessorMock();
+        $accessor->expects($this->once())
+            ->method('setValue')
+            ->with($this->equalTo($document), $this->equalTo('name'), $this->equalTo('denormalized'));
+
+        $normalizer = new Normalizer($factory);
+        $normalizer->setAccessor($accessor);
+        $normalizer->add('name', $nameNormalizer);
+
+        $normalizer->denormalize(array('name' => 'normalized'));
     }
 
-    public function testDenormalizeNested()
+    public function testDenormalizeAlias()
     {
-        $data = $this->getNestedDocumentData();
+        $document = $this->getDocumentObject();
 
-        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
-        $normalizer->add('parent', $normalizer);
+        $factory = function () use ($document) {
+            return $document;
+        };
 
-        $document = $normalizer->denormalize($data);
+        $nameNormalizer = $this->getNormalizerMock();
+        $nameNormalizer->expects($this->once())
+            ->method('denormalize')
+            ->with($this->equalTo('normalized'))
+            ->will($this->returnValue('denormalized'));
 
-        $this->assertEquals($this->getNestedDocumentObject(), $document);
+        $accessor = $this->getAccessorMock();
+        $accessor->expects($this->once())
+            ->method('setValue')
+            ->with($this->equalTo($document), $this->equalTo('name'), $this->equalTo('denormalized'));
+
+        $normalizer = new Normalizer($factory);
+        $normalizer->setAccessor($accessor);
+        $normalizer->alias('name', 'alias-name', $nameNormalizer);
+
+        $normalizer->denormalize(array('alias-name' => 'normalized'));
     }
 
     public function testDenormalizeToObject()
     {
-        $data = $this->getDocumentData();
+        $document = $this->getDocumentObject();
+
+        $nameNormalizer = $this->getNormalizerMock();
+        $nameNormalizer->expects($this->once())
+            ->method('denormalize')
+            ->with($this->equalTo('normalized'))
+            ->will($this->returnValue('denormalized'));
+
+        $accessor = $this->getAccessorMock();
+        $accessor->expects($this->once())
+            ->method('setValue')
+            ->with($this->equalTo($document), $this->equalTo('name'), $this->equalTo('denormalized'));
 
         $normalizer = new Normalizer(self::DOCUMENT_CLASS);
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
+        $normalizer->setAccessor($accessor);
+        $normalizer->add('name', $nameNormalizer);
 
-        $document = new Document();
-        $normalizer->denormalize($data, $document);
-
-        $this->assertEquals($this->getDocumentObject(), $document);
+        $normalizer->denormalize(array('name' => 'normalized'), $document);
     }
 
-    public function testDenormalizeToFactory()
+    public function testAddPropertyException()
     {
-        $data = $this->getDocumentData();
+        $this->setExpectedException('Exception');
 
-        $normalizer = new Normalizer(function () { return new Document(); });
-        $normalizer->add('name',        new TextNormalizer());
-        $normalizer->add('description', new TextNormalizer());
-        $normalizer->add('rank',        new NumberNormalizer());
-        $normalizer->add('rating',      new NumberNormalizer(2));
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+        $normalizer->add('name', $this->getNormalizerMock());
+        $normalizer->add('name', $this->getNormalizerMock());
+    }
 
-        $document = $normalizer->denormalize($data);
+    public function testAliasPropertyException()
+    {
+        $this->setExpectedException('Exception');
 
-        $this->assertEquals($this->getDocumentObject(), $document);
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+        $normalizer->add('name', $this->getNormalizerMock());
+        $normalizer->alias('name', 'alias-name', $this->getNormalizerMock());
+    }
+
+    public function testRemoveProperty()
+    {
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+
+        $normalizer->add('name', $this->getNormalizerMock());
+        $this->assertTrue($normalizer->has('name'));
+
+        $normalizer->remove('name');
+        $this->assertFalse($normalizer->has('name'));
+    }
+
+    public function testHasProperty()
+    {
+        $normalizer = new Normalizer(self::DOCUMENT_CLASS);
+
+        $this->assertFalse($normalizer->has('name'));
+
+        $normalizer->add('name', $this->getNormalizerMock());
+        $this->assertTrue($normalizer->has('name'));
     }
 }

@@ -6,13 +6,15 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Tests;
+namespace Bcn\Component\Serializer\Tests\Integration;
 
+use Bcn\Component\Serializer\Tests\Integration\Type\DocumentNestedType;
+use Bcn\Component\Serializer\Tests\Integration\Type\DocumentType;
+use Bcn\Component\Serializer\Tests\TestCase;
 use Bcn\Component\Serializer\Type\Extension\CoreTypesExtension;
 use Bcn\Component\Serializer\Type\TypeFactory;
-use Bcn\Component\Serializer\Tests\Type\DocumentType;
 
-class DocumentNormalizerTest extends TestCase
+class NormalizerTest extends TestCase
 {
     /**
      * Normalize Document
@@ -22,7 +24,7 @@ class DocumentNormalizerTest extends TestCase
         $document = $this->getNestedDocumentObject();
 
         $normalizer = $this->getFactory()
-            ->create('document');
+            ->create('document_nested');
 
         $data = $normalizer->normalize($document);
 
@@ -37,7 +39,7 @@ class DocumentNormalizerTest extends TestCase
         $data = $this->getNestedDocumentData();
 
         $normalizer = $this->getFactory()
-            ->create('document');
+            ->create('document_nested');
 
         $document = $normalizer->denormalize($data);
 
@@ -53,6 +55,7 @@ class DocumentNormalizerTest extends TestCase
         $factory = new TypeFactory();
         $factory->extend(new CoreTypesExtension());
         $factory->addType(new DocumentType());
+        $factory->addType(new DocumentNestedType());
 
         return $factory;
     }

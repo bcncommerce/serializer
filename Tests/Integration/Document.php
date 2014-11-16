@@ -6,7 +6,7 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Tests;
+namespace Bcn\Component\Serializer\Tests\Integration;
 
 class Document
 {

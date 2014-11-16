@@ -6,7 +6,7 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Tests\Type;
+namespace Bcn\Component\Serializer\Tests\Integration\Type;
 
 use Bcn\Component\Serializer\Normalizer;
 use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
@@ -22,13 +22,12 @@ class DocumentType extends AbstractType
      */
     public function getNormalizer(TypeFactory $factory, array $options = array())
     {
-        $normalizer = new Normalizer('Bcn\Component\Serializer\Tests\Document');
+        $normalizer = new Normalizer('Bcn\Component\Serializer\Tests\Integration\Document');
         $normalizer
             ->add('name',        $factory->create('text'))
             ->add('description', $factory->create('text'))
             ->add('rank',        $factory->create('number'))
             ->add('rating',      $factory->create('number', array('decimals' => 2)))
-            ->add('parent',      $normalizer)
         ;
 
         return $normalizer;

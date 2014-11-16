@@ -34,8 +34,9 @@ class CsvEncoder implements EncoderDecoderInterface
     }
 
     /**
-     * @param  mixed             $data
+     * @param  array|\Traversable $data
      * @return mixed|CsvStreamer
+     * @throws \Exception
      */
     public function encode($data)
     {
