@@ -20,6 +20,13 @@ interface DecoderInterface
     public function node($name = null, $type = null);
 
     /**
+     * Check current pointer in valid position
+     *
+     * @return boolean
+     */
+    public function valid();
+
+    /**
      * Get next node on the same level
      *
      * @return boolean

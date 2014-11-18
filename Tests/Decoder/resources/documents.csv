@@ -1,0 +1,5 @@
+name;description;rank;rating
+Hello;World;1;11.901
+"Quoted text";"This text "";"" have quotes";2;-11.001
+"Extra column";"Has one extra column";3;4;5
+"Missing column";"Miss one column";4
