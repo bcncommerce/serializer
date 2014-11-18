@@ -14,55 +14,44 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArrayTypeTest extends TestCase
 {
-    const TYPE_NAME        = 'array';
-    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\ArrayNormalizer';
+    public function testGetSerializer()
+    {
+        $itemSerializer = $this->getSerializerMock();
+
+        $factory = $this->getTypeFactoryMock();
+        $factory->expects($this->once())
+            ->method('create')
+            ->with($this->equalTo('test'), $this->equalTo(array()))
+            ->will($this->returnValue($itemSerializer));
+
+        $type = new ArrayType();
+        $serializer = $type->getSerializer($factory, array(
+            'item_type'    => 'test',
+            'item_node'    => 'item',
+            'item_options' => array(),
+        ));
+
+        $this->assertInstanceOf('Bcn\Component\Serializer\Serializer\ArraySerializer', $serializer);
+        $this->assertSame($itemSerializer, $serializer->getItemSerializer());
+    }
 
     public function testGetName()
     {
         $type = new ArrayType();
 
-        $this->assertEquals(self::TYPE_NAME, $type->getName());
+        $this->assertEquals('array', $type->getName());
     }
 
-    public function testBuild()
+    public function testGetDefaultOptions()
     {
-        $itemNormalizer = $this->getNormalizerMock();
-
-        $factory = $this->getTypeFactoryMock();
-        $factory->expects($this->once())
-            ->method('create')
-            ->with($this->equalTo('text'))
-            ->will($this->returnValue($itemNormalizer));
-
-        $options = array('item_type' => 'text', 'item_options' => array());
+        $optionResolver = new OptionsResolver();
 
         $type = new ArrayType();
-        $normalizer = $type->getNormalizer($factory, $options);
+        $type->setDefaultOptions($optionResolver);
 
-        $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
-        $this->assertSame($itemNormalizer, $normalizer->getItemNormalizer());
-    }
-
-    public function testAllowedOptions()
-    {
-        $resolver = new OptionsResolver();
-        $type = new ArrayType();
-        $type->setDefaultOptions($resolver);
-
-        $resolver->resolve(array(
-            'item_type'    => 'text',
-            'item_options' => array(),
-        ));
-    }
-
-    public function testDefaultOptions()
-    {
-        $resolver = new OptionsResolver();
-        $type = new ArrayType();
-        $type->setDefaultOptions($resolver);
-
-        $options = $resolver->resolve(array('item_type' => 'text'));
-
-        $this->assertAvailableOptions(array('item_options', 'item_type'), $options);
+        $this->assertEquals(
+            array('item_options', 'item_node', 'item_type'),
+            array_keys($optionResolver->resolve(array('item_type' => 'text')))
+        );
     }
 }

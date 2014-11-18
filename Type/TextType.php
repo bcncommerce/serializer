@@ -8,19 +8,19 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\TextNormalizer;
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Serializer\ScalarSerializer;
+use Bcn\Component\Serializer\Serializer\SerializerInterface;
 
 class TextType extends AbstractType
 {
     /**
-     * @param  TypeFactory                        $factory
-     * @param  array                              $options
-     * @return TextNormalizer|NormalizerInterface
+     * @param  TypeFactory                          $factory
+     * @param  array                                $options
+     * @return ScalarSerializer|SerializerInterface
      */
-    public function getNormalizer(TypeFactory $factory, array $options = array())
+    public function getSerializer(TypeFactory $factory, array $options = array())
     {
-        return new TextNormalizer();
+        return new ScalarSerializer();
     }
 
     /**

@@ -14,46 +14,74 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DatetimeTypeTest extends TestCase
 {
-    const TYPE_NAME        = 'datetime';
-    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\DatetimeNormalizer';
+    public function testGetSerializer()
+    {
+        $type = new DatetimeType();
+        $serializer = $type->getSerializer($this->getTypeFactoryMock());
+
+        $this->assertInstanceOf('Bcn\Component\Serializer\Serializer\ScalarSerializer', $serializer);
+    }
 
     public function testGetName()
     {
         $type = new DatetimeType();
 
-        $this->assertEquals(self::TYPE_NAME, $type->getName());
+        $this->assertEquals('datetime', $type->getName());
     }
 
-    public function testBuild()
+    public function testGetDefaultOptions()
     {
-        $options = array('format' => '');
-        $factory = $this->getTypeFactoryMock();
+        $optionResolver = new OptionsResolver();
 
         $type = new DatetimeType();
-        $normalizer = $type->getNormalizer($factory, $options);
+        $type->setDefaultOptions($optionResolver);
 
-        $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
+        $this->assertEquals(
+            array('format'),
+            array_keys($optionResolver->resolve(array()))
+        );
     }
 
-    public function testAllowedOptions()
+    /**
+     * @dataProvider provideNormalizedAndDenormalized
+     */
+    public function testNormalize($denormalized, $normalized, $options)
     {
-        $resolver = new OptionsResolver();
-        $type = new DatetimeType();
-        $type->setDefaultOptions($resolver);
+        $optionResolver = new OptionsResolver();
 
-        $resolver->resolve(array(
-            'format' => \DateTime::ISO8601,
-        ));
+        $type = new DatetimeType();
+        $type->setDefaultOptions($optionResolver);
+        $serializer = $type->getSerializer($this->getTypeFactoryMock(), $optionResolver->resolve($options));
+
+        $normalizer = $serializer->getNormalizer();
+
+        $this->assertEquals($normalized, $normalizer($denormalized));
     }
 
-    public function testDefaultOptions()
+    /**
+     * @dataProvider provideNormalizedAndDenormalized
+     */
+    public function testDenormalize($denormalized, $normalized, $options)
     {
-        $resolver = new OptionsResolver();
+        $optionResolver = new OptionsResolver();
+
         $type = new DatetimeType();
-        $type->setDefaultOptions($resolver);
+        $type->setDefaultOptions($optionResolver);
+        $serializer = $type->getSerializer($this->getTypeFactoryMock(), $optionResolver->resolve($options));
 
-        $options = $resolver->resolve(array());
+        $denormalizer = $serializer->getDenormalizer();
 
-        $this->assertAvailableOptions(array('format'), $options);
+        $this->assertEquals($denormalized, $denormalizer($normalized));
+    }
+
+    public function provideNormalizedAndDenormalized()
+    {
+        $date = new \DateTime('Mon Jan 4 14:26:20 2010 +0000');
+
+        return array(
+            'ISO8601'  => array($date, '2010-01-04T14:26:20+0000',            array('format' => 'Y-m-d\TH:i:sO')),
+            'Cookie'   => array($date, 'Monday, 04-Jan-10 14:26:20 GMT+0000', array('format' => 'l, d-M-y H:i:s T')),
+            'Unixtime' => array($date, '1262615180',                          array('format' => 'U')),
+        );
     }
 }

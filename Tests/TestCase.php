@@ -8,7 +8,6 @@
 
 namespace Bcn\Component\Serializer\Tests;
 
-use Bcn\Component\Serializer\Normalizer;
 use Bcn\Component\Serializer\Tests\Integration\Document;
 
 class TestCase extends \PHPUnit_Framework_TestCase
@@ -86,48 +85,59 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Serializer
      */
-    public function getNormalizerMock()
+    public function getSerializerMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Normalizer')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Serializer')
                 ->disableOriginalConstructor()
                 ->getMock();
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Encoder\EncoderInterface
      */
-    public function getTypeMock()
+    public function getEncoderMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Type\TypeInterface')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Encoder\EncoderInterface')
+                ->disableOriginalConstructor()
                 ->getMock();
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Decoder\DecoderInterface
      */
-    public function getTypeFactoryMock()
+    public function getDecoderMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Type\TypeFactory')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Decoder\DecoderInterface')
+                ->disableOriginalConstructor()
                 ->getMock();
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    public function getCodecMock()
-    {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Encoder\CodecInterface')
-                ->getMock();
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Symfony\Component\PropertyAccess\PropertyAccessorInterface
      */
     protected function getAccessorMock()
     {
         return $this->getMockBuilder('Symfony\Component\PropertyAccess\PropertyAccessorInterface')
+            ->getMock();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Type\TypeInterface
+     */
+    public function getTypeMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Type\TypeInterface')
+            ->getMock();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Type\TypeFactory
+     */
+    public function getTypeFactoryMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Type\TypeFactory')
             ->getMock();
     }
 
@@ -149,15 +159,5 @@ class TestCase extends \PHPUnit_Framework_TestCase
     public function getFixtureContent($file)
     {
         return file_get_contents($this->getFixturePath($file));
-    }
-
-    /**
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     */
-    public static function assertAvailableOptions($expected, $actual, $message = '')
-    {
-        self::assertEquals(sort($expected), sort($actual), $message);
     }
 }

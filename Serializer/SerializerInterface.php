@@ -8,21 +8,33 @@
 
 namespace Bcn\Component\Serializer\Serializer;
 
+use Bcn\Component\Serializer\Decoder\DecoderInterface;
+use Bcn\Component\Serializer\Encoder\EncoderInterface;
+
 interface SerializerInterface
 {
     /**
-     * @param  mixed  $object
-     * @param  string $type
-     * @param  array  $options
-     * @return mixed
+     * Serialize $data using $encoder
+     *
+     * @param  mixed            $data
+     * @param  EncoderInterface $encoder
+     * @return EncoderInterface
      */
-    public function serialize($object, $type, array $options = array());
+    public function serialize($data, EncoderInterface $encoder);
 
     /**
-     * @param  mixed  $data
-     * @param  string $type
-     * @param  array  $options
-     * @return mixed
+     * Unserialize data from $decoder to $object
+     *
+     * @param  DecoderInterface $decoder
+     * @param  object|null      $object
+     * @return object
      */
-    public function unserialize($data, $type, array $options = array());
+    public function unserialize(DecoderInterface $decoder, &$object = null);
+
+    /**
+     * Basic node type - array, object or scalar
+     *
+     * @return string
+     */
+    public function getNodeType();
 }

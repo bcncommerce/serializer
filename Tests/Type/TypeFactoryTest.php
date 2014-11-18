@@ -16,7 +16,7 @@ class TypeFactoryTest extends TestCase
     public function testCreateByName()
     {
         $factory = new TypeFactory();
-        $normalizer = $this->getNormalizerMock();
+        $serializer = $this->getSerializerMock();
         $options = array();
 
         $type = $this->getTypeMock();
@@ -24,32 +24,32 @@ class TypeFactoryTest extends TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
         $type->expects($this->once())
-            ->method('getNormalizer')
+            ->method('getSerializer')
             ->with($this->equalTo($factory), $this->equalTo($options))
-            ->will($this->returnValue($normalizer));
+            ->will($this->returnValue($serializer));
 
         $factory->addType($type);
 
         $actual = $factory->create('test', $options);
 
-        $this->assertSame($normalizer, $actual);
+        $this->assertSame($serializer, $actual);
     }
 
     public function testCreateByInstance()
     {
         $factory = new TypeFactory();
-        $normalizer = $this->getNormalizerMock();
+        $serializer = $this->getSerializerMock();
         $options = array();
 
         $type = $this->getTypeMock();
         $type->expects($this->once())
-            ->method('getNormalizer')
+            ->method('getSerializer')
             ->with($this->equalTo($factory), $this->equalTo($options))
-            ->will($this->returnValue($normalizer));
+            ->will($this->returnValue($serializer));
 
         $actual = $factory->create($type, $options);
 
-        $this->assertSame($normalizer, $actual);
+        $this->assertSame($serializer, $actual);
     }
 
     public function testCreateUnknownTypeException()
@@ -138,5 +138,31 @@ class TypeFactoryTest extends TestCase
         $factory = new TypeFactory();
 
         $this->assertFalse($factory->hasType($type));
+    }
+
+    public function testExtend()
+    {
+        $type = $this->getTypeMock();
+        $type->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('test'));
+
+        $extension = $this->getTypeExtension();
+        $extension->expects($this->once())
+            ->method('getTypes')
+            ->will($this->returnValue(array($type)));
+
+        $factory = new TypeFactory();
+        $factory->extend($extension);
+
+        $this->assertTrue($factory->hasType('test'));
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getTypeExtension()
+    {
+        return $this->getMock('Bcn\Component\Serializer\Type\Extension\TypeExtensionInterface');
     }
 }

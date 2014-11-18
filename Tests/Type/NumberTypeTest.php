@@ -14,48 +14,94 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NumberTypeTest extends TestCase
 {
-    const TYPE_NAME        = 'number';
-    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\NumberNormalizer';
+    public function testGetSerializer()
+    {
+        $type = new NumberType();
+        $serializer = $type->getSerializer($this->getTypeFactoryMock());
+
+        $this->assertInstanceOf('Bcn\Component\Serializer\Serializer\ScalarSerializer', $serializer);
+    }
 
     public function testGetName()
     {
         $type = new NumberType();
 
-        $this->assertEquals(self::TYPE_NAME, $type->getName());
+        $this->assertEquals('number', $type->getName());
     }
 
-    public function testBuild()
+    public function testGetDefaultOptions()
     {
-        $options = array('decimals' => 0, 'decimal_point' => '.', 'thousand_separator' => '');
-        $factory = $this->getTypeFactoryMock();
+        $optionResolver = new OptionsResolver();
 
         $type = new NumberType();
-        $normalizer = $type->getNormalizer($factory, $options);
+        $type->setDefaultOptions($optionResolver);
 
-        $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
+        $this->assertEquals(
+            array('decimals', 'decimal_point', 'thousand_separator'),
+            array_keys($optionResolver->resolve(array()))
+        );
     }
 
-    public function testAllowedOptions()
+    /**
+     * @dataProvider provideNormalizedAndDenormalized
+     */
+    public function testNormalize($denormalized, $normalized, $options)
     {
-        $resolver = new OptionsResolver();
-        $type = new NumberType();
-        $type->setDefaultOptions($resolver);
+        $optionResolver = new OptionsResolver();
 
-        $resolver->resolve(array(
-            'decimals'           => 4,
-            'decimal_point'      => '.',
-            'thousand_separator' => ' ',
-        ));
+        $type = new NumberType();
+        $type->setDefaultOptions($optionResolver);
+        $serializer = $type->getSerializer($this->getTypeFactoryMock(), $optionResolver->resolve($options));
+
+        $normalizer = $serializer->getNormalizer();
+
+        $this->assertEquals($normalized, $normalizer($denormalized));
     }
 
-    public function testDefaultOptions()
+    /**
+     * @dataProvider provideNormalizedAndDenormalized
+     */
+    public function testDenormalize($denormalized, $normalized, $options)
     {
-        $resolver = new OptionsResolver();
+        $optionResolver = new OptionsResolver();
+
         $type = new NumberType();
-        $type->setDefaultOptions($resolver);
+        $type->setDefaultOptions($optionResolver);
+        $serializer = $type->getSerializer($this->getTypeFactoryMock(), $optionResolver->resolve($options));
 
-        $options = $resolver->resolve(array());
+        $denormalizer = $serializer->getDenormalizer();
 
-        $this->assertAvailableOptions(array('decimals', 'decimal_point', 'thousand_separator'), $options);
+        $this->assertEquals($denormalized, $denormalizer($normalized));
+    }
+
+    public function provideNormalizedAndDenormalized()
+    {
+        return array(
+            'Integer' => array(
+                1022,
+                '1022',
+                array('decimals' => 0, 'decimal_point' => '.', 'thousand_separator' => ''),
+            ),
+            'Integer with thousand separator' => array(
+                1022000,
+                '1*022*000',
+                array('decimals' => 0, 'decimal_point' => '.', 'thousand_separator' => '*'),
+            ),
+            'Float' => array(
+                102.2,
+                '102.2',
+                array('decimals' => 1, 'decimal_point' => '.', 'thousand_separator' => ''),
+            ),
+            'Float with decimal separator' => array(
+                102.2,
+                '102#2',
+                array('decimals' => 1, 'decimal_point' => '#', 'thousand_separator' => '*'),
+            ),
+            'Float with thousand separator' => array(
+                11202.2,
+                '11*202#2',
+                array('decimals' => 1, 'decimal_point' => '#', 'thousand_separator' => '*'),
+            ),
+        );
     }
 }

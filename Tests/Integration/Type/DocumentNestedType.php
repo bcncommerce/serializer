@@ -8,30 +8,29 @@
 
 namespace Bcn\Component\Serializer\Tests\Integration\Type;
 
-use Bcn\Component\Serializer\Normalizer;
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Serializer;
 use Bcn\Component\Serializer\Type\AbstractType;
 use Bcn\Component\Serializer\Type\TypeFactory;
 
 class DocumentNestedType extends AbstractType
 {
     /**
-     * @param  TypeFactory         $factory
-     * @param  array               $options
-     * @return NormalizerInterface
+     * @param  TypeFactory $factory
+     * @param  array       $options
+     * @return Serializer
      */
-    public function getNormalizer(TypeFactory $factory, array $options = array())
+    public function getSerializer(TypeFactory $factory, array $options = array())
     {
-        $normalizer = new Normalizer('Bcn\Component\Serializer\Tests\Integration\Document');
-        $normalizer
+        $serializer = new Serializer('Bcn\Component\Serializer\Tests\Integration\Document');
+        $serializer
             ->add('name',        $factory->create('text'))
             ->add('description', $factory->create('text'))
             ->add('rank',        $factory->create('number'))
             ->add('rating',      $factory->create('number', array('decimals' => 2)))
-            ->add('parent',      $normalizer)
+            ->add('parent',      $serializer)
         ;
 
-        return $normalizer;
+        return $serializer;
     }
 
     /**

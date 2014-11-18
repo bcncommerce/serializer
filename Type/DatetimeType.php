@@ -8,21 +8,30 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\IteratorNormalizer;
-use Bcn\Component\Serializer\Normalizer\DatetimeNormalizer;
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Serializer\ScalarSerializer;
+use Bcn\Component\Serializer\Serializer\SerializerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DatetimeType extends AbstractType
 {
     /**
-     * @param  TypeFactory                            $factory
-     * @param  array                                  $options
-     * @return IteratorNormalizer|NormalizerInterface
+     * @param  TypeFactory                          $factory
+     * @param  array                                $options
+     * @return ScalarSerializer|SerializerInterface
      */
-    public function getNormalizer(TypeFactory $factory, array $options = array())
+    public function getSerializer(TypeFactory $factory, array $options = array())
     {
-        return new DatetimeNormalizer($options['format']);
+        $serializer = new ScalarSerializer();
+
+        $serializer->setNormalizer(function (\DateTime $value) use ($options) {
+            return $value->format($options['format']);
+        });
+
+        $serializer->setDenormalizer(function ($value) use ($options) {
+            return \DateTime::createFromFormat($options['format'], $value);
+        });
+
+        return $serializer;
     }
 
     /**

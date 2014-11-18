@@ -8,8 +8,8 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\NumberNormalizer;
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Serializer\ScalarSerializer;
+use Bcn\Component\Serializer\Serializer\SerializerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class NumberType extends AbstractType
@@ -17,15 +17,28 @@ class NumberType extends AbstractType
     /**
      * @param  TypeFactory                          $factory
      * @param  array                                $options
-     * @return NumberNormalizer|NormalizerInterface
+     * @return ScalarSerializer|SerializerInterface
      */
-    public function getNormalizer(TypeFactory $factory, array $options = array())
+    public function getSerializer(TypeFactory $factory, array $options = array())
     {
-        return new NumberNormalizer(
-            $options['decimals'],
-            $options['decimal_point'],
-            $options['thousand_separator']
-        );
+        $serializer = new ScalarSerializer();
+
+        $serializer->setNormalizer(function ($value) use ($options) {
+            return number_format(
+                $value,
+                $options['decimals'],
+                $options['decimal_point'],
+                $options['thousand_separator']
+            );
+        });
+
+        $serializer->setDenormalizer(function ($value) use ($options) {
+            $value = str_replace($options['thousand_separator'], '', $value);
+
+            return (float) str_replace($options['decimal_point'], '.', $value);
+        });
+
+        return $serializer;
     }
 
     /**

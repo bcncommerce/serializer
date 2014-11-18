@@ -8,22 +8,23 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\ArrayNormalizer;
+use Bcn\Component\Serializer\Serializer\ArraySerializer;
+use Bcn\Component\Serializer\Serializer\SerializerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ArrayType extends AbstractType
 {
     /**
-     * @param  TypeFactory     $factory
-     * @param  array           $options
-     * @return ArrayNormalizer
+     * @param  TypeFactory                         $factory
+     * @param  array                               $options
+     * @return ArraySerializer|SerializerInterface
      */
-    public function getNormalizer(TypeFactory $factory, array $options = array())
+    public function getSerializer(TypeFactory $factory, array $options = array())
     {
-        $itemNormalizer = $factory->create($options['item_type'], $options['item_options']);
-        $normalizer = new ArrayNormalizer($itemNormalizer);
-
-        return $normalizer;
+        return new ArraySerializer(
+            $factory->create($options['item_type'], $options['item_options']),
+            $options['item_node']
+        );
     }
 
     /**
@@ -33,9 +34,10 @@ class ArrayType extends AbstractType
     {
         $optionsResolver
             ->setRequired(array('item_type'))
-            ->setDefaults(array('item_options' => array()))
+            ->setDefaults(array('item_options' => array(), 'item_node' => null))
             ->setAllowedTypes(array(
-                'item_type' => array('string', 'Bcn\Component\Serializer\Normalizer\NormalizerInterface'),
+                'item_type' => array('string', 'Bcn\Component\Serializer\Serializer\SerializerInterface'),
+                'item_node' => array('null', 'string'),
                 'item_options' => 'array',
             ))
         ;

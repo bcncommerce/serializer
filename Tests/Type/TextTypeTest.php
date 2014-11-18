@@ -14,43 +14,31 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TextTypeTest extends TestCase
 {
-    const TYPE_NAME        = 'text';
-    const NORMALIZER_CLASS = 'Bcn\Component\Serializer\Normalizer\TextNormalizer';
+    public function testGetSerializer()
+    {
+        $type = new TextType();
+        $serializer = $type->getSerializer($this->getTypeFactoryMock());
+
+        $this->assertInstanceOf('Bcn\Component\Serializer\Serializer\ScalarSerializer', $serializer);
+    }
 
     public function testGetName()
     {
         $type = new TextType();
 
-        $this->assertEquals(self::TYPE_NAME, $type->getName());
+        $this->assertEquals('text', $type->getName());
     }
 
-    public function testBuild()
+    public function testGetDefaultOptions()
     {
-        $factory = $this->getTypeFactoryMock();
+        $optionResolver = new OptionsResolver();
 
         $type = new TextType();
-        $normalizer = $type->getNormalizer($factory);
+        $type->setDefaultOptions($optionResolver);
 
-        $this->assertInstanceOf(self::NORMALIZER_CLASS, $normalizer);
-    }
-
-    public function testAllowedOptions()
-    {
-        $resolver = new OptionsResolver();
-        $type = new TextType();
-        $type->setDefaultOptions($resolver);
-
-        $resolver->resolve(array());
-    }
-
-    public function testDefaultOptions()
-    {
-        $resolver = new OptionsResolver();
-        $type = new TextType();
-        $type->setDefaultOptions($resolver);
-
-        $options = $resolver->resolve(array());
-
-        $this->assertAvailableOptions(array(), $options);
+        $this->assertEquals(
+            array(),
+            array_keys($optionResolver->resolve(array()))
+        );
     }
 }

@@ -8,7 +8,7 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Normalizer\NormalizerInterface;
+use Bcn\Component\Serializer\Serializer\SerializerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 interface TypeInterface
@@ -21,9 +21,9 @@ interface TypeInterface
     /**
      * @param  TypeFactory         $factory
      * @param  array               $options
-     * @return NormalizerInterface
+     * @return SerializerInterface
      */
-    public function getNormalizer(TypeFactory $factory, array $options = array());
+    public function getSerializer(TypeFactory $factory, array $options = array());
 
     /**
      * @param OptionsResolverInterface $optionsResolver

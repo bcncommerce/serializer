@@ -8,13 +8,23 @@
 
 namespace Bcn\Component\Serializer\Encoder;
 
-use Bcn\Component\Serializer\Encoder\Streamer\StreamerInterface;
-
 interface EncoderInterface
 {
     /**
-     * @param  mixed             $data
-     * @return StreamerInterface
+     * @param  string|null      $name
+     * @param  string|null      $type
+     * @return EncoderInterface
      */
-    public function encode($data);
+    public function node($name = null, $type = null);
+
+    /**
+     * @param  string           $value
+     * @return EncoderInterface
+     */
+    public function write($value);
+
+    /**
+     * @return EncoderInterface
+     */
+    public function end();
 }

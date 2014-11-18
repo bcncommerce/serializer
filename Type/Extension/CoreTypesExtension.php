@@ -10,7 +10,6 @@ namespace Bcn\Component\Serializer\Type\Extension;
 
 use Bcn\Component\Serializer\Type\ArrayType;
 use Bcn\Component\Serializer\Type\DatetimeType;
-use Bcn\Component\Serializer\Type\IteratorType;
 use Bcn\Component\Serializer\Type\NumberType;
 use Bcn\Component\Serializer\Type\TextType;
 use Bcn\Component\Serializer\Type\TypeInterface;
@@ -26,7 +25,6 @@ class CoreTypesExtension implements TypeExtensionInterface
             new TextType(),
             new NumberType(),
             new ArrayType(),
-            new IteratorType(),
             new DatetimeType(),
         );
     }
