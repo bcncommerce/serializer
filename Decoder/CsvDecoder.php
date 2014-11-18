@@ -10,7 +10,6 @@ namespace Bcn\Component\Serializer\Decoder;
 
 class CsvDecoder implements DecoderInterface
 {
-    const CONTEXT_NONE  = 'none';
     const CONTEXT_TABLE = 'table';
     const CONTEXT_LINE  = 'line';
     const CONTEXT_CELL  = 'cell';
@@ -54,7 +53,21 @@ class CsvDecoder implements DecoderInterface
         $this->enclosure = $enclosure ?: "\"";
         $this->escape    = $escape    ?: "\\";
 
-        $this->context   = self::CONTEXT_NONE;
+        $this->context   = self::CONTEXT_TABLE;
+
+        $this->initialize();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function initialize()
+    {
+        if ($this->headers === null) {
+            $this->headers = $this->fetch();
+        }
+
+        $this->next();
     }
 
     /**
@@ -68,9 +81,6 @@ class CsvDecoder implements DecoderInterface
     public function node($name = null, $type = null)
     {
         switch ($this->context) {
-            case self::CONTEXT_NONE:
-                $this->nodeTable($name, $type);
-                break;
             case self::CONTEXT_TABLE:
                 $this->nodeLine($name, $type);
                 break;
@@ -119,6 +129,22 @@ class CsvDecoder implements DecoderInterface
     }
 
     /**
+     * Check if node exists
+     *
+     * @param  string     $name
+     * @return boolean
+     * @throws \Exception
+     */
+    public function exists($name)
+    {
+        if ($this->context != self::CONTEXT_LINE) {
+            throw new \Exception(sprintf("Context \"%s\" can not have any children", $this->context));
+        }
+
+        return in_array($name, $this->headers);
+    }
+
+    /**
      * Read a scalar value
      *
      * @return string|boolean|null|integer|float
@@ -142,10 +168,8 @@ class CsvDecoder implements DecoderInterface
     public function end()
     {
         switch ($this->context) {
-            case self::CONTEXT_NONE:
-                throw new \Exception("Out of context \"table\" context");
             case self::CONTEXT_TABLE:
-                $this->context = self::CONTEXT_NONE;
+                throw new \Exception("Out of context \"table\" context");
                 break;
             case self::CONTEXT_LINE:
                 $this->context = self::CONTEXT_TABLE;
@@ -156,25 +180,6 @@ class CsvDecoder implements DecoderInterface
         }
 
         return $this;
-    }
-
-    /**
-     * @param  string     $name
-     * @param  string     $type
-     * @throws \Exception
-     */
-    protected function nodeTable($name, $type)
-    {
-        if ($type != 'array') {
-            throw new \Exception(sprintf("Type of the CSV table should be \"array\", \"%s\" given", $type));
-        }
-
-        if ($this->headers === null) {
-            $this->headers = $this->fetch();
-        }
-
-        $this->context = self::CONTEXT_TABLE;
-        $this->next();
     }
 
     /**

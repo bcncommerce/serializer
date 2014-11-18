@@ -24,18 +24,25 @@ class NumberType extends AbstractType
         $serializer = new ScalarSerializer();
 
         $serializer->setNormalizer(function ($value) use ($options) {
-            return number_format(
+            $value = number_format(
                 $value,
                 $options['decimals'],
                 $options['decimal_point'],
                 $options['thousand_separator']
             );
+
+            if ($options['decimal_point'] == '.' && $options['thousand_separator'] == '') {
+                $value = ($options['decimals'] === 0) ? intval($value) : floatval($value);
+            }
+
+            return $value;
         });
 
         $serializer->setDenormalizer(function ($value) use ($options) {
             $value = str_replace($options['thousand_separator'], '', $value);
+            $value = str_replace($options['decimal_point'], '.', $value);
 
-            return (float) str_replace($options['decimal_point'], '.', $value);
+            return ($options['decimals'] === 0) ? intval($value) : floatval($value);
         });
 
         return $serializer;

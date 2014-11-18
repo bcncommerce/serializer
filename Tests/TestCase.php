@@ -14,6 +14,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
 {
     const DOCUMENT_CLASS = 'Bcn\Component\Serializer\Tests\Integration\Document';
 
+    /** @var array */
+    protected $streams = array();
+
     /**
      * @param  string $suffix
      * @return array
@@ -142,7 +145,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $file
+     * @param  string $file
      * @return string
      */
     protected function getFixturePath($file)
@@ -153,11 +156,47 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $file
+     * @param  string $file
      * @return string
      */
     public function getFixtureContent($file)
     {
         return file_get_contents($this->getFixturePath($file));
+    }
+
+    /**
+     * @param  string   $file
+     * @param  string   $mode
+     * @return resource
+     */
+    public function getFixtureStream($file, $mode = 'r')
+    {
+        $stream = fopen($this->getFixturePath($file), $mode);
+        $this->streams[] = $stream;
+
+        return $stream;
+    }
+
+    public function getDataStream($data)
+    {
+        $stream = fopen("php://temp", "rw+");
+        fputs($stream, $data);
+        rewind($stream);
+
+        $this->streams[] = $stream;
+
+        return $stream;
+    }
+
+    /**
+     *
+     */
+    protected function tearDown()
+    {
+        foreach ($this->streams as $stream) {
+            fclose($stream);
+        }
+
+        $this->streams = array();
     }
 }

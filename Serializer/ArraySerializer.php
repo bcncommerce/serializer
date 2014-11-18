@@ -58,10 +58,11 @@ class ArraySerializer implements SerializerInterface
             $object = array();
         }
 
-        while ($decoder->next()) {
+        while ($decoder->valid()) {
             $decoder->node($this->itemNodeName, $this->serializer->getNodeType());
             $object[] = $this->serializer->unserialize($decoder);
             $decoder->end();
+            $decoder->next();
         }
 
         return $object;

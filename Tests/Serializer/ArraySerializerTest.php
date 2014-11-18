@@ -55,7 +55,7 @@ class ArraySerializerTest extends TestCase
     {
         $decoder = $this->getDecoderMock();
         $decoder->expects($this->at(0))
-            ->method('next')
+            ->method('valid')
             ->will($this->returnValue(true));
         $decoder->expects($this->at(1))
             ->method('node')
@@ -66,18 +66,22 @@ class ArraySerializerTest extends TestCase
         $decoder->expects($this->at(3))
             ->method('end');
         $decoder->expects($this->at(4))
-            ->method('next')
-            ->will($this->returnValue(true));
+            ->method('next');
         $decoder->expects($this->at(5))
+            ->method('valid')
+            ->will($this->returnValue(true));
+        $decoder->expects($this->at(6))
             ->method('node')
             ->with($this->equalTo('item'), $this->equalTo('text'));
-        $decoder->expects($this->at(6))
+        $decoder->expects($this->at(7))
             ->method('read')
             ->will($this->returnValue('two'));
-        $decoder->expects($this->at(7))
-            ->method('end');
         $decoder->expects($this->at(8))
-            ->method('next')
+            ->method('end');
+        $decoder->expects($this->at(9))
+            ->method('next');
+        $decoder->expects($this->at(10))
+            ->method('valid')
             ->will($this->returnValue(false));
 
         $itemSerializer = $this->getSerializerMock();

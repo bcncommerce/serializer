@@ -100,4 +100,12 @@ class ArrayDecoderTest extends TestCase
 
         $this->assertEquals($names, array());
     }
+
+    public function testExists()
+    {
+        $decoder = new ArrayDecoder(array('foo' => 'baz'));
+
+        $this->assertTrue($decoder->exists('foo'));
+        $this->assertFalse($decoder->exists('baz'));
+    }
 }

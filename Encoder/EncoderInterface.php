@@ -27,4 +27,9 @@ interface EncoderInterface
      * @return EncoderInterface
      */
     public function end();
+
+    /**
+     * @return mixed
+     */
+    public function dump();
 }

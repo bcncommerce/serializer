@@ -15,11 +15,10 @@ class CsvDecoderTest extends TestCase
 {
     public function testDecodeTableWithHeaders()
     {
-        $stream = fopen($this->getFixturePath('resources/documents.csv'), 'r');
+        $stream = $this->getFixtureStream('resources/documents.csv', 'r');
         $data  = array();
 
         $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
         while ($decoder->valid()) {
             $decoder->node('document', 'object');
             $data[] = $decoder->node('description', 'scalar')->read();
@@ -27,22 +26,18 @@ class CsvDecoderTest extends TestCase
             $decoder->end();
             $decoder->next();
         }
-        $decoder->end();
-
-        fclose($stream);
 
         $this->assertEquals($this->getDescriptionValues(), $data);
     }
 
     public function testDecodeTableWithoutHeaders()
     {
-        $stream = fopen($this->getFixturePath('resources/documents.csv'), 'r');
+        $stream = $this->getFixtureStream('resources/documents.csv', 'r');
         fgets($stream, 1000); // skip headers line
 
         $data  = array();
 
         $decoder = new CsvDecoder($stream, array('name', 'x-description'));
-        $decoder->node('documents', 'array');
         while ($decoder->valid()) {
             $decoder->node('document', 'object');
             $data[] = $decoder->node('x-description', 'scalar')->read();
@@ -50,38 +45,16 @@ class CsvDecoderTest extends TestCase
             $decoder->end();
             $decoder->next();
         }
-        $decoder->end();
-
-        fclose($stream);
 
         $this->assertEquals($this->getDescriptionValues(), $data);
-    }
-
-    public function testRootNodeObjectException()
-    {
-        $this->setExpectedException("Exception");
-
-        $stream = fopen('data://text/plain;base64,'.base64_encode(""), 'r');
-        $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'object');
-    }
-
-    public function testRootNodeScalarException()
-    {
-        $this->setExpectedException("Exception");
-
-        $stream = fopen('data://text/plain;base64,'.base64_encode(""), 'r');
-        $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'scalar');
     }
 
     public function testLineNodeArrayException()
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode(""), 'r');
+        $stream = $this->getDataStream("");
         $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
         $decoder->node('document', 'array');
     }
 
@@ -89,9 +62,8 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode("name"), 'r');
+        $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
         $decoder->node('document', 'scalar');
     }
 
@@ -99,9 +71,8 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode("name"), 'r');
+        $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'array');
     }
@@ -110,9 +81,8 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode("name"), 'r');
+        $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'object');
     }
@@ -121,9 +91,8 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode("name"), 'r');
+        $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'scalar');
         $decoder->node('nested',    'scalar');
@@ -133,7 +102,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode("name"), 'r');
+        $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
         $decoder->read();
     }
@@ -142,8 +111,9 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode("name"), 'r');
+        $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('document', 'object');
         $decoder->next();
     }
 
@@ -151,9 +121,36 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = fopen('data://text/plain;base64,'.base64_encode("name"), 'r');
+        $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
         $decoder->end();
+    }
+
+    public function testExists()
+    {
+        $stream = $this->getDataStream("name;description\nName;Description");
+        $decoder = new CsvDecoder($stream);
+        $decoder->node('document', 'object');
+
+        $this->assertTrue($decoder->exists('name'));
+    }
+
+    public function testNotExists()
+    {
+        $stream = $this->getDataStream("name;description\nName;Description");
+        $decoder = new CsvDecoder($stream);
+        $decoder->node('document', 'object');
+
+        $this->assertFalse($decoder->exists('rank'));
+    }
+
+    public function testExistsWrongContextException()
+    {
+        $this->setExpectedException("Exception");
+
+        $stream = $this->getDataStream("name;description\nName;Description");
+        $decoder = new CsvDecoder($stream);
+        $decoder->exists('name');
     }
 
     /**

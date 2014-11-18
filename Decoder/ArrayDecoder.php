@@ -66,6 +66,15 @@ class ArrayDecoder implements DecoderInterface
     }
 
     /**
+     * @param  string $name
+     * @return bool
+     */
+    public function exists($name)
+    {
+        return isset($this->current[$name]);
+    }
+
+    /**
      * Get an iterator through the child nodes
      *
      * @return bool
@@ -105,6 +114,7 @@ class ArrayDecoder implements DecoderInterface
     public function end()
     {
         $this->current = $this->context[count($this->context) - 1];
+        $this->valid   = true;
         array_pop($this->context);
         array_pop($this->types);
 

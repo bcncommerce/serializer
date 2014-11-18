@@ -84,6 +84,12 @@ class Serializer implements SerializerInterface
      */
     public function serialize($data, EncoderInterface $encoder)
     {
+        if ($data === null) {
+            $encoder->write(null);
+
+            return $encoder;
+        }
+
         foreach ($this->properties as $property => $serializer) {
             $encoder->node($property, $serializer->getNodeType());
             $serializer->serialize($this->getProperty($data, $this->names[$property]), $encoder);
@@ -105,9 +111,13 @@ class Serializer implements SerializerInterface
         }
 
         foreach ($this->properties as $property => $serializer) {
-            $decoder->node($property, $serializer->getNodeType());
-            $value = $serializer->unserialize($decoder);
-            $decoder->end();
+            if ($decoder->exists($property)) {
+                $decoder->node($property, $serializer->getNodeType());
+                $value = $serializer->unserialize($decoder);
+                $decoder->end();
+            } else {
+                $value = null;
+            }
 
             $this->setProperty($object, $this->names[$property], $value);
         }

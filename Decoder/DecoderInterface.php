@@ -27,6 +27,14 @@ interface DecoderInterface
     public function valid();
 
     /**
+     * Check if node exists
+     *
+     * @param  string  $name
+     * @return boolean
+     */
+    public function exists($name);
+
+    /**
      * Get next node on the same level
      *
      * @return boolean

@@ -79,7 +79,7 @@ class NumberTypeTest extends TestCase
         return array(
             'Integer' => array(
                 1022,
-                '1022',
+                1022,
                 array('decimals' => 0, 'decimal_point' => '.', 'thousand_separator' => ''),
             ),
             'Integer with thousand separator' => array(
