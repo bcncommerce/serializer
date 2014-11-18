@@ -12,8 +12,8 @@ use Bcn\Component\Serializer\Decoder\ArrayDecoder;
 use Bcn\Component\Serializer\Decoder\CsvDecoder;
 use Bcn\Component\Serializer\Decoder\DecoderInterface;
 use Bcn\Component\Serializer\Decoder\JsonDecoder;
+use Bcn\Component\Serializer\SerializerFactory;
 use Bcn\Component\Serializer\Tests\TestCase;
-use Bcn\Component\Serializer\Type\TypeFactory;
 use Bcn\Component\Serializer\Type\Extension\CoreTypesExtension;
 use Bcn\Component\Serializer\Tests\Integration\Type\Extension\DocumentTypeExtension;
 
@@ -28,8 +28,7 @@ class DocumentUnserializationTest extends TestCase
      */
     public function testDocumentUnserialize(DecoderInterface $decoder)
     {
-        $document = $this->getFactory()->create('document', array())
-            ->unserialize($decoder);
+        $document = $this->getFactory()->unserialize($decoder, 'document');
 
         $this->assertEquals($this->getDocument('flat'), $document);
     }
@@ -52,8 +51,7 @@ class DocumentUnserializationTest extends TestCase
      */
     public function testNestedDocumentUnserialize(DecoderInterface $decoder)
     {
-        $document = $this->getFactory()->create('document_nested', array())
-            ->unserialize($decoder);
+        $document = $this->getFactory()->unserialize($decoder, 'document_nested');
 
         $this->assertEquals($this->getNestedDocument(), $document);
     }
@@ -76,8 +74,7 @@ class DocumentUnserializationTest extends TestCase
      */
     public function testDocumentArrayUnserialize(DecoderInterface $decoder)
     {
-        $documents = $this->getFactory()->create('document_array', array())
-            ->unserialize($decoder);
+        $documents = $this->getFactory()->unserialize($decoder, 'document_array');
 
         $this->assertEquals($this->getDocuments(), $documents);
     }
@@ -98,11 +95,11 @@ class DocumentUnserializationTest extends TestCase
     }
 
     /**
-     * @return TypeFactory
+     * @return SerializerFactory
      */
     protected function getFactory()
     {
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->extend(new CoreTypesExtension());
         $factory->extend(new DocumentTypeExtension());
 

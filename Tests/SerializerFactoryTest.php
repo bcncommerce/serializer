@@ -6,16 +6,15 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Tests\Type;
+namespace Bcn\Component\Serializer\Tests;
 
-use Bcn\Component\Serializer\Tests\TestCase;
-use Bcn\Component\Serializer\Type\TypeFactory;
+use Bcn\Component\Serializer\SerializerFactory;
 
-class TypeFactoryTest extends TestCase
+class SerializerFactoryTest extends TestCase
 {
     public function testCreateByName()
     {
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $serializer = $this->getSerializerMock();
         $options = array();
 
@@ -37,7 +36,7 @@ class TypeFactoryTest extends TestCase
 
     public function testCreateByInstance()
     {
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $serializer = $this->getSerializerMock();
         $options = array();
 
@@ -56,7 +55,7 @@ class TypeFactoryTest extends TestCase
     {
         $this->setExpectedException('Exception');
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->create('test');
     }
 
@@ -67,7 +66,7 @@ class TypeFactoryTest extends TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->addType($type);
 
         $this->assertSame($type, $factory->getType('test'));
@@ -77,7 +76,7 @@ class TypeFactoryTest extends TestCase
     {
         $this->setExpectedException('Exception');
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->getType('test');
     }
 
@@ -88,7 +87,7 @@ class TypeFactoryTest extends TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->addType($type);
 
         $this->assertTrue($factory->hasType('test'));
@@ -103,14 +102,14 @@ class TypeFactoryTest extends TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->addType($type);
         $factory->addType($type);
     }
 
     public function testDoesNotHaveTypeByName()
     {
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
 
         $this->assertFalse($factory->hasType('test'));
     }
@@ -122,7 +121,7 @@ class TypeFactoryTest extends TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->addType($type);
 
         $this->assertTrue($factory->hasType($type));
@@ -135,7 +134,7 @@ class TypeFactoryTest extends TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
 
         $this->assertFalse($factory->hasType($type));
     }
@@ -152,7 +151,7 @@ class TypeFactoryTest extends TestCase
             ->method('getTypes')
             ->will($this->returnValue(array($type)));
 
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->extend($extension);
 
         $this->assertTrue($factory->hasType('test'));

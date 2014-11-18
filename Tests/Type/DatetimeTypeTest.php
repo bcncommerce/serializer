@@ -17,7 +17,7 @@ class DatetimeTypeTest extends TestCase
     public function testGetSerializer()
     {
         $type = new DatetimeType();
-        $serializer = $type->getSerializer($this->getTypeFactoryMock());
+        $serializer = $type->getSerializer($this->getSerializerFactoryMock());
 
         $this->assertInstanceOf('Bcn\Component\Serializer\Serializer\ScalarSerializer', $serializer);
     }
@@ -51,7 +51,7 @@ class DatetimeTypeTest extends TestCase
 
         $type = new DatetimeType();
         $type->setDefaultOptions($optionResolver);
-        $serializer = $type->getSerializer($this->getTypeFactoryMock(), $optionResolver->resolve($options));
+        $serializer = $type->getSerializer($this->getSerializerFactoryMock(), $optionResolver->resolve($options));
 
         $normalizer = $serializer->getNormalizer();
 
@@ -67,7 +67,7 @@ class DatetimeTypeTest extends TestCase
 
         $type = new DatetimeType();
         $type->setDefaultOptions($optionResolver);
-        $serializer = $type->getSerializer($this->getTypeFactoryMock(), $optionResolver->resolve($options));
+        $serializer = $type->getSerializer($this->getSerializerFactoryMock(), $optionResolver->resolve($options));
 
         $denormalizer = $serializer->getDenormalizer();
 

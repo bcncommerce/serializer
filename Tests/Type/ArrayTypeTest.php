@@ -18,7 +18,7 @@ class ArrayTypeTest extends TestCase
     {
         $itemSerializer = $this->getSerializerMock();
 
-        $factory = $this->getTypeFactoryMock();
+        $factory = $this->getSerializerFactoryMock();
         $factory->expects($this->once())
             ->method('create')
             ->with($this->equalTo('test'), $this->equalTo(array()))

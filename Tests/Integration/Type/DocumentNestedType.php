@@ -8,18 +8,19 @@
 
 namespace Bcn\Component\Serializer\Tests\Integration\Type;
 
-use Bcn\Component\Serializer\Serializer;
 use Bcn\Component\Serializer\Type\AbstractType;
-use Bcn\Component\Serializer\Type\TypeFactory;
+use Bcn\Component\Serializer\Serializer;
+use Bcn\Component\Serializer\SerializerFactory;
+use Bcn\Component\Serializer\Serializer\SerializerInterface;
 
 class DocumentNestedType extends AbstractType
 {
     /**
-     * @param  TypeFactory $factory
-     * @param  array       $options
-     * @return Serializer
+     * @param  SerializerFactory   $factory
+     * @param  array               $options
+     * @return SerializerInterface
      */
-    public function getSerializer(TypeFactory $factory, array $options = array())
+    public function getSerializer(SerializerFactory $factory, array $options = array())
     {
         $serializer = new Serializer('Bcn\Component\Serializer\Tests\Integration\Document');
         $serializer

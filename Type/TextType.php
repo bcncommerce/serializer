@@ -10,15 +10,16 @@ namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Serializer\ScalarSerializer;
 use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\SerializerFactory;
 
 class TextType extends AbstractType
 {
     /**
-     * @param  TypeFactory                          $factory
-     * @param  array                                $options
-     * @return ScalarSerializer|SerializerInterface
+     * @param  SerializerFactory   $factory
+     * @param  array               $options
+     * @return SerializerInterface
      */
-    public function getSerializer(TypeFactory $factory, array $options = array())
+    public function getSerializer(SerializerFactory $factory, array $options = array())
     {
         return new ScalarSerializer();
     }

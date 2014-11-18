@@ -8,6 +8,7 @@
 
 namespace Bcn\Component\Serializer\Tests\Integration;
 
+use Bcn\Component\Serializer\SerializerFactory;
 use Bcn\Component\Serializer\Encoder\ArrayEncoder;
 use Bcn\Component\Serializer\Encoder\CsvEncoder;
 use Bcn\Component\Serializer\Encoder\EncoderInterface;
@@ -15,7 +16,6 @@ use Bcn\Component\Serializer\Encoder\JsonEncoder;
 use Bcn\Component\Serializer\Tests\Integration\Type\Extension\DocumentTypeExtension;
 use Bcn\Component\Serializer\Tests\TestCase;
 use Bcn\Component\Serializer\Type\Extension\CoreTypesExtension;
-use Bcn\Component\Serializer\Type\TypeFactory;
 
 /**
  * @group integration
@@ -31,8 +31,7 @@ class DocumentSerializationTest extends TestCase
     {
         $document = $this->getDocument('flat');
 
-        $this->getFactory()->create('document', array())
-            ->serialize($document, $encoder);
+        $this->getFactory()->serialize($document, $encoder, 'document');
 
         $this->assertEquals($expected, $encoder->dump());
     }
@@ -60,8 +59,7 @@ class DocumentSerializationTest extends TestCase
     {
         $document = $this->getNestedDocument();
 
-        $this->getFactory()->create('document_nested', array())
-            ->serialize($document, $encoder);
+        $this->getFactory()->serialize($document, $encoder, 'document_nested');
 
         $this->assertEquals($expected, $encoder->dump());
     }
@@ -87,10 +85,9 @@ class DocumentSerializationTest extends TestCase
      */
     public function testDocumentArraySerialize(EncoderInterface $encoder, $expected)
     {
-        $document = $this->getDocuments();
+        $documents = $this->getDocuments();
 
-        $this->getFactory()->create('document_array', array())
-            ->serialize($document, $encoder);
+        $this->getFactory()->serialize($documents, $encoder, 'document_array');
 
         $this->assertEquals($expected, $encoder->dump());
     }
@@ -114,11 +111,11 @@ class DocumentSerializationTest extends TestCase
     }
 
     /**
-     * @return TypeFactory
+     * @return SerializerFactory
      */
     protected function getFactory()
     {
-        $factory = new TypeFactory();
+        $factory = new SerializerFactory();
         $factory->extend(new CoreTypesExtension());
         $factory->extend(new DocumentTypeExtension());
 

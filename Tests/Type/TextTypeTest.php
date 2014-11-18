@@ -17,7 +17,7 @@ class TextTypeTest extends TestCase
     public function testGetSerializer()
     {
         $type = new TextType();
-        $serializer = $type->getSerializer($this->getTypeFactoryMock());
+        $serializer = $type->getSerializer($this->getSerializerFactoryMock());
 
         $this->assertInstanceOf('Bcn\Component\Serializer\Serializer\ScalarSerializer', $serializer);
     }

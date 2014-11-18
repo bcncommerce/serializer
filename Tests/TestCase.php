@@ -136,11 +136,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Type\TypeFactory
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\SerializerFactory
      */
-    public function getTypeFactoryMock()
+    public function getSerializerFactoryMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Type\TypeFactory')
+        return $this->getMockBuilder('Bcn\Component\Serializer\SerializerFactory')
             ->getMock();
     }
 

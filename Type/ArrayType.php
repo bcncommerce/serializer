@@ -10,16 +10,17 @@ namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Serializer\ArraySerializer;
 use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\SerializerFactory;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ArrayType extends AbstractType
 {
     /**
-     * @param  TypeFactory                         $factory
+     * @param  SerializerFactory                   $factory
      * @param  array                               $options
      * @return ArraySerializer|SerializerInterface
      */
-    public function getSerializer(TypeFactory $factory, array $options = array())
+    public function getSerializer(SerializerFactory $factory, array $options = array())
     {
         return new ArraySerializer(
             $factory->create($options['item_type'], $options['item_options']),

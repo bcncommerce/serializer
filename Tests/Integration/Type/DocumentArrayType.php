@@ -9,17 +9,17 @@
 namespace Bcn\Component\Serializer\Tests\Integration\Type;
 
 use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\SerializerFactory;
 use Bcn\Component\Serializer\Type\AbstractType;
-use Bcn\Component\Serializer\Type\TypeFactory;
 
 class DocumentArrayType extends AbstractType
 {
     /**
-     * @param  TypeFactory         $factory
+     * @param  SerializerFactory   $factory
      * @param  array               $options
      * @return SerializerInterface
      */
-    public function getSerializer(TypeFactory $factory, array $options = array())
+    public function getSerializer(SerializerFactory $factory, array $options = array())
     {
         return $factory->create('array', array('item_type' => 'document'));
     }
