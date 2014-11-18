@@ -8,6 +8,7 @@
 
 namespace Bcn\Component\Serializer\Tests\Integration;
 
+use Bcn\Component\Serializer\Encoder\XmlEncoder;
 use Bcn\Component\Serializer\SerializerFactory;
 use Bcn\Component\Serializer\Encoder\ArrayEncoder;
 use Bcn\Component\Serializer\Encoder\CsvEncoder;
@@ -47,6 +48,10 @@ class DocumentSerializationTest extends TestCase
                 new JsonEncoder(),
                 $this->getFixtureContent('resources/document.json'),
             ),
+            'xml'  => array(
+                new XmlEncoder($this->getDataStream(), "document"),
+                $this->getFixtureContent('resources/document.xml'),
+            ),
         );
     }
 
@@ -74,6 +79,10 @@ class DocumentSerializationTest extends TestCase
             'json'  => array(
                 new JsonEncoder(),
                 $this->getFixtureContent('resources/document_nested.json'),
+            ),
+            'xml'  => array(
+                new XmlEncoder($this->getDataStream(), "document"),
+                $this->getFixtureContent('resources/document_nested.xml'),
             ),
         );
     }
@@ -106,6 +115,10 @@ class DocumentSerializationTest extends TestCase
             'csv' => array(
                 new CsvEncoder(fopen('php://temp', 'rw+')),
                 $this->getFixtureContent('resources/document_array.csv'),
+            ),
+            'xml'  => array(
+                new XmlEncoder($this->getDataStream(), "documents"),
+                $this->getFixtureContent('resources/document_array.xml'),
             ),
         );
     }

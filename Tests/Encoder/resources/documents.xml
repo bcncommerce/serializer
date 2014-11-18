@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documents>
+    <document>
+        <name><![CDATA[Test name one]]></name>
+        <description><![CDATA[Test description one]]></description>
+        <rank><![CDATA[11]]></rank>
+        <rating><![CDATA[93.31]]></rating>
+    </document>
+    <document>
+        <name><![CDATA[Test name two]]></name>
+        <description><![CDATA[Test description two]]></description>
+        <rank><![CDATA[11]]></rank>
+        <rating><![CDATA[93.31]]></rating>
+    </document>
+</documents>

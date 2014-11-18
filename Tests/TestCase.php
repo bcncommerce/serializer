@@ -177,11 +177,17 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $stream;
     }
 
-    public function getDataStream($data)
+    /**
+     * @param  string   $data
+     * @return resource
+     */
+    public function getDataStream($data = null)
     {
         $stream = fopen("php://temp", "rw+");
-        fputs($stream, $data);
-        rewind($stream);
+        if ($data !== null) {
+            fputs($stream, $data);
+            rewind($stream);
+        }
 
         $this->streams[] = $stream;
 
