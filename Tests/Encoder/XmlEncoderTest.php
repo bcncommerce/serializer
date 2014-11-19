@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Tests\Encoder;
 
 use Bcn\Component\Serializer\Encoder\XmlEncoder;
 use Bcn\Component\Serializer\Tests\TestCase;
+use Bcn\Component\StreamWrapper\Stream;
 
 class XmlEncoderTest extends TestCase
 {
@@ -24,6 +25,31 @@ class XmlEncoderTest extends TestCase
         $encoder->end();
 
         $this->assertXmlStringEqualsXmlString($data, $encoder->dump());
+    }
+
+    public function testEncodeStructureToUri()
+    {
+        $data = '<document><first>one</first><second>two</second></document>';
+
+        $stream = new Stream();
+
+        $encoder = new XmlEncoder($stream->getUri());
+        $encoder->node('document', 'object');
+        $encoder->node('first', 'scalar')->write('one')->end();
+        $encoder->node('second', 'scalar')->write('two')->end();
+        $encoder->end();
+
+        $this->assertXmlStringEqualsXmlString($data, $stream->getContent());
+    }
+
+    public function testDumpUriException()
+    {
+        $this->setExpectedException("Exception");
+
+        $stream = new Stream();
+
+        $encoder = new XmlEncoder($stream->getUri());
+        $encoder->dump();
     }
 
     public function testEncodeArray()

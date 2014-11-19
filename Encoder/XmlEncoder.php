@@ -32,13 +32,12 @@ class XmlEncoder implements EncoderInterface
     protected $deep = 0;
 
     /**
-     * @param string   $version
-     * @param string   $encoding
-     * @param resource $stream
+     * @param string|resource $stream
+     * @param string          $version
+     * @param string          $encoding
      */
     public function __construct($stream, $version = null, $encoding = null)
     {
-        $this->stream      = $stream;
         $this->version     = $version;
         $this->encoding    = $encoding;
         $this->finalised   = false;
@@ -46,7 +45,14 @@ class XmlEncoder implements EncoderInterface
         $this->deep        = 0;
 
         $this->writer = new \XMLWriter();
-        $this->writer->openMemory();
+
+        if (is_resource($stream)) {
+            $this->stream = $stream;
+            $this->writer->openMemory();
+        } else {
+            $this->stream = null;
+            $this->writer->openUri($stream);
+        }
     }
 
     /**
@@ -135,14 +141,23 @@ class XmlEncoder implements EncoderInterface
             throw new \Exception("Document already finalised, it can not be extended");
         }
 
-        fwrite($this->stream, $this->writer->outputMemory(true));
+        if ($this->stream) {
+            fwrite($this->stream, $this->writer->outputMemory(true));
+        } else {
+            $this->writer->flush(true);
+        }
     }
 
     /**
-     * @return string
+     * @return mixed|string
+     * @throws \Exception
      */
     public function dump()
     {
+        if (!$this->stream) {
+            throw new \Exception("Can not dump document");
+        }
+
         rewind($this->stream);
 
         return stream_get_contents($this->stream);

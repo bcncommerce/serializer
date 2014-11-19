@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5113c3b5832b793290f3806f2071b95f",
+    "hash": "2257b30b18d80a39a34a0aae553fbb21",
     "packages": [
         {
             "name": "symfony/options-resolver",
@@ -118,6 +118,56 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "bcncommerce/stream-wrapper",
+            "version": "0.1.0",
+            "target-dir": "Bcn/Component/StreamWrapper",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bcncommerce/stream-wrapper.git",
+                "reference": "ea98e91830d7ce25881d5bd731f67d24169d1c0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bcncommerce/stream-wrapper/zipball/ea98e91830d7ce25881d5bd731f67d24169d1c0b",
+                "reference": "ea98e91830d7ce25881d5bd731f67d24169d1c0b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Bcn\\Component\\StreamWrapper\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Kolodyazhnyy",
+                    "email": "sergey.kolodyazhnyy@gmail.com"
+                }
+            ],
+            "description": "PHP stream wrapper for testing classes which interact with files",
+            "keywords": [
+                "file",
+                "filesystem",
+                "mock",
+                "phpunit",
+                "stream",
+                "test",
+                "unit-test",
+                "wrapper"
+            ],
+            "time": "2014-04-09 15:37:53"
+        },
         {
             "name": "fabpot/php-cs-fixer",
             "version": "v1.1",
