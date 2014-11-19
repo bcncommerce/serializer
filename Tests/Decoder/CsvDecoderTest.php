@@ -19,6 +19,7 @@ class CsvDecoderTest extends TestCase
         $data  = array();
 
         $decoder = new CsvDecoder($stream);
+        $decoder->node('table', 'array');
         while ($decoder->valid()) {
             $decoder->node('document', 'object');
             $data[] = $decoder->node('description', 'scalar')->read();
@@ -26,6 +27,7 @@ class CsvDecoderTest extends TestCase
             $decoder->end();
             $decoder->next();
         }
+        $decoder->end();
 
         $this->assertEquals($this->getDescriptionValues(), $data);
     }
@@ -38,6 +40,7 @@ class CsvDecoderTest extends TestCase
         $data  = array();
 
         $decoder = new CsvDecoder($stream, array('name', 'x-description'));
+        $decoder->node('table', 'array');
         while ($decoder->valid()) {
             $decoder->node('document', 'object');
             $data[] = $decoder->node('x-description', 'scalar')->read();
@@ -45,8 +48,27 @@ class CsvDecoderTest extends TestCase
             $decoder->end();
             $decoder->next();
         }
+        $decoder->end();
 
         $this->assertEquals($this->getDescriptionValues(), $data);
+    }
+
+    public function testTableNodeObjectException()
+    {
+        $this->setExpectedException("Exception");
+
+        $stream = $this->getDataStream("");
+        $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'object');
+    }
+
+    public function testTableNodeScalarException()
+    {
+        $this->setExpectedException("Exception");
+
+        $stream = $this->getDataStream("name");
+        $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'scalar');
     }
 
     public function testLineNodeArrayException()
@@ -55,6 +77,7 @@ class CsvDecoderTest extends TestCase
 
         $stream = $this->getDataStream("");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document', 'array');
     }
 
@@ -64,6 +87,7 @@ class CsvDecoderTest extends TestCase
 
         $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document', 'scalar');
     }
 
@@ -73,6 +97,7 @@ class CsvDecoderTest extends TestCase
 
         $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'array');
     }
@@ -83,6 +108,7 @@ class CsvDecoderTest extends TestCase
 
         $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'object');
     }
@@ -93,6 +119,7 @@ class CsvDecoderTest extends TestCase
 
         $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'scalar');
         $decoder->node('nested',    'scalar');
@@ -113,6 +140,7 @@ class CsvDecoderTest extends TestCase
 
         $stream = $this->getDataStream("name");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document', 'object');
         $decoder->next();
     }
@@ -130,6 +158,7 @@ class CsvDecoderTest extends TestCase
     {
         $stream = $this->getDataStream("name;description\nName;Description");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document', 'object');
 
         $this->assertTrue($decoder->exists('name'));
@@ -139,6 +168,7 @@ class CsvDecoderTest extends TestCase
     {
         $stream = $this->getDataStream("name;description\nName;Description");
         $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document', 'object');
 
         $this->assertFalse($decoder->exists('rank'));

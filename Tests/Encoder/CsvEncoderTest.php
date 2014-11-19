@@ -19,6 +19,7 @@ class CsvEncoderTest extends TestCase
         $documents = $this->getDocumentsData();
 
         $encoder = new CsvEncoder($stream);
+        $encoder->node('table', 'array');
         foreach ($documents as $document) {
             $encoder->node('document', 'object');
             foreach ($document as $prop => $value) {
@@ -26,8 +27,27 @@ class CsvEncoderTest extends TestCase
             }
             $encoder->end();
         }
+        $encoder->end();
 
         $this->assertEquals($this->getFixtureContent('resources/documents.csv'), $encoder->dump());
+    }
+
+    public function testTableNodeObjectException()
+    {
+        $this->setExpectedException("Exception");
+
+        $stream = fopen('php://temp', 'w');
+        $decoder = new CsvEncoder($stream);
+        $decoder->node('documents', 'object');
+    }
+
+    public function testTableNodeScalarException()
+    {
+        $this->setExpectedException("Exception");
+
+        $stream = fopen('php://temp', 'w');
+        $decoder = new CsvEncoder($stream);
+        $decoder->node('documents', 'scalar');
     }
 
     public function testLineNodeArrayException()
@@ -36,6 +56,7 @@ class CsvEncoderTest extends TestCase
 
         $stream = fopen('php://temp', 'w');
         $decoder = new CsvEncoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document', 'array');
     }
 
@@ -45,6 +66,7 @@ class CsvEncoderTest extends TestCase
 
         $stream = fopen('php://temp', 'w');
         $decoder = new CsvEncoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document', 'scalar');
     }
 
@@ -54,6 +76,7 @@ class CsvEncoderTest extends TestCase
 
         $stream = fopen('php://temp', 'w');
         $decoder = new CsvEncoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'array');
     }
@@ -64,6 +87,7 @@ class CsvEncoderTest extends TestCase
 
         $stream = fopen('php://temp', 'w');
         $decoder = new CsvEncoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'object');
     }
@@ -74,6 +98,7 @@ class CsvEncoderTest extends TestCase
 
         $stream = fopen('php://temp', 'w');
         $decoder = new CsvEncoder($stream);
+        $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
         $decoder->node('name',      'scalar');
         $decoder->node('nested',    'scalar');

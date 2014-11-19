@@ -21,8 +21,10 @@ class ArrayEncoderTest extends TestCase
         );
 
         $encoder = new ArrayEncoder();
+        $encoder->node('root', 'object');
         $encoder->node('first', 'scalar')->write('one')->end();
         $encoder->node('second', 'scalar')->write('two')->end();
+        $encoder->end();
 
         $this->assertEquals($data, $encoder->dump());
     }
@@ -35,8 +37,10 @@ class ArrayEncoderTest extends TestCase
         );
 
         $encoder = new ArrayEncoder();
-        $encoder->node(null, 'scalar')->write('one')->end();
-        $encoder->node(null, 'scalar')->write('two')->end();
+        $encoder->node('root', 'array');
+        $encoder->node('item', 'scalar')->write('one')->end();
+        $encoder->node('item', 'scalar')->write('two')->end();
+        $encoder->end();
 
         $this->assertEquals($data, $encoder->dump());
     }
@@ -69,6 +73,6 @@ class ArrayEncoderTest extends TestCase
                     ->node('rating',      'scalar')->write(93.31)->end()
                 ->end();
 
-        $this->assertEquals(array('documents' => $data), $encoder->dump());
+        $this->assertEquals($data, $encoder->dump());
     }
 }

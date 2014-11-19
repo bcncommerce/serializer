@@ -16,6 +16,7 @@ class JsonDecoderTest extends TestCase
     public function testDecodeDocument()
     {
         $decoder = new JsonDecoder(json_encode($this->getDocumentData()));
+        $decoder->node("document");
 
         $name = $decoder->node('name', 'scalar')->read();
         $decoder->end();
@@ -31,6 +32,8 @@ class JsonDecoderTest extends TestCase
               = $decoder->node('rating', 'scalar')->read();
         $decoder->end();
 
+        $decoder->end();
+
         $this->assertEquals('Test name ',        $name);
         $this->assertEquals('Test description ', $description);
         $this->assertEquals(11,                  $rank);
@@ -41,6 +44,7 @@ class JsonDecoderTest extends TestCase
     {
         $data = array();
         $decoder = new JsonDecoder('["one", "two"]');
+        $decoder->node("strings", "array");
 
         while ($decoder->valid()) {
             $data[] = $decoder->node(null, 'scalar')->read();
@@ -48,13 +52,15 @@ class JsonDecoderTest extends TestCase
             $decoder->next();
         }
 
+        $decoder->end();
+
         $this->assertEquals(array('one', 'two'), $data);
     }
 
     public function testDecodeDocumentsArray()
     {
         $names = array();
-        $decoder = new JsonDecoder(json_encode(array('documents' => $this->getDocumentsData())));
+        $decoder = new JsonDecoder(json_encode($this->getDocumentsData()));
         $decoder->node('documents', 'array');
 
         while ($decoder->valid()) {
@@ -85,7 +91,7 @@ class JsonDecoderTest extends TestCase
     {
         $names = array();
 
-        $decoder = new JsonDecoder('{"documents": []}');
+        $decoder = new JsonDecoder('[]');
         $decoder->node('documents', 'array');
 
         while ($decoder->valid()) {

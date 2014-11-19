@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Tests\Integration\Type\Extension;
 
 use Bcn\Component\Serializer\Tests\Integration\Type\DocumentArrayType;
 use Bcn\Component\Serializer\Tests\Integration\Type\DocumentNestedType;
+use Bcn\Component\Serializer\Tests\Integration\Type\DocumentRootType;
 use Bcn\Component\Serializer\Tests\Integration\Type\DocumentType;
 use Bcn\Component\Serializer\Type\Extension\TypeExtensionInterface;
 use Bcn\Component\Serializer\Type\TypeInterface;
@@ -23,8 +24,9 @@ class DocumentTypeExtension implements TypeExtensionInterface
     {
         return array(
             new DocumentType(),
-            new DocumentNestedType(),
+            new DocumentRootType(),
             new DocumentArrayType(),
+            new DocumentNestedType(),
         );
     }
 }

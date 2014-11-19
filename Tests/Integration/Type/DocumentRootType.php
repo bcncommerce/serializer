@@ -13,7 +13,7 @@ use Bcn\Component\Serializer\Serializer\SerializerInterface;
 use Bcn\Component\Serializer\SerializerFactory;
 use Bcn\Component\Serializer\Type\AbstractType;
 
-class DocumentArrayType extends AbstractType
+class DocumentRootType extends AbstractType
 {
     /**
      * @param  SerializerFactory   $factory
@@ -22,10 +22,7 @@ class DocumentArrayType extends AbstractType
      */
     public function getSerializer(SerializerFactory $factory, array $options = array())
     {
-        return new RootSerializer('documents', $factory->create('array', array(
-            'item_type' => 'document',
-            'item_node' => 'document',
-        )));
+        return new RootSerializer("document", $factory->create('document', $options));
     }
 
     /**
@@ -33,6 +30,6 @@ class DocumentArrayType extends AbstractType
      */
     public function getName()
     {
-        return 'document_array';
+        return 'document_root';
     }
 }

@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Encoder;
 
 class CsvEncoder implements EncoderInterface
 {
+    const CONTEXT_NONE  = 'none';
     const CONTEXT_TABLE = 'table';
     const CONTEXT_LINE  = 'line';
     const CONTEXT_CELL  = 'cell';
@@ -57,7 +58,7 @@ class CsvEncoder implements EncoderInterface
         $this->escape          = $escape    ?: "\\";
         $this->isHeadersPushed = $headers === false;
 
-        $this->context         = self::CONTEXT_TABLE;
+        $this->context         = self::CONTEXT_NONE;
     }
 
     /**
@@ -71,6 +72,9 @@ class CsvEncoder implements EncoderInterface
     public function node($name = null, $type = null)
     {
         switch ($this->context) {
+            case self::CONTEXT_NONE:
+                $this->nodeTable($name, $type);
+                break;
             case self::CONTEXT_TABLE:
                 $this->nodeLine($name, $type);
                 break;
@@ -82,6 +86,20 @@ class CsvEncoder implements EncoderInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param  string     $name
+     * @param  string     $type
+     * @throws \Exception
+     */
+    protected function nodeTable($name, $type)
+    {
+        if ($type != 'array') {
+            throw new \Exception(sprintf("Type of the CSV table should be \"array\", \"%s\" given", $type));
+        }
+
+        $this->context = self::CONTEXT_TABLE;
     }
 
     /**
@@ -123,8 +141,12 @@ class CsvEncoder implements EncoderInterface
     public function end()
     {
         switch ($this->context) {
-            case self::CONTEXT_TABLE:
+            case self::CONTEXT_NONE:
                 throw new \Exception("Out of context \"table\" context");
+                break;
+            case self::CONTEXT_TABLE:
+                $this->context = self::CONTEXT_NONE;
+                break;
             case self::CONTEXT_LINE:
                 $this->context = self::CONTEXT_TABLE;
                 $this->pushRow($this->line);

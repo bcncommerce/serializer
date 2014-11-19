@@ -27,10 +27,10 @@ class ArrayDecoder implements DecoderInterface
      */
     public function __construct(array $data)
     {
-        $this->data      = $data;
+        $this->data      = array($data);
         $this->current   = &$this->data;
         $this->context[] = &$this->data;
-        $this->types[]   = 'mixed';
+        $this->types[]   = 'array';
     }
 
     /**

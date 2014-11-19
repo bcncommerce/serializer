@@ -18,8 +18,10 @@ class JsonEncoderTest extends TestCase
         $data = '{"first": "one", "second": "two"}';
 
         $encoder = new JsonEncoder();
+        $encoder->node('root', 'object');
         $encoder->node('first', 'scalar')->write('one')->end();
         $encoder->node('second', 'scalar')->write('two')->end();
+        $encoder->end();
 
         $this->assertJsonStringEqualsJsonString($data, $encoder->dump());
     }
@@ -29,8 +31,10 @@ class JsonEncoderTest extends TestCase
         $data = '["one", "two"]';
 
         $encoder = new JsonEncoder();
-        $encoder->node(null, 'scalar')->write('one')->end();
-        $encoder->node(null, 'scalar')->write('two')->end();
+        $encoder->node('root', 'array');
+        $encoder->node('item', 'scalar')->write('one')->end();
+        $encoder->node('item', 'scalar')->write('two')->end();
+        $encoder->end();
 
         $this->assertJsonStringEqualsJsonString($data, $encoder->dump());
     }
@@ -45,7 +49,7 @@ class JsonEncoderTest extends TestCase
 
     public function testEncodeDocumentArray()
     {
-        $data = json_encode(array('documents' => $this->getDocumentsData()));
+        $data = json_encode($this->getDocumentsData());
 
         $encoder = new JsonEncoder();
         $encoder

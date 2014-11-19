@@ -88,6 +88,6 @@ class ArrayEncoder implements EncoderInterface
      */
     public function dump()
     {
-        return $this->data;
+        return is_array($this->data) ? current($this->data) : $this->data;
     }
 }

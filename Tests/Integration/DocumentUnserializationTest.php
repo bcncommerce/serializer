@@ -28,7 +28,7 @@ class DocumentUnserializationTest extends TestCase
      */
     public function testDocumentUnserialize(DecoderInterface $decoder)
     {
-        $document = $this->getFactory()->unserialize($decoder, 'document');
+        $document = $this->getFactory()->unserialize($decoder, 'document_root');
 
         $this->assertEquals($this->getDocument('flat'), $document);
     }

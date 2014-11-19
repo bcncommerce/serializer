@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document>
+<nested_document>
     <name><![CDATA[Test name ]]></name>
     <description><![CDATA[Test description ]]></description>
     <rank>11</rank>
@@ -11,4 +11,4 @@
         <rating>93.31</rating>
         <parent/>
     </parent>
-</document>
+</nested_document>

@@ -16,6 +16,7 @@ class ArrayDecoderTest extends TestCase
     public function testDecodeDocument()
     {
         $decoder = new ArrayDecoder($this->getDocumentData());
+        $decoder->node("document", "object");
 
         $name = $decoder->node('name', 'scalar')->read();
         $decoder->end();
@@ -31,6 +32,8 @@ class ArrayDecoderTest extends TestCase
               = $decoder->node('rating', 'scalar')->read();
         $decoder->end();
 
+        $decoder->end();
+
         $this->assertEquals('Test name ',        $name);
         $this->assertEquals('Test description ', $description);
         $this->assertEquals(11,                  $rank);
@@ -41,12 +44,14 @@ class ArrayDecoderTest extends TestCase
     {
         $data = array();
         $decoder = new ArrayDecoder(array('one', 'two'));
+        $decoder->node('strings', 'array');
 
         while ($decoder->valid()) {
             $data[] = $decoder->node(null, 'scalar')->read();
             $decoder->end();
             $decoder->next();
         }
+        $decoder->end();
 
         $this->assertEquals(array('one', 'two'), $data);
     }
@@ -54,7 +59,7 @@ class ArrayDecoderTest extends TestCase
     public function testDecodeDocumentsArray()
     {
         $names = array();
-        $decoder = new ArrayDecoder(array('documents' => $this->getDocumentsData()));
+        $decoder = new ArrayDecoder($this->getDocumentsData());
         $decoder->node('documents', 'array');
 
         while ($decoder->valid()) {
@@ -85,9 +90,8 @@ class ArrayDecoderTest extends TestCase
     {
         $names = array();
 
-        $decoder = new ArrayDecoder(array('documents' => array()));
+        $decoder = new ArrayDecoder(array());
         $decoder->node('documents', 'array');
-
         while ($decoder->valid()) {
             $decoder->node('document', 'object');
             $names[] = $decoder->node('name', 'scalar')->read();
@@ -95,7 +99,6 @@ class ArrayDecoderTest extends TestCase
             $decoder->end();
             $decoder->next();
         }
-
         $decoder->end();
 
         $this->assertEquals($names, array());
@@ -104,6 +107,7 @@ class ArrayDecoderTest extends TestCase
     public function testExists()
     {
         $decoder = new ArrayDecoder(array('foo' => 'baz'));
+        $decoder->node("document");
 
         $this->assertTrue($decoder->exists('foo'));
         $this->assertFalse($decoder->exists('baz'));

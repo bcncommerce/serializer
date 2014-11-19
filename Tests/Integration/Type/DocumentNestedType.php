@@ -31,7 +31,7 @@ class DocumentNestedType extends AbstractType
             ->add('parent',      $serializer)
         ;
 
-        return $serializer;
+        return new Serializer\RootSerializer("nested_document", $serializer);
     }
 
     /**

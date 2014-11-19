@@ -19,32 +19,48 @@ class XmlEncoder implements EncoderInterface
     /** @var bool */
     protected $finalised;
 
+    /** @var bool */
+    protected $initialised;
+
+    /** @var string */
+    protected $version;
+
+    /** @var string */
+    protected $encoding;
+
+    /** @var int */
+    protected $deep = 0;
+
     /**
+     * @param string   $version
+     * @param string   $encoding
      * @param resource $stream
      */
-    public function __construct($stream, $root, $version = null, $encoding = null)
+    public function __construct($stream, $version = null, $encoding = null)
     {
-        $this->stream    = $stream;
-        $this->finalised = false;
+        $this->stream      = $stream;
+        $this->version     = $version;
+        $this->encoding    = $encoding;
+        $this->finalised   = false;
+        $this->initialised = false;
+        $this->deep        = 0;
 
         $this->writer = new \XMLWriter();
         $this->writer->openMemory();
-
-        $this->initialise($root, $version, $encoding);
     }
 
     /**
-     * @param  string $root
      * @param  string $version
      * @param  string $encoding
      * @return $this
      */
-    protected function initialise($root, $version = null, $encoding = null)
+    protected function initialise($version = null, $encoding = null)
     {
         $this->writer->setIndent(true);
         $this->writer->setIndentString("    ");
         $this->writer->startDocument($version ?: "1.0", $encoding ?: "UTF-8");
-        $this->writer->startElement($root);
+
+        $this->initialised = true;
 
         return $this;
     }
@@ -56,8 +72,14 @@ class XmlEncoder implements EncoderInterface
      */
     public function node($name = null, $type = null)
     {
+        if ($this->deep == 0) {
+            $this->initialise($this->version, $this->encoding);
+        }
+
         $this->writer->startElement($name ?: "element");
         $this->flush();
+
+        $this->deep++;
 
         return $this;
     }
@@ -65,9 +87,14 @@ class XmlEncoder implements EncoderInterface
     /**
      * @param  string           $value
      * @return EncoderInterface
+     * @throws \Exception
      */
     public function write($value)
     {
+        if (!$this->initialised) {
+            throw new \Exception("Document does not have root node");
+        }
+
         if ($value === null) {
             return $this;
         }
@@ -91,6 +118,11 @@ class XmlEncoder implements EncoderInterface
         $this->writer->endElement();
         $this->flush();
 
+        $this->deep--;
+        if ($this->deep == 0) {
+            $this->finalise();
+        }
+
         return $this;
     }
 
@@ -111,8 +143,6 @@ class XmlEncoder implements EncoderInterface
      */
     public function dump()
     {
-        $this->finalise();
-
         rewind($this->stream);
 
         return stream_get_contents($this->stream);
@@ -123,11 +153,8 @@ class XmlEncoder implements EncoderInterface
      */
     public function finalise()
     {
-        if (!$this->finalised) {
-            $this->writer->endElement();
-            $this->writer->endDocument();
-            $this->flush();
-        }
+        $this->writer->endDocument();
+        $this->flush();
 
         $this->finalised = true;
 

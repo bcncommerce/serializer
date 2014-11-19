@@ -32,7 +32,7 @@ class DocumentSerializationTest extends TestCase
     {
         $document = $this->getDocument('flat');
 
-        $this->getFactory()->serialize($document, $encoder, 'document');
+        $this->getFactory()->serialize($document, $encoder, 'document_root');
 
         $this->assertEquals($expected, $encoder->dump());
     }
@@ -49,7 +49,7 @@ class DocumentSerializationTest extends TestCase
                 $this->getFixtureContent('resources/document.json'),
             ),
             'xml'  => array(
-                new XmlEncoder($this->getDataStream(), "document"),
+                new XmlEncoder($this->getDataStream()),
                 $this->getFixtureContent('resources/document.xml'),
             ),
         );
@@ -81,7 +81,7 @@ class DocumentSerializationTest extends TestCase
                 $this->getFixtureContent('resources/document_nested.json'),
             ),
             'xml'  => array(
-                new XmlEncoder($this->getDataStream(), "document"),
+                new XmlEncoder($this->getDataStream()),
                 $this->getFixtureContent('resources/document_nested.xml'),
             ),
         );
@@ -117,7 +117,7 @@ class DocumentSerializationTest extends TestCase
                 $this->getFixtureContent('resources/document_array.csv'),
             ),
             'xml'  => array(
-                new XmlEncoder($this->getDataStream(), "documents"),
+                new XmlEncoder($this->getDataStream()),
                 $this->getFixtureContent('resources/document_array.xml'),
             ),
         );
