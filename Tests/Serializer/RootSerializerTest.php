@@ -47,7 +47,8 @@ class RootSerializerTest extends TestCase
         $decoder = $this->getDecoderMock();
         $decoder->expects($this->at(0))
             ->method('node')
-            ->with($this->equalTo('root'), $this->equalTo('text'));
+            ->with($this->equalTo('root'), $this->equalTo('text'))
+            ->will($this->returnValue(true));
         $decoder->expects($this->at(1))
             ->method('read')
             ->will($this->returnValue('one'));
@@ -69,6 +70,20 @@ class RootSerializerTest extends TestCase
         $data = $serializer->unserialize($decoder);
 
         $this->assertEquals('one', $data);
+    }
+
+    public function testUnserializeEmptyDocument()
+    {
+        $decoder = $this->getDecoderMock();
+        $decoder->expects($this->at(0))
+            ->method('node')
+            ->with($this->equalTo('root'), $this->anything())
+            ->will($this->returnValue(false));
+
+        $serializer = new RootSerializer('root', $this->getSerializerMock());
+        $data = $serializer->unserialize($decoder);
+
+        $this->assertNull($data);
     }
 
     public function testNodeType()

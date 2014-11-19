@@ -111,8 +111,7 @@ class Serializer implements SerializerInterface
         }
 
         foreach ($this->properties as $property => $serializer) {
-            if ($decoder->exists($property)) {
-                $decoder->node($property, $serializer->getNodeType());
+            if ($decoder->node($property, $serializer->getNodeType())) {
                 $value = $serializer->unserialize($decoder);
                 $decoder->end();
             } else {

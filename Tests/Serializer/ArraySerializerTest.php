@@ -55,33 +55,34 @@ class ArraySerializerTest extends TestCase
     {
         $decoder = $this->getDecoderMock();
         $decoder->expects($this->at(0))
-            ->method('valid')
+            ->method('node')
+            ->with($this->equalTo('item'), $this->equalTo('text'))
             ->will($this->returnValue(true));
         $decoder->expects($this->at(1))
-            ->method('node')
-            ->with($this->equalTo('item'), $this->equalTo('text'));
-        $decoder->expects($this->at(2))
             ->method('read')
             ->will($this->returnValue('one'));
+        $decoder->expects($this->at(2))
+            ->method('end')
+            ->will($this->returnValue($decoder));
         $decoder->expects($this->at(3))
-            ->method('end');
+            ->method('next')
+            ->will($this->returnValue($decoder));
         $decoder->expects($this->at(4))
-            ->method('next');
-        $decoder->expects($this->at(5))
-            ->method('valid')
-            ->will($this->returnValue(true));
-        $decoder->expects($this->at(6))
             ->method('node')
-            ->with($this->equalTo('item'), $this->equalTo('text'));
-        $decoder->expects($this->at(7))
+            ->with($this->equalTo('item'), $this->equalTo('text'))
+            ->will($this->returnValue(true));
+        $decoder->expects($this->at(5))
             ->method('read')
             ->will($this->returnValue('two'));
+        $decoder->expects($this->at(6))
+            ->method('end')
+            ->will($this->returnValue($decoder));
+        $decoder->expects($this->at(7))
+            ->method('next')
+            ->will($this->returnValue($decoder));
         $decoder->expects($this->at(8))
-            ->method('end');
-        $decoder->expects($this->at(9))
-            ->method('next');
-        $decoder->expects($this->at(10))
-            ->method('valid')
+            ->method('node')
+            ->with($this->equalTo('item'), $this->equalTo('text'))
             ->will($this->returnValue(false));
 
         $itemSerializer = $this->getSerializerMock();

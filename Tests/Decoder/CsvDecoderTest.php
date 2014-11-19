@@ -20,12 +20,13 @@ class CsvDecoderTest extends TestCase
 
         $decoder = new CsvDecoder($stream);
         $decoder->node('table', 'array');
-        while ($decoder->valid()) {
-            $decoder->node('document', 'object');
-            $data[] = $decoder->node('description', 'scalar')->read();
-            $decoder->end();
-            $decoder->end();
-            $decoder->next();
+        while ($decoder->node('line', 'object')) {
+            if ($decoder->node('description', 'scalar')) {
+                $data[] = $decoder->read();
+                $decoder->end();
+            }
+
+            $decoder->end()->next();
         }
         $decoder->end();
 
@@ -41,12 +42,13 @@ class CsvDecoderTest extends TestCase
 
         $decoder = new CsvDecoder($stream, array('name', 'x-description'));
         $decoder->node('table', 'array');
-        while ($decoder->valid()) {
-            $decoder->node('document', 'object');
-            $data[] = $decoder->node('x-description', 'scalar')->read();
-            $decoder->end();
-            $decoder->end();
-            $decoder->next();
+        while ($decoder->node('line', 'object')) {
+            if ($decoder->node('x-description', 'scalar')) {
+                $data[] = $decoder->read();
+                $decoder->end();
+            }
+
+            $decoder->end()->next();
         }
         $decoder->end();
 
@@ -57,7 +59,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'object');
     }
@@ -66,7 +68,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'scalar');
     }
@@ -75,7 +77,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'array');
         $decoder->node('document', 'array');
@@ -85,7 +87,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'array');
         $decoder->node('document', 'scalar');
@@ -95,7 +97,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
@@ -106,7 +108,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
@@ -117,7 +119,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'array');
         $decoder->node('document',  'object');
@@ -129,7 +131,7 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->read();
     }
@@ -138,49 +140,30 @@ class CsvDecoderTest extends TestCase
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->node('documents', 'array');
         $decoder->node('document', 'object');
         $decoder->next();
     }
 
+    public function testReadNonExistentCellException()
+    {
+        $stream = $this->getDataStream("name\nName");
+        $decoder = new CsvDecoder($stream);
+        $decoder->node('documents', 'array');
+        $decoder->node('document', 'object');
+
+        $this->assertFalse($decoder->node('description', 'scalar'));
+    }
+
     public function testEndOutOfContextException()
     {
         $this->setExpectedException("Exception");
 
-        $stream = $this->getDataStream("name");
+        $stream = $this->getDataStream("name\nName");
         $decoder = new CsvDecoder($stream);
         $decoder->end();
-    }
-
-    public function testExists()
-    {
-        $stream = $this->getDataStream("name;description\nName;Description");
-        $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
-        $decoder->node('document', 'object');
-
-        $this->assertTrue($decoder->exists('name'));
-    }
-
-    public function testNotExists()
-    {
-        $stream = $this->getDataStream("name;description\nName;Description");
-        $decoder = new CsvDecoder($stream);
-        $decoder->node('documents', 'array');
-        $decoder->node('document', 'object');
-
-        $this->assertFalse($decoder->exists('rank'));
-    }
-
-    public function testExistsWrongContextException()
-    {
-        $this->setExpectedException("Exception");
-
-        $stream = $this->getDataStream("name;description\nName;Description");
-        $decoder = new CsvDecoder($stream);
-        $decoder->exists('name');
     }
 
     /**

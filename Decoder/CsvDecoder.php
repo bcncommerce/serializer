@@ -60,44 +60,28 @@ class CsvDecoder implements DecoderInterface
     /**
      * Enter a node
      *
-     * @param  string|null      $name
-     * @param  string|null      $type
-     * @return DecoderInterface
+     * @param  string     $name
+     * @param  string     $type
+     * @return bool
      * @throws \Exception
      */
     public function node($name = null, $type = null)
     {
         switch ($this->context) {
             case self::CONTEXT_NONE:
-                $this->nodeTable($name, $type);
-                break;
+                return $this->nodeTable($name, $type);
             case self::CONTEXT_TABLE:
-                $this->nodeLine($name, $type);
-                break;
+                return $this->nodeLine($name, $type);
             case self::CONTEXT_LINE:
-                $this->nodeCell($name, $type);
-                break;
-            default:
-                throw new \Exception(sprintf("Unable to read node \"%s\"", $name));
+                return $this->nodeCell($name, $type);
         }
 
-        return $this;
-    }
-
-    /**
-     * Check current pointer in valid position
-     *
-     * @return boolean
-     */
-    public function valid()
-    {
-        return $this->context != self::CONTEXT_TABLE || $this->line;
+        throw new \Exception(sprintf("Unable to read node \"%s\"", $name));
     }
 
     /**
      * Get next node on the same level
      *
-     * @return boolean
      * @throws \Exception
      */
     public function next()
@@ -119,22 +103,6 @@ class CsvDecoder implements DecoderInterface
     }
 
     /**
-     * Check if node exists
-     *
-     * @param  string     $name
-     * @return boolean
-     * @throws \Exception
-     */
-    public function exists($name)
-    {
-        if ($this->context != self::CONTEXT_LINE) {
-            throw new \Exception(sprintf("Context \"%s\" can not have any children", $this->context));
-        }
-
-        return in_array($name, $this->headers);
-    }
-
-    /**
      * Read a scalar value
      *
      * @return string|boolean|null|integer|float
@@ -147,6 +115,70 @@ class CsvDecoder implements DecoderInterface
         }
 
         return isset($this->line[$this->cell]) ? $this->line[$this->cell] : null;
+    }
+
+    /**
+     * @throws \Exception
+     * @return bool
+     */
+    protected function nodeTable($name, $type)
+    {
+        if ($type != 'array') {
+            throw new \Exception(sprintf("Type of the CSV table should be \"array\", \"%s\" given", $type));
+        }
+
+        $this->context = self::CONTEXT_TABLE;
+
+        if ($this->headers === null) {
+            $this->headers = $this->fetch();
+        }
+
+        $this->next();
+
+        return true;
+    }
+
+    /**
+     * @param  string     $name
+     * @param  string     $type
+     * @return bool
+     * @throws \Exception
+     */
+    protected function nodeLine($name, $type)
+    {
+        if ($type != 'object') {
+            throw new \Exception(sprintf("Type of lines in CSV table should be \"object\", \"%s\" given", $type));
+        }
+
+        if ($this->line === null) {
+            return false;
+        }
+
+        $this->context = self::CONTEXT_LINE;
+
+        return true;
+    }
+
+    /**
+     * @param  string     $name
+     * @param  string     $type
+     * @return bool
+     * @throws \Exception
+     */
+    protected function nodeCell($name, $type)
+    {
+        if ($type != 'scalar') {
+            throw new \Exception(sprintf("Type of cells in CSV table should be \"scalar\", \"%s\" given", $type));
+        }
+
+        if (!isset($this->line[$name])) {
+            return false;
+        }
+
+        $this->cell = $name;
+        $this->context = self::CONTEXT_CELL;
+
+        return true;
     }
 
     /**
@@ -173,53 +205,6 @@ class CsvDecoder implements DecoderInterface
         }
 
         return $this;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function nodeTable($name, $type)
-    {
-        if ($type != 'array') {
-            throw new \Exception(sprintf("Type of the CSV table should be \"array\", \"%s\" given", $type));
-        }
-
-        $this->context = self::CONTEXT_TABLE;
-
-        if ($this->headers === null) {
-            $this->headers = $this->fetch();
-        }
-
-        $this->next();
-    }
-
-    /**
-     * @param  string     $name
-     * @param  string     $type
-     * @throws \Exception
-     */
-    protected function nodeLine($name, $type)
-    {
-        if ($type != 'object') {
-            throw new \Exception(sprintf("Type of lines in CSV table should be \"object\", \"%s\" given", $type));
-        }
-
-        $this->context = self::CONTEXT_LINE;
-    }
-
-    /**
-     * @param  string     $name
-     * @param  string     $type
-     * @throws \Exception
-     */
-    protected function nodeCell($name, $type)
-    {
-        if ($type != 'scalar') {
-            throw new \Exception(sprintf("Type of cells in CSV table should be \"scalar\", \"%s\" given", $type));
-        }
-
-        $this->cell = $name;
-        $this->context = self::CONTEXT_CELL;
     }
 
     /**

@@ -13,31 +13,14 @@ interface DecoderInterface
     /**
      * Enter a node
      *
-     * @param  string|null      $name
-     * @param  string|null      $type
-     * @return DecoderInterface
+     * @param  string|null $name
+     * @param  string|null $type
+     * @return bool
      */
     public function node($name = null, $type = null);
 
     /**
-     * Check current pointer in valid position
-     *
-     * @return boolean
-     */
-    public function valid();
-
-    /**
-     * Check if node exists
-     *
-     * @param  string  $name
-     * @return boolean
-     */
-    public function exists($name);
-
-    /**
      * Get next node on the same level
-     *
-     * @return boolean
      */
     public function next();
 

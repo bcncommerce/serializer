@@ -52,9 +52,12 @@ class RootSerializer implements SerializerInterface
      */
     public function unserialize(DecoderInterface $decoder, &$object = null)
     {
-        $decoder->node($this->nodeName, $this->serializer->getNodeType());
-        $object = $this->serializer->unserialize($decoder, $object);
-        $decoder->end();
+        if ($decoder->node($this->nodeName, $this->serializer->getNodeType())) {
+            $object = $this->serializer->unserialize($decoder, $object);
+            $decoder->end();
+        } else {
+            $object = null;
+        }
 
         return $object;
     }

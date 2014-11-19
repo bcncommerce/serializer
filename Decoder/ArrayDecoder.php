@@ -36,9 +36,9 @@ class ArrayDecoder implements DecoderInterface
     /**
      * Enter a node
      *
-     * @param  string|null      $name
-     * @param  string|null      $type
-     * @return DecoderInterface
+     * @param  string|null $name
+     * @param  string|null $type
+     * @return bool
      */
     public function node($name = null, $type = null)
     {
@@ -46,12 +46,12 @@ class ArrayDecoder implements DecoderInterface
             $name = null;
         }
 
-        if ($name === null) {
-            $name = key($this->current);
+        if ($name === null && is_array($this->current)) {
+            $name =  key($this->current);
         }
 
-        if (!isset($this->current[$name])) {
-            $this->current[$name] = $type == 'scalar' ? null : array();
+        if ($name === null || !isset($this->current[$name])) {
+            return false;
         }
 
         $this->types[]   = $type;
@@ -62,22 +62,11 @@ class ArrayDecoder implements DecoderInterface
             reset($this->current);
         }
 
-        return $this;
-    }
-
-    /**
-     * @param  string $name
-     * @return bool
-     */
-    public function exists($name)
-    {
-        return isset($this->current[$name]);
+        return true;
     }
 
     /**
      * Get an iterator through the child nodes
-     *
-     * @return bool
      */
     public function next()
     {
@@ -87,17 +76,7 @@ class ArrayDecoder implements DecoderInterface
     }
 
     /**
-     * Get an iterator through the child nodes
-     *
-     * @return bool
-     */
-    public function valid()
-    {
-        return !empty($this->current);
-    }
-
-    /**
-     * Read a scalar value
+     * Read a scalar idue
      *
      * @return string|boolean|null|integer|float
      */
@@ -114,7 +93,6 @@ class ArrayDecoder implements DecoderInterface
     public function end()
     {
         $this->current = $this->context[count($this->context) - 1];
-        $this->valid   = true;
         array_pop($this->context);
         array_pop($this->types);
 

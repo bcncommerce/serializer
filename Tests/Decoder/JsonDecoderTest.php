@@ -15,43 +15,44 @@ class JsonDecoderTest extends TestCase
 {
     public function testDecodeDocument()
     {
+        $data = array('name' => null, 'description' => null, 'rank' => null, 'rating' => null);
+
         $decoder = new JsonDecoder(json_encode($this->getDocumentData()));
-        $decoder->node("document");
+        if ($decoder->node("document", "object")) {
+            if ($decoder->node('name', 'scalar')) {
+                $data['name'] = $decoder->read();
+                $decoder->end();
+            }
 
-        $name = $decoder->node('name', 'scalar')->read();
-        $decoder->end();
+            if ($decoder->node('description', 'scalar')) {
+                $data['description'] = $decoder->read();
+                $decoder->end();
+            }
 
-        $description
-              = $decoder->node('description', 'scalar')->read();
-        $decoder->end();
+            if ($decoder->node('rank', 'scalar')) {
+                $data['rank'] = $decoder->read();
+                $decoder->end();
+            }
 
-        $rank = $decoder->node('rank', 'scalar')->read();
-        $decoder->end();
+            if ($decoder->node('rating', 'scalar')) {
+                $data['rating'] = $decoder->read();
+                $decoder->end();
+            }
+            $decoder->end();
+        }
 
-        $rating
-              = $decoder->node('rating', 'scalar')->read();
-        $decoder->end();
-
-        $decoder->end();
-
-        $this->assertEquals('Test name ',        $name);
-        $this->assertEquals('Test description ', $description);
-        $this->assertEquals(11,                  $rank);
-        $this->assertEquals(93.31,               $rating);
+        $this->assertEquals($this->getDocumentData(), $data);
     }
 
     public function testDecodeStringArray()
     {
         $data = array();
         $decoder = new JsonDecoder('["one", "two"]');
-        $decoder->node("strings", "array");
-
-        while ($decoder->valid()) {
-            $data[] = $decoder->node(null, 'scalar')->read();
-            $decoder->end();
-            $decoder->next();
+        $decoder->node('strings', 'array');
+        while ($decoder->node('item', 'scalar')) {
+            $data[] = $decoder->read();
+            $decoder->end()->next();
         }
-
         $decoder->end();
 
         $this->assertEquals(array('one', 'two'), $data);
@@ -63,12 +64,12 @@ class JsonDecoderTest extends TestCase
         $decoder = new JsonDecoder(json_encode($this->getDocumentsData()));
         $decoder->node('documents', 'array');
 
-        while ($decoder->valid()) {
-            $decoder->node('document', 'object');
-            $names[] = $decoder->node('name', 'scalar')->read();
-            $decoder->end();
-            $decoder->end();
-            $decoder->next();
+        while ($decoder->node('document', 'object')) {
+            if ($decoder->node('name', 'scalar')) {
+                $names[] = $decoder->read();
+                $decoder->end();
+            }
+            $decoder->end()->next();
         }
 
         $decoder->end();
@@ -80,11 +81,8 @@ class JsonDecoderTest extends TestCase
     {
         $decoder = new JsonDecoder('{"name": "Test"}');
         $decoder->node('document', 'object');
-        $description = $decoder->node('description', 'scalar')->read();
-        $decoder->end();
-        $decoder->end();
 
-        $this->assertNull($description);
+        $this->assertFalse($decoder->node('description', 'scalar'));
     }
 
     public function testDecodeEmptyArray()
@@ -94,12 +92,12 @@ class JsonDecoderTest extends TestCase
         $decoder = new JsonDecoder('[]');
         $decoder->node('documents', 'array');
 
-        while ($decoder->valid()) {
-            $decoder->node('document', 'object');
-            $names[] = $decoder->node('name', 'scalar')->read();
-            $decoder->end();
-            $decoder->end();
-            $decoder->next();
+        while ($decoder->node('document', 'object')) {
+            if ($decoder->node('name', 'scalar')) {
+                $names[] = $decoder->read();
+                $decoder->end();
+            }
+            $decoder->end()->next();
         }
 
         $decoder->end();
