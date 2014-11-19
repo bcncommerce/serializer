@@ -98,6 +98,9 @@ class DocumentUnserializationTest extends TestCase
             'csv'  => array(
                 new CsvDecoder($this->getFixtureStream('resources/document_array.csv')),
             ),
+            'xml'  => array(
+                new XmlDecoder($this->getFixtureUri('resources/document_array.xml')),
+            ),
         );
     }
 
