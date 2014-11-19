@@ -59,6 +59,15 @@ class ArrayDecoderTest extends TestCase
         $this->assertEquals(array('one', 'two'), $data);
     }
 
+    public function testIsEmpty()
+    {
+        $decoder = new ArrayDecoder(array('empty' => null));
+
+        $this->assertTrue($decoder->node('root', 'object'),  "Enter root node");
+        $this->assertTrue($decoder->node('empty', 'scalar'), "Enter property node");
+        $this->assertTrue($decoder->isEmpty(),               "Check if property is empty");
+    }
+
     public function testDecodeDocumentsArray()
     {
         $names = array();

@@ -81,4 +81,14 @@ class XmlEncoderTest extends TestCase
         $encoder->end();
         $encoder->node('second_root');
     }
+
+    public function testWriteEmptyNode()
+    {
+        $encoder = new XmlEncoder($this->getDataStream());
+        $encoder->node('root', 'scalar');
+        $encoder->write(null);
+        $encoder->end();
+
+        $this->assertXmlStringEqualsXmlString("<root/>", $encoder->dump());
+    }
 }

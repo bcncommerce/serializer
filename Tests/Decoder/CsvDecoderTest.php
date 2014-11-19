@@ -166,6 +166,26 @@ class CsvDecoderTest extends TestCase
         $decoder->end();
     }
 
+    public function testEmptyTable()
+    {
+        $stream = $this->getDataStream("name");
+        $decoder = new CsvDecoder($stream);
+        $decoder->node('table', 'array');
+
+        $this->assertFalse($decoder->isEmpty());
+    }
+
+    public function testEmptyCell()
+    {
+        $stream = $this->getDataStream("name;index\n;5");
+        $decoder = new CsvDecoder($stream);
+        $decoder->node('table', 'array');
+        $decoder->node('line',  'object');
+        $decoder->node('name',  'scalar');
+
+        $this->assertTrue($decoder->isEmpty());
+    }
+
     /**
      * @return array
      */

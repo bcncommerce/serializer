@@ -109,6 +109,7 @@ class XmlDecoderTest extends TestCase
         $decoder->node('collection', 'array');
         $decoder->node('item', 'scalar');
 
+        $this->assertTrue($decoder->isEmpty());
         $this->assertNull($decoder->read());
     }
 

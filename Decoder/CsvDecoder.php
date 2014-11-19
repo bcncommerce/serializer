@@ -191,7 +191,11 @@ class CsvDecoder implements DecoderInterface
      */
     public function isEmpty()
     {
-        return $this->line === null;
+        if ($this->context == self::CONTEXT_CELL) {
+            return !isset($this->line[$this->cell]) || $this->line[$this->cell] === "";
+        }
+
+        return false;
     }
 
     /**

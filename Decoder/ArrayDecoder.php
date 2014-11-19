@@ -50,7 +50,7 @@ class ArrayDecoder implements DecoderInterface
             $name =  key($this->current);
         }
 
-        if ($name === null || !isset($this->current[$name])) {
+        if ($name === null || !is_array($this->current) || !array_key_exists($name, $this->current)) {
             return false;
         }
 

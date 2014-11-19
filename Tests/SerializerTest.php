@@ -44,6 +44,17 @@ class SerializerTest extends TestCase
         $serializer->serialize($document, $encoder);
     }
 
+    public function testSerializeNull()
+    {
+        $encoder = $this->getEncoderMock();
+        $encoder->expects($this->once())
+            ->method('write')
+            ->with($this->equalTo(null));
+
+        $serializer = new Serializer(self::DOCUMENT_CLASS);
+        $serializer->serialize(null, $encoder);
+    }
+
     public function testUnserialize()
     {
         $decoder = $this->getDecoderMock();
@@ -97,6 +108,42 @@ class SerializerTest extends TestCase
         $document = $serializer->unserialize($this->getDecoderMock(), $instance);
 
         $this->assertSame($instance, $document);
+    }
+
+    public function testUnserializeEmptyObject()
+    {
+        $decoder = $this->getDecoderMock();
+        $decoder->expects($this->once())
+            ->method('isEmpty')
+            ->will($this->returnValue(true));
+
+        $serializer = new Serializer(self::DOCUMENT_CLASS);
+        $document = $serializer->unserialize($decoder);
+
+        $this->assertNull($document);
+    }
+
+    public function testUnserializeNonDefinedProperty()
+    {
+        $decoder = $this->getDecoderMock();
+        $decoder->expects($this->at(0))
+            ->method('isEmpty')
+            ->will($this->returnValue(false));
+        $decoder->expects($this->at(1))
+            ->method('node')
+            ->with($this->equalTo('name'), $this->equalTo('text'))
+            ->will($this->returnValue(false));
+
+        $nameSerializer = $this->getSerializerMock();
+        $nameSerializer->expects($this->once())
+            ->method('getNodeType')
+            ->will($this->returnValue('text'));
+
+        $serializer = new Serializer(self::DOCUMENT_CLASS);
+        $serializer->add('name', $nameSerializer);
+        $document = $serializer->unserialize($decoder);
+
+        $this->assertNull($document->getName());
     }
 
     public function testAddPropertyException()
