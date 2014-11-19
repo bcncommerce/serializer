@@ -148,7 +148,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
      * @param  string $file
      * @return string
      */
-    protected function getFixturePath($file)
+    protected function getFixtureUri($file)
     {
         $reflection = new \ReflectionClass($this);
 
@@ -161,7 +161,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getFixtureContent($file)
     {
-        return file_get_contents($this->getFixturePath($file));
+        return file_get_contents($this->getFixtureUri($file));
     }
 
     /**
@@ -171,7 +171,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     public function getFixtureStream($file, $mode = 'r')
     {
-        $stream = fopen($this->getFixturePath($file), $mode);
+        $stream = fopen($this->getFixtureUri($file), $mode);
         $this->streams[] = $stream;
 
         return $stream;

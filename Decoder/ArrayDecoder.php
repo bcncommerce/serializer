@@ -66,17 +66,31 @@ class ArrayDecoder implements DecoderInterface
     }
 
     /**
+     * Check if current node is empty
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->current);
+    }
+
+    /**
      * Get an iterator through the child nodes
+     *
+     * @return $this
      */
     public function next()
     {
         if (!next($this->current)) {
             $this->current = null;
         }
+
+        return $this;
     }
 
     /**
-     * Read a scalar idue
+     * Read a scalar
      *
      * @return string|boolean|null|integer|float
      */
@@ -88,7 +102,7 @@ class ArrayDecoder implements DecoderInterface
     /**
      * Leave a node
      *
-     * @return DecoderInterface
+     * @return $this
      */
     public function end()
     {

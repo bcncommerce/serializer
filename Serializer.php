@@ -106,6 +106,12 @@ class Serializer implements SerializerInterface
      */
     public function unserialize(DecoderInterface $decoder, &$object = null)
     {
+        if ($decoder->isEmpty()) {
+            $object = null;
+
+            return $object;
+        }
+
         if ($object === null) {
             $object = $this->newInstance();
         }

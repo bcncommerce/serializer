@@ -82,6 +82,7 @@ class CsvDecoder implements DecoderInterface
     /**
      * Get next node on the same level
      *
+     * @return $this
      * @throws \Exception
      */
     public function next()
@@ -100,6 +101,8 @@ class CsvDecoder implements DecoderInterface
         } else {
             $this->line = null;
         }
+
+        return $this;
     }
 
     /**
@@ -182,9 +185,19 @@ class CsvDecoder implements DecoderInterface
     }
 
     /**
+     * Check if current node is empty
+     *
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return $this->line === null;
+    }
+
+    /**
      * Leave a node
      *
-     * @return DecoderInterface
+     * @return $this
      * @throws \Exception
      */
     public function end()

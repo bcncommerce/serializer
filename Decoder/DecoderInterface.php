@@ -20,7 +20,9 @@ interface DecoderInterface
     public function node($name = null, $type = null);
 
     /**
-     * Get next node on the same level
+     * Move to next node on the same level
+     *
+     * @return $this
      */
     public function next();
 
@@ -32,9 +34,16 @@ interface DecoderInterface
     public function read();
 
     /**
+     * Check if current node is empty
+     *
+     * @return bool
+     */
+    public function isEmpty();
+
+    /**
      * Leave a node
      *
-     * @return DecoderInterface
+     * @return $this
      */
     public function end();
 }

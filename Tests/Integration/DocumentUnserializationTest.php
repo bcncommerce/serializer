@@ -12,6 +12,7 @@ use Bcn\Component\Serializer\Decoder\ArrayDecoder;
 use Bcn\Component\Serializer\Decoder\CsvDecoder;
 use Bcn\Component\Serializer\Decoder\DecoderInterface;
 use Bcn\Component\Serializer\Decoder\JsonDecoder;
+use Bcn\Component\Serializer\Decoder\XmlDecoder;
 use Bcn\Component\Serializer\SerializerFactory;
 use Bcn\Component\Serializer\Tests\TestCase;
 use Bcn\Component\Serializer\Type\Extension\CoreTypesExtension;
@@ -42,6 +43,9 @@ class DocumentUnserializationTest extends TestCase
             'json'  => array(
                 new JsonDecoder($this->getFixtureContent('resources/document.json')),
             ),
+            'xml'  => array(
+                new XmlDecoder($this->getFixtureUri('resources/document.xml')),
+            ),
         );
     }
 
@@ -64,6 +68,9 @@ class DocumentUnserializationTest extends TestCase
             ),
             'json'  => array(
                 new JsonDecoder($this->getFixtureContent('resources/document_nested.json')),
+            ),
+            'xml'  => array(
+                new XmlDecoder($this->getFixtureUri('resources/document_nested.xml')),
             ),
         );
     }

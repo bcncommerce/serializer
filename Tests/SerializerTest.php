@@ -48,13 +48,16 @@ class SerializerTest extends TestCase
     {
         $decoder = $this->getDecoderMock();
         $decoder->expects($this->at(0))
+            ->method('isEmpty')
+            ->will($this->returnValue(false));
+        $decoder->expects($this->at(1))
             ->method('node')
             ->with($this->equalTo('name'), $this->equalTo('text'))
             ->will($this->returnValue(true));
-        $decoder->expects($this->at(1))
+        $decoder->expects($this->at(2))
             ->method('read')
             ->will($this->returnValue('Name'));
-        $decoder->expects($this->at(2))
+        $decoder->expects($this->at(3))
             ->method('end');
 
         $nameSerializer = $this->getSerializerMock();
