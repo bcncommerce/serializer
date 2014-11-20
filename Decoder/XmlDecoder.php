@@ -152,7 +152,7 @@ class XmlDecoder implements DecoderInterface
         $useInternalErrors = libxml_use_internal_errors(true);
         libxml_clear_errors();
 
-        if (!$this->reader->read()) {
+        if (!@$this->reader->read()) {
             $this->finished = true;
             $errors = libxml_get_errors();
 
