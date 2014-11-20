@@ -21,7 +21,7 @@ use Bcn\Component\Serializer\Tests\Integration\Type\Extension\DocumentTypeExtens
 /**
  * @group integration
  */
-class DocumentUnserializationTest extends TestCase
+class DocumentUnserializeTest extends TestCase
 {
     /**
      * @param DecoderInterface $decoder

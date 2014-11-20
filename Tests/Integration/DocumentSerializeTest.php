@@ -21,7 +21,7 @@ use Bcn\Component\Serializer\Type\Extension\CoreTypesExtension;
 /**
  * @group integration
  */
-class DocumentSerializationTest extends TestCase
+class DocumentSerializeTest extends TestCase
 {
     /**
      * @param EncoderInterface $encoder

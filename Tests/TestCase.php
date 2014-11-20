@@ -150,6 +150,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getFixtureUri($file)
     {
+        if ($file && $file[0] == "/") {
+            return $file;
+        }
+
         $reflection = new \ReflectionClass($this);
 
         return dirname($reflection->getFileName()).DIRECTORY_SEPARATOR.$file;

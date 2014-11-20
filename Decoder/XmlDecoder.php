@@ -8,6 +8,8 @@
 
 namespace Bcn\Component\Serializer\Decoder;
 
+use Bcn\Component\Serializer\Exception\MalformedXmlException;
+
 class XmlDecoder implements DecoderInterface
 {
     /** @var \XMLReader */
@@ -147,12 +149,18 @@ class XmlDecoder implements DecoderInterface
             throw new \Exception("End of document");
         }
 
-        $errors = libxml_use_internal_errors(true);
+        $useInternalErrors = libxml_use_internal_errors(true);
+        libxml_clear_errors();
 
         if (!$this->reader->read()) {
             $this->finished = true;
+            $errors = libxml_get_errors();
+
+            if ($errors) {
+                throw new MalformedXmlException($errors);
+            }
         }
 
-        libxml_use_internal_errors($errors);
+        libxml_use_internal_errors($useInternalErrors);
     }
 }

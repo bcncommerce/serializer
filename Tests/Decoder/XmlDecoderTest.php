@@ -13,21 +13,21 @@ use Bcn\Component\Serializer\Tests\TestCase;
 
 class XmlDecoderTest extends TestCase
 {
-    public function testNodeEnterValid()
+    public function testEnteringExistingNode()
     {
         $decoder = new XmlDecoder($this->getFixtureUri('resources/document.xml'));
 
         $this->assertTrue($decoder->node('document'));
     }
 
-    public function testNodeEnterInvalid()
+    public function testEnteringNotExistingNode()
     {
         $decoder = new XmlDecoder($this->getFixtureUri('resources/document.xml'));
 
         $this->assertFalse($decoder->node('invalid'));
     }
 
-    public function testNodeEnterInnerFirst()
+    public function testEnteringChildNode()
     {
         $decoder = new XmlDecoder($this->getFixtureUri('resources/document.xml'));
 
@@ -35,16 +35,7 @@ class XmlDecoderTest extends TestCase
         $this->assertTrue($decoder->node('name'));
     }
 
-    public function testNodeEnterInnerFirstWithSecondTry()
-    {
-        $decoder = new XmlDecoder($this->getFixtureUri('resources/document.xml'));
-
-        $decoder->node('document');
-        $this->assertFalse($decoder->node('prename'));
-        $this->assertTrue($decoder->node('name'));
-    }
-
-    public function testNodeEnterInnerSecond()
+    public function testEnteringNotExistentChild()
     {
         $decoder = new XmlDecoder($this->getFixtureUri('resources/document.xml'));
 
@@ -52,7 +43,17 @@ class XmlDecoderTest extends TestCase
         $this->assertFalse($decoder->node('description'));
     }
 
-    public function testNodeEnterEmptyElement()
+    public function testEnteringChildNodeWithSecondTry()
+    {
+        $decoder = new XmlDecoder($this->getFixtureUri('resources/document.xml'));
+
+        $decoder->node('document');
+
+        $this->assertFalse($decoder->node('non_existent'));
+        $this->assertTrue($decoder->node('name'));
+    }
+
+    public function testEnteringChildOfEmptyNode()
     {
         $decoder = new XmlDecoder($this->getFixtureUri('resources/empty_elements.xml'));
 
@@ -60,12 +61,13 @@ class XmlDecoderTest extends TestCase
         $decoder->node('item', 'object');
 
         $this->assertFalse($decoder->node('inner'));
+
         $decoder->end();
 
         $this->assertTrue($decoder->node('item'));
     }
 
-    public function testEndSkipInnerNodes()
+    public function testSkipNodeSubtreeWhenLeavingNode()
     {
         $decoder = new XmlDecoder($this->getFixtureUri('resources/nested.xml'));
 
@@ -77,7 +79,7 @@ class XmlDecoderTest extends TestCase
         $this->assertTrue($decoder->node('definition'));
     }
 
-    public function testNextIterating()
+    public function testIteratingThroughNodeCollection()
     {
         $decoder = new XmlDecoder($this->getFixtureUri('resources/iterations.xml'));
 
@@ -113,7 +115,7 @@ class XmlDecoderTest extends TestCase
         $this->assertNull($decoder->read());
     }
 
-    public function testUnexpectedEnding()
+    public function testUnexpectedDocumentEnding()
     {
         $this->setExpectedException("Exception");
 
@@ -154,5 +156,26 @@ class XmlDecoderTest extends TestCase
         }
 
         $this->assertEquals($this->getDocumentData(), $data);
+    }
+
+    public function testDecodeMalformedDocument()
+    {
+        $this->setExpectedException('Bcn\Component\Serializer\Exception\MalformedXmlException');
+
+        $data = array('name' => null, 'description' => null, 'rank' => null, 'rating' => null);
+
+        $decoder = new XmlDecoder($this->getFixtureUri('resources/malformed.xml'));
+        if ($decoder->node("document", "object")) {
+            if ($decoder->node('name', 'scalar')) {
+                $data['name'] = $decoder->read();
+                $decoder->end();
+            }
+
+            if ($decoder->node('description', 'scalar')) {
+                $data['description'] = $decoder->read();
+                $decoder->end();
+            }
+            $decoder->end();
+        }
     }
 }
