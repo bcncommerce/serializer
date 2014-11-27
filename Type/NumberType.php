@@ -8,45 +8,24 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Serializer\ScalarSerializer;
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
-use Bcn\Component\Serializer\SerializerFactory;
+use Bcn\Component\Serializer\Definition\Builder;
+use Bcn\Component\Serializer\Definition\Transformer\NumberTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class NumberType extends AbstractType
 {
     /**
-     * @param  SerializerFactory   $factory
-     * @param  array               $options
-     * @return SerializerInterface
+     * @param  Builder $builder
+     * @param  array   $options
+     * @return mixed
      */
-    public function getSerializer(SerializerFactory $factory, array $options = array())
+    public function build(Builder $builder, array $options = array())
     {
-        $serializer = new ScalarSerializer();
-
-        $serializer->setNormalizer(function ($value) use ($options) {
-            $value = number_format(
-                $value,
-                $options['decimals'],
-                $options['decimal_point'],
-                $options['thousand_separator']
-            );
-
-            if ($options['decimal_point'] == '.' && $options['thousand_separator'] == '') {
-                $value = ($options['decimals'] === 0) ? intval($value) : floatval($value);
-            }
-
-            return $value;
-        });
-
-        $serializer->setDenormalizer(function ($value) use ($options) {
-            $value = str_replace($options['thousand_separator'], '', $value);
-            $value = str_replace($options['decimal_point'], '.', $value);
-
-            return ($options['decimals'] === 0) ? intval($value) : floatval($value);
-        });
-
-        return $serializer;
+        $builder->transform(new NumberTransformer(
+            $options['decimals'],
+            $options['decimal_point'],
+            $options['thousand_separator']
+        ));
     }
 
     /**

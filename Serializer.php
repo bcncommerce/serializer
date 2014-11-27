@@ -8,165 +8,98 @@
 
 namespace Bcn\Component\Serializer;
 
-use Bcn\Component\Serializer\Decoder\DecoderInterface;
-use Bcn\Component\Serializer\Encoder\EncoderInterface;
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Bcn\Component\Serializer\Type\Extension\ExtensionInterface;
 
-class Serializer implements SerializerInterface
+class Serializer
 {
-    /** @var SerializerInterface[] */
-    protected $properties = array();
+    /** @var Encoder */
+    protected $encoder;
 
-    /** @var array */
-    protected $names = array();
-
-    /** @var string|callback */
-    protected $dataClass;
-
-    /** @var PropertyAccessorInterface */
-    protected $accessor;
+    /** @var Resolver */
+    protected $resolver;
 
     /**
-     * @param string|callback $dataClass
+     * @param Resolver   $resolver
+     * @param Normalizer $normalizer
+     * @param Encoder    $encoder
      */
-    public function __construct($dataClass)
+    public function __construct(Resolver $resolver = null, Normalizer $normalizer = null, Encoder $encoder = null)
     {
-        $this->dataClass = $dataClass;
-        $this->accessor = PropertyAccess::createPropertyAccessor();
+        $this->resolver   = $resolver   ?: new Resolver();
+        $this->normalizer = $normalizer ?: new Normalizer();
+        $this->encoder    = $encoder    ?: new Encoder();
     }
 
     /**
-     * @param  string              $name
-     * @param  SerializerInterface $serializer
-     * @param  string              $property
-     * @throws \Exception
-     * @return $this
-     */
-    public function add($name, SerializerInterface $serializer, $property = null)
-    {
-        if ($this->has($name)) {
-            throw new \Exception(sprintf("Property %s already registered", $name));
-        }
-
-        $this->properties[$name] = $serializer;
-        $this->names[$name]      = $property ?: $name;
-
-        return $this;
-    }
-
-    /**
-     * @param  string $name
-     * @return $this
-     */
-    public function remove($name)
-    {
-        unset($this->properties[$name]);
-        unset($this->names[$name]);
-
-        return $this;
-    }
-
-    /**
-     * @param  string $name
-     * @return bool
-     */
-    public function has($name)
-    {
-        return isset($this->properties[$name]);
-    }
-
-    /**
-     * @param  mixed            $data
-     * @param  EncoderInterface $encoder
-     * @return EncoderInterface
-     */
-    public function serialize($data, EncoderInterface $encoder)
-    {
-        if ($data === null) {
-            $encoder->write(null);
-
-            return $encoder;
-        }
-
-        foreach ($this->properties as $property => $serializer) {
-            $encoder->node($property, $serializer->getNodeType());
-            $serializer->serialize($this->getProperty($data, $this->names[$property]), $encoder);
-            $encoder->end();
-        }
-
-        return $encoder;
-    }
-
-    /**
-     * @param  DecoderInterface $decoder
-     * @param  object|null      $object
-     * @return object
-     */
-    public function unserialize(DecoderInterface $decoder, &$object = null)
-    {
-        if ($decoder->isEmpty()) {
-            $object = null;
-
-            return $object;
-        }
-
-        if ($object === null) {
-            $object = $this->newInstance();
-        }
-
-        foreach ($this->properties as $property => $serializer) {
-            if ($decoder->node($property, $serializer->getNodeType())) {
-                $value = $serializer->unserialize($decoder);
-                $decoder->end();
-            } else {
-                $value = null;
-            }
-
-            $this->setProperty($object, $this->names[$property], $value);
-        }
-
-        return $object;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNodeType()
-    {
-        return 'object';
-    }
-
-    /**
-     * @return object
-     */
-    protected function newInstance()
-    {
-        if (is_callable($this->dataClass)) {
-            return call_user_func($this->dataClass);
-        }
-
-        return new $this->dataClass();
-    }
-
-    /**
-     * @param  object|array $object
-     * @param  string       $property
+     * @param  mixed  $object
+     * @param  string $type
+     * @param  mixed  $stream
+     * @param  string $format
+     * @param  array  $options
      * @return mixed
      */
-    protected function getProperty($object, $property)
+    public function serialize($object, $type, &$stream, $format, array $options = array())
     {
-        return $this->accessor->getValue($object, $property);
+        $definition = $this->resolver->getDefinition($type, $options);
+
+        return $this->encoder->encode($object, $definition, $stream, $format);
     }
 
     /**
-     * @param object|array $object
-     * @param string       $property
-     * @param mixed        $value
+     * @param  mixed  $stream
+     * @param  string $format
+     * @param  string $type
+     * @param  array  $options
+     * @param  mixed  $object
+     * @return mixed
      */
-    protected function setProperty($object, $property, $value)
+    public function unserialize($stream, $format, $type, array $options = array(), &$object = null)
     {
-        $this->accessor->setValue($object, $property, $value);
+        $definition = $this->resolver->getDefinition($type, $options);
+
+        return $this->encoder->decode($stream, $format, $definition, $object);
+    }
+
+    /**
+     * @param  mixed  $object
+     * @param  string $type
+     * @param  array  $options
+     * @return mixed
+     */
+    public function normalize($object, $type, array $options = array())
+    {
+        $definition = $this->resolver->getDefinition($type, $options);
+
+        return $this->normalizer->normalize($object, $definition);
+    }
+
+    /**
+     * @param  mixed      $data
+     * @param  string     $type
+     * @param  array      $options
+     * @param  mixed      $object
+     * @return mixed
+     * @throws \Exception
+     */
+    public function denormalize($data, $type, array $options = array(), &$object = null)
+    {
+        $definition = $this->resolver->getDefinition($type, $options);
+
+        return $this->normalizer->denormalize($data, $definition, $object);
+    }
+
+    /**
+     * @param  ExtensionInterface $extension
+     * @throws \Exception
+     */
+    public function extend(ExtensionInterface $extension)
+    {
+        foreach ($extension->getTypes() as $type) {
+            $this->resolver->addType($type);
+        }
+
+        foreach ($extension->getEncoders() as $encoder) {
+            $this->encoder->addFormat($encoder);
+        }
     }
 }

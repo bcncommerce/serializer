@@ -8,178 +8,115 @@
 
 namespace Bcn\Component\Serializer\Tests;
 
-use Bcn\Component\Serializer\Decoder\DecoderInterface;
 use Bcn\Component\Serializer\Serializer;
+use Bcn\Component\Serializer\Type\Extension\CoreExtension;
+use Bcn\Component\Serializer\Tests\Type\Extension\DocumentExtension;
 
 class SerializerTest extends TestCase
 {
-    public function testSerialize()
+    public function testNormalize()
     {
-        $document = $this->getDocument();
+        $data = $this->getSerializer()
+            ->normalize($this->getDocument(), 'document');
 
-        $encoder = $this->getEncoderMock();
-        $encoder->expects($this->at(0))
-            ->method('node')
-            ->with($this->equalTo('name'), $this->equalTo('text'));
-        $encoder->expects($this->at(1))
-            ->method('write')
-            ->with('Test name ');
-        $encoder->expects($this->at(2))
-            ->method('end')
-            ->withAnyParameters();
-
-        $nameSerializer = $this->getSerializerMock();
-        $nameSerializer->expects($this->once())
-            ->method('getNodeType')
-            ->will($this->returnValue('text'));
-        $nameSerializer->expects($this->once())
-            ->method('serialize')
-            ->with($this->anything(), $this->equalTo($encoder))
-            ->will($this->returnCallback(function ($value) use ($encoder) {
-                $encoder->write($value);
-            }));
-
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-        $serializer->add('name', $nameSerializer);
-        $serializer->serialize($document, $encoder);
+        $this->assertEquals($this->getDocumentData(), $data);
     }
 
-    public function testSerializeNull()
+    public function testDenormalize()
     {
-        $encoder = $this->getEncoderMock();
-        $encoder->expects($this->once())
-            ->method('write')
-            ->with($this->equalTo(null));
+        $document = $this->getSerializer()
+            ->denormalize($this->getDocumentData(), 'document');
 
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-        $serializer->serialize(null, $encoder);
+        $this->assertEquals($this->getDocument(), $document);
     }
 
-    public function testUnserialize()
+    /**
+     * @dataProvider getDocumentFormats
+     */
+    public function testDocumentSerialize($format, $content)
     {
-        $decoder = $this->getDecoderMock();
-        $decoder->expects($this->at(0))
-            ->method('isEmpty')
-            ->will($this->returnValue(false));
-        $decoder->expects($this->at(1))
-            ->method('node')
-            ->with($this->equalTo('name'), $this->equalTo('text'))
-            ->will($this->returnValue(true));
-        $decoder->expects($this->at(2))
-            ->method('read')
-            ->will($this->returnValue('Name'));
-        $decoder->expects($this->at(3))
-            ->method('end');
+        $document = $this->getDocument('flat');
+        $stream   = $this->getDataStream();
 
-        $nameSerializer = $this->getSerializerMock();
-        $nameSerializer->expects($this->once())
-            ->method('getNodeType')
-            ->will($this->returnValue('text'));
-        $nameSerializer->expects($this->once())
-            ->method('unserialize')
-            ->will($this->returnCallback(function (DecoderInterface $decoder) {
-                return $decoder->read();
-            }));
+        $this->getSerializer()->serialize($document, 'document', $stream, $format);
 
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-        $serializer->add('name', $nameSerializer);
-        $document = $serializer->unserialize($decoder);
-
-        $this->assertEquals('Name', $document->getName());
+        $this->assertEquals($content, $this->getStreamContent($stream));
     }
 
-    public function testUnserializeFactory()
+    /**
+     * @dataProvider getNestedDocumentFormats
+     */
+    public function testDocumentWithParentSerialize($format, $content)
     {
-        $instance = $this->getDocument();
-        $factory = function () use ($instance) {
-            return $instance;
-        };
+        $document = $this->getNestedDocument();
+        $stream   = $this->getDataStream();
 
-        $serializer = new Serializer($factory);
-        $document = $serializer->unserialize($this->getDecoderMock());
+        $this->getSerializer()->serialize($document, 'document', $stream, $format);
 
-        $this->assertSame($instance, $document);
+        $this->assertEquals($content, $this->getStreamContent($stream));
     }
 
-    public function testUnserializeToObject()
+    /**
+     * @dataProvider getDocumentArrayFormats
+     */
+    public function testDocumentArraySerialize($format, $content)
     {
-        $instance = $this->getDocument();
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-        $document = $serializer->unserialize($this->getDecoderMock(), $instance);
+        $documents = $this->getDocuments();
+        $stream    = $this->getDataStream();
 
-        $this->assertSame($instance, $document);
+        $this->getSerializer()->serialize($documents, 'document_array', $stream, $format);
+
+        $this->assertEquals($content, $this->getStreamContent($stream));
     }
 
-    public function testUnserializeEmptyObject()
+    /**
+     * @dataProvider getDocumentFormats
+     */
+    public function testDocumentUnserialize($format, $content)
     {
-        $decoder = $this->getDecoderMock();
-        $decoder->expects($this->once())
-            ->method('isEmpty')
-            ->will($this->returnValue(true));
+        $stream = $this->getDataStream($content);
 
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-        $document = $serializer->unserialize($decoder);
+        $document = $this->getSerializer()
+            ->unserialize($stream, $format, 'document');
 
-        $this->assertNull($document);
+        $this->assertEquals($this->getDocument('flat'), $document);
     }
 
-    public function testUnserializeNonDefinedProperty()
+    /**
+     * @dataProvider getNestedDocumentFormats
+     */
+    public function testDocumentWithParentUnserialize($format, $content)
     {
-        $decoder = $this->getDecoderMock();
-        $decoder->expects($this->at(0))
-            ->method('isEmpty')
-            ->will($this->returnValue(false));
-        $decoder->expects($this->at(1))
-            ->method('node')
-            ->with($this->equalTo('name'), $this->equalTo('text'))
-            ->will($this->returnValue(false));
+        $stream = $this->getDataStream($content);
 
-        $nameSerializer = $this->getSerializerMock();
-        $nameSerializer->expects($this->once())
-            ->method('getNodeType')
-            ->will($this->returnValue('text'));
+        $document = $this->getSerializer()
+            ->unserialize($stream, $format, 'document');
 
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-        $serializer->add('name', $nameSerializer);
-        $document = $serializer->unserialize($decoder);
-
-        $this->assertNull($document->getName());
+        $this->assertEquals($this->getNestedDocument(), $document);
     }
 
-    public function testAddPropertyException()
+    /**
+     * @dataProvider getDocumentArrayFormats
+     */
+    public function testDocumentArrayUnserialize($format, $content)
     {
-        $this->setExpectedException('Exception');
+        $stream    = $this->getDataStream($content);
 
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-        $serializer->add('name', $this->getSerializerMock());
-        $serializer->add('name', $this->getSerializerMock());
+        $documents = $this->getSerializer()
+            ->unserialize($stream, $format, 'document_array');
+
+        $this->assertEquals($this->getDocuments(), $documents);
     }
 
-    public function testRemoveProperty()
+    /**
+     * @return Serializer
+     */
+    protected function getSerializer()
     {
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
+        $serializer = new Serializer();
+        $serializer->extend(new CoreExtension());
+        $serializer->extend(new DocumentExtension());
 
-        $serializer->add('name', $this->getSerializerMock());
-        $this->assertTrue($serializer->has('name'));
-
-        $serializer->remove('name');
-        $this->assertFalse($serializer->has('name'));
-    }
-
-    public function testHasProperty()
-    {
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-
-        $this->assertFalse($serializer->has('name'));
-
-        $serializer->add('name', $this->getSerializerMock());
-        $this->assertTrue($serializer->has('name'));
-    }
-
-    public function testNodeType()
-    {
-        $serializer = new Serializer(self::DOCUMENT_CLASS);
-
-        $this->assertEquals('object', $serializer->getNodeType());
+        return $serializer;
     }
 }

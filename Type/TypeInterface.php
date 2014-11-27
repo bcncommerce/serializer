@@ -8,8 +8,7 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\SerializerFactory;
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
+use Bcn\Component\Serializer\Definition\Builder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 interface TypeInterface
@@ -20,11 +19,11 @@ interface TypeInterface
     public function getName();
 
     /**
-     * @param  SerializerFactory   $factory
-     * @param  array               $options
-     * @return SerializerInterface
+     * @param  Builder $builder
+     * @param  array   $options
+     * @return mixed
      */
-    public function getSerializer(SerializerFactory $factory, array $options = array());
+    public function build(Builder $builder, array $options = array());
 
     /**
      * @param OptionsResolverInterface $optionsResolver

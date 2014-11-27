@@ -6,11 +6,12 @@
  *
  */
 
-namespace Bcn\Component\Serializer\Type;
+namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Definition\Builder;
+use Bcn\Component\Serializer\Type\AbstractType;
 
-class TextType extends AbstractType
+class DocumentArrayType extends AbstractType
 {
     /**
      * @param  Builder $builder
@@ -19,6 +20,11 @@ class TextType extends AbstractType
      */
     public function build(Builder $builder, array $options = array())
     {
+        $builder
+            ->name('documents')
+            ->prototype('document')
+                ->name('document')
+            ->end();
     }
 
     /**
@@ -26,6 +32,6 @@ class TextType extends AbstractType
      */
     public function getName()
     {
-        return 'text';
+        return 'document_array';
     }
 }

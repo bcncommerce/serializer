@@ -8,31 +8,20 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Bcn\Component\Serializer\Serializer\ScalarSerializer;
-use Bcn\Component\Serializer\Serializer\SerializerInterface;
-use Bcn\Component\Serializer\SerializerFactory;
+use Bcn\Component\Serializer\Definition\Builder;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Bcn\Component\Serializer\Definition\Transformer\DatetimeTransformer;
 
 class DatetimeType extends AbstractType
 {
     /**
-     * @param  SerializerFactory   $factory
-     * @param  array               $options
-     * @return SerializerInterface
+     * @param  Builder $builder
+     * @param  array   $options
+     * @return mixed
      */
-    public function getSerializer(SerializerFactory $factory, array $options = array())
+    public function build(Builder $builder, array $options = array())
     {
-        $serializer = new ScalarSerializer();
-
-        $serializer->setNormalizer(function (\DateTime $value) use ($options) {
-            return $value->format($options['format']);
-        });
-
-        $serializer->setDenormalizer(function ($value) use ($options) {
-            return \DateTime::createFromFormat($options['format'], $value);
-        });
-
-        return $serializer;
+        $builder->transform(new DatetimeTransformer($options['format']));
     }
 
     /**

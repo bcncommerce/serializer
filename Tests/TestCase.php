@@ -8,11 +8,9 @@
 
 namespace Bcn\Component\Serializer\Tests;
 
-use Bcn\Component\Serializer\Tests\Integration\Document;
-
 class TestCase extends \PHPUnit_Framework_TestCase
 {
-    const DOCUMENT_CLASS = 'Bcn\Component\Serializer\Tests\Integration\Document';
+    const DOCUMENT_CLASS = 'Bcn\Component\Serializer\Tests\Document';
 
     /** @var array */
     protected $streams = array();
@@ -28,6 +26,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             'description' => 'Test description '.$suffix,
             'rank'        => 11,
             'rating'      => 93.31,
+            'parent'      => null,
         );
 
         return $data;
@@ -40,7 +39,6 @@ class TestCase extends \PHPUnit_Framework_TestCase
     {
         $data = $this->getDocumentData();
         $data['parent'] = $this->getDocumentData('parent');
-        $data['parent']['parent'] = null;
 
         return $data;
     }
@@ -88,6 +86,49 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return array
+     */
+    public function getDocumentFormats()
+    {
+        return array(
+            'json' => array('json', $this->getFixtureContent('resources/document.json')),
+            'xml'  => array('xml',  $this->getFixtureContent('resources/document.xml')),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getDocumentArrayFormats()
+    {
+        return array(
+            'json' => array('json', $this->getFixtureContent('resources/document_array.json')),
+            'xml'  => array('xml',  $this->getFixtureContent('resources/document_array.xml')),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getNestedDocumentFormats()
+    {
+        return array(
+            'json' => array('json', $this->getFixtureContent('resources/document_nested.json')),
+            'xml'  => array('xml',  $this->getFixtureContent('resources/document_nested.xml')),
+        );
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Format\Parser\Handler\HandlerInterface
+     */
+    public function getParserHandlerMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Format\Parser\Handler\HandlerInterface')
+                ->disableOriginalConstructor()
+                ->getMock();
+    }
+
+    /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Serializer
      */
     public function getSerializerMock()
@@ -98,21 +139,31 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Encoder\EncoderInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Format\FormatInterface
      */
-    public function getEncoderMock()
+    public function getFormatMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Encoder\EncoderInterface')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Format\FormatInterface')
                 ->disableOriginalConstructor()
                 ->getMock();
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Decoder\DecoderInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Resolver
      */
-    public function getDecoderMock()
+    public function getResolverMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\Decoder\DecoderInterface')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Resolver')
+                ->disableOriginalConstructor()
+                ->getMock();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Definition\TransformerInterface
+     */
+    public function getTransformerMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Definition\TransformerInterface')
                 ->disableOriginalConstructor()
                 ->getMock();
     }
@@ -136,11 +187,21 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\SerializerFactory
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Definition
      */
-    public function getSerializerFactoryMock()
+    public function getDefinitionMock()
     {
-        return $this->getMockBuilder('Bcn\Component\Serializer\SerializerFactory')
+        return $this->getMockBuilder('Bcn\Component\Serializer\Definition')
+            ->getMock();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Normalizer
+     */
+    public function getNormalizerMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Normalizer')
+            ->disableOriginalConstructor()
             ->getMock();
     }
 
@@ -196,6 +257,17 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->streams[] = $stream;
 
         return $stream;
+    }
+
+    /**
+     * @param  resource $stream
+     * @return string
+     */
+    public function getStreamContent($stream)
+    {
+        rewind($stream);
+
+        return stream_get_contents($stream);
     }
 
     /**
