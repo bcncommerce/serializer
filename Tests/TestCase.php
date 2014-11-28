@@ -147,6 +147,15 @@ class TestCase extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
                 ->getMock();
     }
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Definition\Builder
+     */
+    public function getBuilderMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Definition\Builder')
+                ->disableOriginalConstructor()
+                ->getMock();
+    }
 
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Resolver

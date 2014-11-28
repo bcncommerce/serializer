@@ -10,7 +10,7 @@ namespace Bcn\Component\Serializer\Format\Parser\Handler\Context;
 
 use Bcn\Component\Serializer\Definition;
 
-class Context implements ContextInterface
+class DefinitionContext implements ContextInterface
 {
     /** @var string */
     protected $content;
@@ -54,13 +54,13 @@ class Context implements ContextInterface
                 $collection[$this->index] = $prototype->create();
             }
 
-            return new Context($collection[$this->index], $prototype);
+            return new DefinitionContext($collection[$this->index], $prototype);
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
             $object = $this->definition->extract($this->origin);
 
-            return new Context($object, $this->definition->getProperty($name));
+            return new DefinitionContext($object, $this->definition->getProperty($name));
         }
 
         return new NullContext();

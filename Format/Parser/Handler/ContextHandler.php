@@ -67,7 +67,7 @@ class ContextHandler implements HandlerInterface
         $child = $this->current;
         $this->current = array_pop($this->contexts);
 
-        if (!$this->current) {
+        if (empty($this->contexts)) {
             throw new \Exception("Out of Context");
         }
 

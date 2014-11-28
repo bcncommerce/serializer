@@ -39,4 +39,15 @@ class XmlParserTest extends TestCase
         $parser = new XmlParser();
         $parser->parse($stream->getUri(), $handler);
     }
+
+    public function testMelformedXmlException()
+    {
+        $this->setExpectedException('Exception');
+
+        $handler = $this->getParserHandlerMock();
+        $stream = $this->getDataStream("<root<</root>");
+
+        $parser = new XmlParser();
+        $parser->parse($stream, $handler);
+    }
 }

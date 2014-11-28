@@ -13,7 +13,7 @@ use Bcn\Component\Serializer\Format\Parser\Handler\Context\RootContext;
 use Bcn\Component\Serializer\Format\Writer\XmlWriter;
 use Bcn\Component\Serializer\Format\Parser\XmlParser;
 use Bcn\Component\Serializer\Format\Parser\Handler\ContextHandler;
-use Bcn\Component\Serializer\Format\Parser\Handler\Context\Context;
+use Bcn\Component\Serializer\Format\Parser\Handler\Context\DefinitionContext;
 
 class XmlFormat implements FormatInterface
 {
@@ -51,7 +51,7 @@ class XmlFormat implements FormatInterface
      */
     public function decode($stream, Definition $definition, &$origin = null)
     {
-        $context = new RootContext($origin, $definition);
+        $context = new RootContext(new DefinitionContext($origin, $definition));
         $handler = new ContextHandler($context);
 
         $this->parser->parse($stream, $handler);

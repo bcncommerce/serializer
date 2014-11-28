@@ -8,23 +8,10 @@
 
 namespace Bcn\Component\Serializer\Format\Parser\Handler\Context;
 
-class RootContext implements ContextInterface
+class ArrayContext implements ContextInterface
 {
-    /** @var ContextInterface */
-    protected $context;
-
-    /** @var string */
-    protected $rootNode;
-
-    /**
-     * @param ContextInterface $context
-     * @param string           $rootNode
-     */
-    public function __construct(ContextInterface $context, $rootNode = null)
-    {
-        $this->context  = $context;
-        $this->rootNode = $rootNode;
-    }
+    /** @var array|string */
+    protected $data;
 
     /**
      * @param  string           $name
@@ -34,11 +21,11 @@ class RootContext implements ContextInterface
      */
     public function start($name, array $attributes = array())
     {
-        if ($this->rootNode !== null && $this->rootNode != $name) {
-            throw new \Exception('Root node name mismatch');
+        if (!is_array($this->data)) {
+            $this->data = array();
         }
 
-        return $this->context;
+        return new self();
     }
 
     /**
@@ -46,6 +33,9 @@ class RootContext implements ContextInterface
      */
     public function append($data)
     {
+        if (!is_array($this->data)) {
+            $this->data .= $data;
+        }
     }
 
     /**
@@ -56,6 +46,7 @@ class RootContext implements ContextInterface
      */
     public function end($name, $value)
     {
+        $this->data[$name] = $value;
     }
 
     /**
@@ -63,6 +54,7 @@ class RootContext implements ContextInterface
      */
     public function reset()
     {
+        $this->data = null;
     }
 
     /**
@@ -72,6 +64,6 @@ class RootContext implements ContextInterface
      */
     public function fetch()
     {
-        return $this->context->fetch();
+        return $this->data;
     }
 }
