@@ -12,6 +12,9 @@ use Bcn\Component\Serializer\Serializer;
 use Bcn\Component\Serializer\Type\Extension\CoreExtension;
 use Bcn\Component\Serializer\Tests\Type\Extension\DocumentExtension;
 
+/**
+ * @group integration
+ */
 class SerializerTest extends TestCase
 {
     public function testNormalize()

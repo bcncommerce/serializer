@@ -67,9 +67,9 @@ class Normalizer
     }
 
     /**
-     * @param $data
+     * @param  mixed      $data
      * @param  Definition $definition
-     * @param  null       $origin
+     * @param  mixed      $origin
      * @return null
      */
     public function denormalize($data, Definition $definition, &$origin = null)
@@ -90,9 +90,9 @@ class Normalizer
     }
 
     /**
-     * @param $data
+     * @param mixed      $data
      * @param Definition $definition
-     * @param $origin
+     * @param mixed      $origin
      */
     protected function denormalizeArray($data, Definition $definition, &$origin)
     {
@@ -108,9 +108,9 @@ class Normalizer
     }
 
     /**
-     * @param $data
+     * @param  mixed      $data
      * @param  Definition $definition
-     * @param $origin
+     * @param  mixed      $origin
      * @return array
      */
     protected function denormalizeObject($data, Definition $definition, &$origin)

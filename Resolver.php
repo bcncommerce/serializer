@@ -60,6 +60,15 @@ class Resolver
     }
 
     /**
+     * @param  TypeInterface|string $type
+     * @return string
+     */
+    protected function resolveTypeName($type)
+    {
+        return $type instanceof TypeInterface ? $type->getName() : $type;
+    }
+
+    /**
      * @param  string     $type
      * @param  array      $options
      * @return Definition
@@ -77,15 +86,6 @@ class Resolver
         $type->build($builder, $resolver->resolve($options));
 
         return $definition;
-    }
-
-    /**
-     * @param  TypeInterface|string $type
-     * @return string
-     */
-    protected function resolveTypeName($type)
-    {
-        return $type instanceof TypeInterface ? $type->getName() : $type;
     }
 
     /**

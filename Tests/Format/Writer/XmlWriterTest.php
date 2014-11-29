@@ -14,6 +14,30 @@ use Bcn\Component\StreamWrapper\Stream;
 
 class XmlWriterTest extends TestCase
 {
+    public function testWriteNull()
+    {
+        $origin = new \stdClass();
+
+        $definition = $this->getDefinitionMock();
+        $definition->expects($this->once())
+            ->method('isObject')
+            ->will($this->returnValue(true));
+        $definition->expects($this->once())
+            ->method('getNodeName')
+            ->will($this->returnValue('null'));
+        $definition->expects($this->once())
+            ->method('extract')
+            ->with($origin)
+            ->will($this->returnValue(null));
+
+        $stream = $this->getDataStream();
+
+        $writer = new XmlWriter();
+        $writer->write($stream, $origin, $definition);
+
+        $this->assertXmlStringEqualsXmlString("<null/>", $this->getStreamContent($stream));
+    }
+
     public function testWriteScalar()
     {
         $origin = new \stdClass();

@@ -94,6 +94,21 @@ class NormalizerTest extends TestCase
         $this->assertEquals($normalized, $normalizer->normalize($original, $definition));
     }
 
+    public function testNormalizeNull()
+    {
+        $definition = $this->getDefinitionMock();
+        $definition->expects($this->once())
+            ->method('isObject')
+            ->will($this->returnValue(true));
+        $definition->expects($this->once())
+            ->method('extract')
+            ->will($this->returnValue(null));
+
+        $normalizer = new Normalizer();
+
+        $this->assertNull($normalizer->normalize(null, $definition));
+    }
+
     public function testDenormalizeScalar()
     {
         $definition = $this->getDefinitionMock();
@@ -189,5 +204,22 @@ class NormalizerTest extends TestCase
 
         $this->isInstanceOf(self::DOCUMENT_CLASS, $denormalized);
         $this->assertEquals("Document", $denormalized->getName());
+    }
+
+    public function testDenormalizeNull()
+    {
+        $origin = new \stdClass();
+
+        $normalizer   = new Normalizer();
+
+        $definition = $this->getDefinitionMock();
+        $definition->expects($this->once())
+            ->method('isObject')
+            ->will($this->returnValue(true));
+        $definition->expects($this->once())
+            ->method('settle')
+            ->with($origin, null);
+
+        $normalizer->denormalize(null, $definition, $origin);
     }
 }
