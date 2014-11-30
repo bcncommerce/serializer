@@ -10,6 +10,7 @@ namespace Bcn\Component\Serializer\Definition;
 
 use Bcn\Component\Serializer\Resolver;
 use Bcn\Component\Serializer\Definition;
+use Bcn\Component\Serializer\Definition\Transformer\ChainTransformer;
 
 class Builder
 {
@@ -28,6 +29,9 @@ class Builder
     /** @var Builder */
     protected $parent;
 
+    /** @var ChainTransformer */
+    protected $transformers;
+
     /**
      * @param Resolver   $resolver
      * @param Definition $definition
@@ -35,9 +39,10 @@ class Builder
      */
     public function __construct(Resolver $resolver, Definition $definition, Builder $parent = null)
     {
-        $this->resolver   = $resolver;
-        $this->definition = $definition;
-        $this->parent     = $parent;
+        $this->resolver     = $resolver;
+        $this->definition   = $definition;
+        $this->parent       = $parent;
+        $this->transformers = new ChainTransformer();
     }
 
     /**
@@ -107,7 +112,9 @@ class Builder
      */
     public function transform(TransformerInterface $transformer)
     {
-        $this->definition->setTransformer($transformer);
+        $this->transformers->addTransformer($transformer);
+
+        $this->definition->setTransformer($this->transformers);
 
         return $this;
     }
