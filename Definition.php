@@ -193,11 +193,12 @@ class Definition
      * @param  mixed $data
      * @return mixed
      */
-    public function extract(&$data)
+    public function &extract(&$data)
     {
-        $value = $this->getAccessor($data)->get();
+        $value = &$this->getAccessor($data)->get();
+        $value = $this->transformer ? $this->transformer->normalize($value) : $value;
 
-        return $this->transformer ? $this->transformer->normalize($value) : $value;
+        return $value;
     }
     /**
      * @param  mixed $object
@@ -221,7 +222,7 @@ class Definition
             return $factory();
         }
 
-        return null;
+        return $this->isArray() ? array() : null;
     }
 
     /**

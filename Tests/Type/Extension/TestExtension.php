@@ -9,12 +9,13 @@
 namespace Bcn\Component\Serializer\Tests\Type\Extension;
 
 use Bcn\Component\Serializer\Format\FormatInterface;
+use Bcn\Component\Serializer\Tests\Type\AttributesType;
 use Bcn\Component\Serializer\Tests\Type\DocumentArrayType;
 use Bcn\Component\Serializer\Tests\Type\DocumentType;
 use Bcn\Component\Serializer\Type\Extension\ExtensionInterface;
 use Bcn\Component\Serializer\Type\TypeInterface;
 
-class DocumentExtension implements ExtensionInterface
+class TestExtension implements ExtensionInterface
 {
     /**
      * @return TypeInterface[]
@@ -23,6 +24,7 @@ class DocumentExtension implements ExtensionInterface
     {
         return array(
             new DocumentType(),
+            new AttributesType(),
             new DocumentArrayType(),
         );
     }

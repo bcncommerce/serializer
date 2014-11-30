@@ -16,6 +16,21 @@ class TestCase extends \PHPUnit_Framework_TestCase
     protected $streams = array();
 
     /**
+     * @param  string   $suffix
+     * @return Document
+     */
+    protected function getDocument($suffix = '')
+    {
+        $document = new Document();
+        $document->setName('Test name '.$suffix);
+        $document->setDescription('Test description '.$suffix);
+        $document->setRank(11);
+        $document->setRating(93.31);
+
+        return $document;
+    }
+
+    /**
      * @param  string $suffix
      * @return array
      */
@@ -35,27 +50,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    protected function getNestedDocumentData()
+    public function getDocumentFormats()
     {
-        $data = $this->getDocumentData();
-        $data['parent'] = $this->getDocumentData('parent');
-
-        return $data;
-    }
-
-    /**
-     * @param  string   $suffix
-     * @return Document
-     */
-    protected function getDocument($suffix = '')
-    {
-        $document = new Document();
-        $document->setName('Test name '.$suffix);
-        $document->setDescription('Test description '.$suffix);
-        $document->setRank(11);
-        $document->setRating(93.31);
-
-        return $document;
+        return array(
+            'json' => array('json', $this->getFixtureContent('resources/document.json')),
+            'xml'  => array('xml',  $this->getFixtureContent('resources/document.xml')),
+        );
     }
 
     /**
@@ -72,9 +72,23 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    protected function getDocumentsData()
+    protected function getNestedDocumentData()
     {
-        return array($this->getDocumentData('one'), $this->getDocumentData('two'));
+        $data = $this->getDocumentData();
+        $data['parent'] = $this->getDocumentData('parent');
+
+        return $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNestedDocumentFormats()
+    {
+        return array(
+            'json' => array('json', $this->getFixtureContent('resources/document_nested.json')),
+            'xml'  => array('xml',  $this->getFixtureContent('resources/document_nested.xml')),
+        );
     }
 
     /**
@@ -88,12 +102,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function getDocumentFormats()
+    protected function getDocumentsData()
     {
-        return array(
-            'json' => array('json', $this->getFixtureContent('resources/document.json')),
-            'xml'  => array('xml',  $this->getFixtureContent('resources/document.xml')),
-        );
+        return array($this->getDocumentData('one'), $this->getDocumentData('two'));
     }
 
     /**
@@ -107,14 +118,23 @@ class TestCase extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function getAttributes()
+    {
+        return array(
+            array('code' => 'name',        'value' => 'Foo'),
+            array('code' => 'description', 'value' => 'Baz'),
+            array('code' => 'rating',      'value' => 100),
+        );
+    }
+
     /**
      * @return array
      */
-    public function getNestedDocumentFormats()
+    public function getAttributesFormats()
     {
         return array(
-            'json' => array('json', $this->getFixtureContent('resources/document_nested.json')),
-            'xml'  => array('xml',  $this->getFixtureContent('resources/document_nested.xml')),
+            'json' => array('json', $this->getFixtureContent('resources/attributes.json')),
+            'xml'  => array('xml',  $this->getFixtureContent('resources/attributes.xml')),
         );
     }
 

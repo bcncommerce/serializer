@@ -10,7 +10,7 @@ namespace Bcn\Component\Serializer\Tests;
 
 use Bcn\Component\Serializer\Serializer;
 use Bcn\Component\Serializer\Type\Extension\CoreExtension;
-use Bcn\Component\Serializer\Tests\Type\Extension\DocumentExtension;
+use Bcn\Component\Serializer\Tests\Type\Extension\TestExtension;
 
 /**
  * @group integration
@@ -73,6 +73,19 @@ class SerializerTest extends TestCase
     }
 
     /**
+     * @dataProvider getAttributesFormats
+     */
+    public function testAttributesSerialize($format, $content)
+    {
+        $attributes = $this->getAttributes();
+        $stream     = $this->getDataStream();
+
+        $this->getSerializer()->serialize($attributes, 'attributes', $stream, $format);
+
+        $this->assertEquals($content, $this->getStreamContent($stream));
+    }
+
+    /**
      * @dataProvider getDocumentFormats
      */
     public function testDocumentUnserialize($format, $content)
@@ -112,13 +125,26 @@ class SerializerTest extends TestCase
     }
 
     /**
+     * @dataProvider getAttributesFormats
+     */
+    public function testAttributesUnserialize($format, $content)
+    {
+        $stream    = $this->getDataStream($content);
+
+        $documents = $this->getSerializer()
+            ->unserialize($stream, $format, 'attributes');
+
+        $this->assertEquals($this->getAttributes(), $documents);
+    }
+
+    /**
      * @return Serializer
      */
     protected function getSerializer()
     {
         $serializer = new Serializer();
         $serializer->extend(new CoreExtension());
-        $serializer->extend(new DocumentExtension());
+        $serializer->extend(new TestExtension());
 
         return $serializer;
     }

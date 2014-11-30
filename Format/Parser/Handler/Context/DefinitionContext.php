@@ -58,7 +58,7 @@ class DefinitionContext implements ContextInterface
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
-            $object = $this->definition->extract($this->origin);
+            $object = &$this->definition->extract($this->origin);
 
             return new DefinitionContext($object, $this->definition->getProperty($name));
         }
@@ -92,7 +92,7 @@ class DefinitionContext implements ContextInterface
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
-            $object = $this->definition->extract($this->origin);
+            $object = &$this->definition->extract($this->origin);
             $property = $this->definition->getProperty($name);
             $property->settle($object, $value);
         }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<attributes>
+    <attribute>
+        <code><![CDATA[name]]></code>
+        <value><![CDATA[Foo]]></value>
+    </attribute>
+    <attribute>
+        <code><![CDATA[description]]></code>
+        <value><![CDATA[Baz]]></value>
+    </attribute>
+    <attribute>
+        <code><![CDATA[rating]]></code>
+        <value>100</value>
+    </attribute>
+</attributes>

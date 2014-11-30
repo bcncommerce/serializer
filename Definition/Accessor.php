@@ -49,12 +49,14 @@ class Accessor
     /**
      * @return mixed
      */
-    public function get()
+    public function &get()
     {
         if ($this->path) {
-            return $this->accessor->getValue($this->object, $this->path);
+            $value = $this->accessor->getValue($this->object, $this->path);
+        } else {
+            $value = &$this->object;
         }
 
-        return $this->object;
+        return $value;
     }
 }
