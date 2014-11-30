@@ -21,6 +21,7 @@ class AttributesType extends AbstractType
     public function build(Builder $builder, array $options = array())
     {
         $builder->name('attributes')
+            ->keys('[code]')
             ->prototype()
                 ->factory(function () { return array(); })
                 ->name('attribute')

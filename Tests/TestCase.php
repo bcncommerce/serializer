@@ -121,9 +121,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
     public function getAttributes()
     {
         return array(
-            array('code' => 'name',        'value' => 'Foo'),
-            array('code' => 'description', 'value' => 'Baz'),
-            array('code' => 'rating',      'value' => 100),
+            'name'        => array('code' => 'name',        'value' => 'Foo'),
+            'description' => array('code' => 'description', 'value' => 'Baz'),
+            'rating'      => array('code' => 'rating',      'value' => 100),
         );
     }
 

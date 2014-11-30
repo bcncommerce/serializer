@@ -8,6 +8,7 @@
 
 namespace Bcn\Component\Serializer;
 
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Bcn\Component\Serializer\Definition\Accessor;
 use Bcn\Component\Serializer\Definition\TransformerInterface;
@@ -34,6 +35,17 @@ class Definition
 
     /** @var callback|null */
     protected $factory;
+
+    /** @var string */
+    protected $keyProperty;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+    }
 
     /**
      * @return bool
@@ -146,6 +158,17 @@ class Definition
     }
 
     /**
+     * @param  string $keyProperty
+     * @return $this
+     */
+    public function setKeyProperty($keyProperty)
+    {
+        $this->keyProperty = $keyProperty;
+
+        return $this;
+    }
+
+    /**
      * @param  null|string $propertyPath
      * @return $this
      */
@@ -211,6 +234,24 @@ class Definition
         $this->getAccessor($object)->set($data);
 
         return $object;
+    }
+
+    /**
+     * @param mixed $collection
+     * @param mixed $item
+     */
+    public function append(&$collection, $item)
+    {
+        $items = $this->extract($collection);
+
+        if ($this->keyProperty) {
+            $key = $this->propertyAccessor->getValue($item, $this->keyProperty);
+            $items[$key] = $item;
+        } else {
+            $items[] = $item;
+        }
+
+        $this->settle($collection, $items);
     }
 
     /**

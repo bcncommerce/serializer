@@ -15,9 +15,6 @@ class DefinitionContext implements ContextInterface
     /** @var string */
     protected $content;
 
-    /** @var int */
-    protected $index;
-
     /** @var boolean */
     protected $initialized;
 
@@ -49,12 +46,9 @@ class DefinitionContext implements ContextInterface
 
         if ($this->definition->isArray()) {
             $prototype = $this->definition->getPrototype();
-            $collection = $this->definition->extract($this->origin);
-            if (!isset($collection[$this->index])) {
-                $collection[$this->index] = $prototype->create();
-            }
+            $item = $prototype->create();
 
-            return new DefinitionContext($collection[$this->index], $prototype);
+            return new DefinitionContext($item, $prototype);
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
@@ -85,10 +79,7 @@ class DefinitionContext implements ContextInterface
     public function end($name, $value)
     {
         if ($this->definition->isArray()) {
-            $collection = $this->definition->extract($this->origin);
-            $collection[$this->index] = $value;
-            $this->definition->settle($this->origin, $collection);
-            $this->index++;
+            $this->definition->append($this->origin, $value);
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
@@ -104,7 +95,6 @@ class DefinitionContext implements ContextInterface
     public function reset()
     {
         $this->content     = null;
-        $this->index       = 0;
         $this->initialized = false;
     }
 
