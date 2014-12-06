@@ -243,15 +243,27 @@ class Definition
     public function append(&$collection, $item)
     {
         $items = $this->extract($collection);
-
-        if ($this->keyProperty) {
-            $key = $this->propertyAccessor->getValue($item, $this->keyProperty);
+        $key = $this->key($item);
+        if ($key !== null) {
             $items[$key] = $item;
         } else {
             $items[] = $item;
         }
 
         $this->settle($collection, $items);
+    }
+
+    /**
+     * @param  mixed           $item
+     * @return string|int|null
+     */
+    public function key($item)
+    {
+        if (!$this->keyProperty) {
+            return null;
+        }
+
+        return $this->propertyAccessor->getValue($item, $this->keyProperty);
     }
 
     /**
