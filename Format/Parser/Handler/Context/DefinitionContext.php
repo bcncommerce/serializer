@@ -24,6 +24,15 @@ class DefinitionContext implements ContextInterface
     /** @var Definition */
     protected $definition;
 
+    /** @var int */
+    protected $index;
+
+    /** @var int|string */
+    protected $key;
+
+    /** @var array */
+    protected $collection;
+
     /**
      * @param mixed      $origin
      * @param Definition $definition
@@ -46,9 +55,20 @@ class DefinitionContext implements ContextInterface
 
         if ($this->definition->isArray()) {
             $prototype = $this->definition->getPrototype();
-            $item = $prototype->create();
 
-            return new DefinitionContext($item, $prototype);
+            $keyName = $this->definition->getKeyName();
+            if ($keyName && isset($attributes[$keyName])) {
+                $this->key = $attributes[$keyName];
+            } else {
+                $this->key = $this->index;
+                $this->index++;
+            }
+
+            if (!isset($this->collection[$this->key])) {
+                $this->collection[$this->key] = $prototype->create();
+            }
+
+            return new DefinitionContext($this->collection[$this->key], $prototype);
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
@@ -79,7 +99,7 @@ class DefinitionContext implements ContextInterface
     public function end($name, $value)
     {
         if ($this->definition->isArray()) {
-            $this->definition->append($this->origin, $value);
+
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
@@ -96,6 +116,7 @@ class DefinitionContext implements ContextInterface
     {
         $this->content     = null;
         $this->initialized = false;
+        $this->index       = 0;
     }
 
     /**
@@ -106,7 +127,11 @@ class DefinitionContext implements ContextInterface
     public function fetch()
     {
         if ($this->definition->isScalar()) {
-            return $this->content;
+            $this->definition->settle($this->origin, $this->content);
+        }
+
+        if ($this->definition->isArray()) {
+            $this->definition->settle($this->origin, $this->collection);
         }
 
         return $this->definition->extract($this->origin);
@@ -127,6 +152,10 @@ class DefinitionContext implements ContextInterface
 
         if ($value === null) {
             $this->definition->settle($this->origin, $this->definition->create());
+        }
+
+        if ($this->definition->isArray()) {
+            $this->collection = &$this->definition->extract($this->origin);
         }
     }
 }

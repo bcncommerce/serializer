@@ -59,14 +59,8 @@ class Normalizer
         $collection = $definition->extract($origin);
 
         $normalized = array();
-        foreach ($collection as $entry) {
-            $key = $definition->key($entry);
-
-            if ($key !== null) {
-                $normalized[$key] = $this->normalize($entry, $definition->getPrototype());
-            } else {
-                $normalized[] = $this->normalize($entry, $definition->getPrototype());
-            }
+        foreach ($collection as $index => $entry) {
+            $normalized[$index] = $this->normalize($entry, $definition->getPrototype());
         }
 
         return $normalized;

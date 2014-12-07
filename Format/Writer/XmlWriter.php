@@ -90,8 +90,12 @@ class XmlWriter
         $prototype = $definition->getPrototype();
         $collection = $definition->extract($origin);
 
-        foreach ($collection as $entry) {
+        foreach ($collection as $index => $entry) {
             $writer->startElement($prototype->getNodeName());
+            if ($definition->getKeyName()) {
+                $writer->writeAttribute($definition->getKeyName(), $index);
+            }
+
             $this->writeNode($writer, $stream, $entry, $prototype);
             $writer->endElement();
         }

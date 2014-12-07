@@ -8,6 +8,7 @@
 
 namespace Bcn\Component\Serializer\Tests\Type;
 
+use Bcn\Component\Serializer\Definition\Transformer\CallbackTransformer;
 use Bcn\Component\Serializer\Type\AbstractType;
 use Bcn\Component\Serializer\Definition\Builder;
 
@@ -21,12 +22,18 @@ class AttributesType extends AbstractType
     public function build(Builder $builder, array $options = array())
     {
         $builder->name('attributes')
-            ->keys('[code]')
+            ->transform(new CallbackTransformer(null, function($attributes) {
+                foreach ($attributes as $code => $attribute) {
+                    $attributes[$code]['code'] = $code;
+                }
+
+                return $attributes;
+            }))
+            ->keys('code')
             ->prototype()
                 ->factory(function () { return array(); })
                 ->name('attribute')
-                ->node('code',  'text')->property('[code]')->end()
-                ->node('value', 'text')->property('[value]')->end()
+                ->property('[value]')
             ->end()
         ;
     }

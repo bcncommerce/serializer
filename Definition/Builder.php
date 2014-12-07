@@ -77,12 +77,12 @@ class Builder
     }
 
     /**
-     * @param  string $propertyPath
+     * @param  string $name
      * @return $this
      */
-    public function keys($propertyPath)
+    public function keys($name)
     {
-        $this->definition->setKeyProperty($propertyPath);
+        $this->definition->setKeyName($name);
 
         return $this;
     }

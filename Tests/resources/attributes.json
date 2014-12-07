@@ -1,1 +1,1 @@
-{"name":{"code":"name","value":"Foo"},"description":{"code":"description","value":"Baz"},"rating":{"code":"rating","value":100}}
+{"name":"Foo","description":"Baz","rating":100}

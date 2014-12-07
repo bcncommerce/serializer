@@ -37,7 +37,7 @@ class Definition
     protected $factory;
 
     /** @var string */
-    protected $keyProperty;
+    protected $keyName;
 
     /**
      *
@@ -158,14 +158,22 @@ class Definition
     }
 
     /**
-     * @param  string $keyProperty
+     * @param  string $name
      * @return $this
      */
-    public function setKeyProperty($keyProperty)
+    public function setKeyName($name)
     {
-        $this->keyProperty = $keyProperty;
+        $this->keyName = $name;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getKeyName()
+    {
+        return $this->keyName;
     }
 
     /**
@@ -234,36 +242,6 @@ class Definition
         $this->getAccessor($object)->set($data);
 
         return $object;
-    }
-
-    /**
-     * @param mixed $collection
-     * @param mixed $item
-     */
-    public function append(&$collection, $item)
-    {
-        $items = $this->extract($collection);
-        $key = $this->key($item);
-        if ($key !== null) {
-            $items[$key] = $item;
-        } else {
-            $items[] = $item;
-        }
-
-        $this->settle($collection, $items);
-    }
-
-    /**
-     * @param  mixed           $item
-     * @return string|int|null
-     */
-    public function key($item)
-    {
-        if (!$this->keyProperty) {
-            return null;
-        }
-
-        return $this->propertyAccessor->getValue($item, $this->keyProperty);
     }
 
     /**
