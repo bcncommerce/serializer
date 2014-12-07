@@ -101,6 +101,7 @@ class Normalizer
 
         foreach ($data as $index => $entry) {
             $item = isset($collection[$index]) ? $collection[$index] : $prototype->create();
+            $definition->settleKey($item, $index);
             $collection[$index] = $this->denormalize($entry, $prototype, $item);
         }
 

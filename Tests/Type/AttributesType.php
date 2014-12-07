@@ -22,14 +22,7 @@ class AttributesType extends AbstractType
     public function build(Builder $builder, array $options = array())
     {
         $builder->name('attributes')
-            ->transform(new CallbackTransformer(null, function($attributes) {
-                foreach ($attributes as $code => $attribute) {
-                    $attributes[$code]['code'] = $code;
-                }
-
-                return $attributes;
-            }))
-            ->keys('code')
+            ->keys('code', '[code]')
             ->prototype()
                 ->factory(function () { return array(); })
                 ->name('attribute')

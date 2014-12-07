@@ -39,6 +39,9 @@ class Definition
     /** @var string */
     protected $keyName;
 
+    /** @var string */
+    protected $keyPropertyPath;
+
     /**
      *
      */
@@ -177,6 +180,17 @@ class Definition
     }
 
     /**
+     * @param  string $path
+     * @return $this
+     */
+    public function setKeyPropertyPath($path)
+    {
+        $this->keyPropertyPath = $path;
+
+        return $this;
+    }
+
+    /**
      * @param  null|string $propertyPath
      * @return $this
      */
@@ -231,6 +245,7 @@ class Definition
 
         return $value;
     }
+
     /**
      * @param  mixed $object
      * @param  mixed $data
@@ -240,6 +255,20 @@ class Definition
     {
         $data = $this->transformer ? $this->transformer->denormalize($data) : $data;
         $this->getAccessor($object)->set($data);
+
+        return $object;
+    }
+
+    /**
+     * @param  mixed $object
+     * @param  mixed $key
+     * @return mixed
+     */
+    public function settleKey(&$object, $key)
+    {
+        if ($this->keyPropertyPath) {
+            $this->propertyAccessor->setValue($object, $this->keyPropertyPath, $key);
+        }
 
         return $object;
     }

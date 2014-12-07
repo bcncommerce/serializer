@@ -68,6 +68,8 @@ class DefinitionContext implements ContextInterface
                 $this->collection[$this->key] = $prototype->create();
             }
 
+            $this->definition->settleKey($this->collection[$this->key], $this->key);
+
             return new DefinitionContext($this->collection[$this->key], $prototype);
         }
 
