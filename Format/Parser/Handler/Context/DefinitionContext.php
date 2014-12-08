@@ -12,9 +12,6 @@ use Bcn\Component\Serializer\Definition;
 
 class DefinitionContext implements ContextInterface
 {
-    /** @var string */
-    protected $content;
-
     /** @var boolean */
     protected $initialized;
 
@@ -24,14 +21,20 @@ class DefinitionContext implements ContextInterface
     /** @var Definition */
     protected $definition;
 
+    /** @var string */
+    protected $content;
+
+    /** @var array */
+    protected $collection;
+
     /** @var int */
     protected $index;
 
     /** @var int|string */
     protected $key;
 
-    /** @var array */
-    protected $collection;
+    /** @var mixed */
+    protected $object;
 
     /**
      * @param mixed      $origin
@@ -74,9 +77,7 @@ class DefinitionContext implements ContextInterface
         }
 
         if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
-            $object = &$this->definition->extract($this->origin);
-
-            return new DefinitionContext($object, $this->definition->getProperty($name));
+            return new DefinitionContext($this->object, $this->definition->getProperty($name));
         }
 
         return new NullContext();
@@ -100,15 +101,6 @@ class DefinitionContext implements ContextInterface
      */
     public function end($name, $value)
     {
-        if ($this->definition->isArray()) {
-
-        }
-
-        if ($this->definition->isObject() && $this->definition->hasProperty($name)) {
-            $object = &$this->definition->extract($this->origin);
-            $property = $this->definition->getProperty($name);
-            $property->settle($object, $value);
-        }
     }
 
     /**
@@ -119,6 +111,9 @@ class DefinitionContext implements ContextInterface
         $this->content     = null;
         $this->initialized = false;
         $this->index       = 0;
+        $this->key         = null;
+        $this->collection  = array();
+        $this->object      = null;
     }
 
     /**
@@ -130,13 +125,23 @@ class DefinitionContext implements ContextInterface
     {
         if ($this->definition->isScalar()) {
             $this->definition->settle($this->origin, $this->content);
+
+            return $this->content;
         }
 
         if ($this->definition->isArray()) {
             $this->definition->settle($this->origin, $this->collection);
+
+            return $this->collection;
         }
 
-        return $this->definition->extract($this->origin);
+        if ($this->definition->isObject()) {
+            $this->definition->settle($this->origin, $this->object);
+
+            return $this->object;
+        }
+
+        return null;
     }
 
     /**
@@ -150,14 +155,16 @@ class DefinitionContext implements ContextInterface
 
         $this->initialized = true;
 
-        $value = $this->definition->extract($this->origin);
-
-        if ($value === null) {
-            $this->definition->settle($this->origin, $this->definition->create());
-        }
-
         if ($this->definition->isArray()) {
             $this->collection = &$this->definition->extract($this->origin);
+        }
+
+        if ($this->definition->isObject()) {
+            $this->object = &$this->definition->extract($this->origin);
+
+            if ($this->object === null) {
+                $this->object = $this->definition->create();
+            }
         }
     }
 }
