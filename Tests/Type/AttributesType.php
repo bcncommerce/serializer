@@ -8,7 +8,6 @@
 
 namespace Bcn\Component\Serializer\Tests\Type;
 
-use Bcn\Component\Serializer\Definition\Transformer\CallbackTransformer;
 use Bcn\Component\Serializer\Type\AbstractType;
 use Bcn\Component\Serializer\Definition\Builder;
 

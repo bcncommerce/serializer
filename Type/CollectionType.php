@@ -36,18 +36,18 @@ class CollectionType extends AbstractType
     {
         $optionsResolver
             ->setRequired(array(
-                    'item_type'
+                    'item_type',
                 ))
             ->setDefaults(array(
                     'name'         => 'collection',
                     'item_name'    => null,
-                    'item_options' => array()
+                    'item_options' => array(),
                 ))
             ->setAllowedTypes(array(
                     'name'         => 'string',
                     'item_name'    => array('string', 'null'),
                     'item_type'    => array('string', '\Bcn\Component\Serializer\Definition'),
-                    'item_options' => 'array'
+                    'item_options' => 'array',
                 ))
         ;
     }

@@ -10,7 +10,6 @@ namespace Bcn\Component\Serializer\Tests\Type;
 
 use Bcn\Component\Serializer\Tests\TestCase;
 use Bcn\Component\Serializer\Type\CollectionType;
-use Bcn\Component\Serializer\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CollectionTypeTest extends TestCase
@@ -54,7 +53,7 @@ class CollectionTypeTest extends TestCase
                 'name'         => 'collection',
                 'item_name'    => 'item',
                 'item_type'    => 'text',
-                'item_options' => array('length' => 100)
+                'item_options' => array('length' => 100),
             ));
     }
 }
