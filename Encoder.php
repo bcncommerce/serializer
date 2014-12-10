@@ -22,13 +22,14 @@ class Encoder
      */
     public function addFormat(FormatInterface $encoder)
     {
-        $format = $encoder->getName();
+        $names = $encoder->getNames();
+        foreach ($names as $name) {
+            if ($this->hasFormat($name)) {
+                throw new \Exception("Format \"$name\" already defined");
+            }
 
-        if ($this->hasFormat($format)) {
-            throw new \Exception("Format \"$format\" already defined");
+            $this->formats[$name] = $encoder;
         }
-
-        $this->formats[$format] = $encoder;
 
         return $this;
     }

@@ -60,10 +60,10 @@ class XmlFormat implements FormatInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getName()
+    public function getNames()
     {
-        return 'xml';
+        return array('xml', 'application/xml', 'text/xml');
     }
 }

@@ -16,8 +16,8 @@ class EncoderTest extends TestCase
     {
         $format = $this->getFormatMock();
         $format->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('foo'));
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
 
         $encoder = new Encoder();
         $encoder->addFormat($format);
@@ -31,8 +31,8 @@ class EncoderTest extends TestCase
 
         $format = $this->getFormatMock();
         $format->expects($this->exactly(2))
-            ->method('getName')
-            ->will($this->returnValue('foo'));
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
 
         $encoder = new Encoder();
         $encoder->addFormat($format);
@@ -43,8 +43,8 @@ class EncoderTest extends TestCase
     {
         $format = $this->getFormatMock();
         $format->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('foo'));
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
 
         $encoder = new Encoder();
         $encoder->addFormat($format);
@@ -68,8 +68,8 @@ class EncoderTest extends TestCase
 
         $format = $this->getFormatMock();
         $format->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('foo'));
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
         $format->expects($this->once())
             ->method('encode')
             ->with($origin, $definition, $stream);
@@ -89,8 +89,8 @@ class EncoderTest extends TestCase
 
         $format = $this->getFormatMock();
         $format->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('foo'));
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
         $format->expects($this->once())
             ->method('decode')
             ->with($stream, $definition, $origin)

@@ -16,11 +16,15 @@ class JsonFormatTest extends TestCase
     /**
      *
      */
-    public function testGetName()
+    public function testGetNames()
     {
         $format = new JsonFormat();
 
-        $this->assertEquals('json', $format->getName());
+        $names = $format->getNames();
+
+        $this->assertContains('json', $names);
+        $this->assertContains('application/json', $names);
+        $this->assertContains('text/json', $names);
     }
 
     /**

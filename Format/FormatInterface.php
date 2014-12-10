@@ -13,9 +13,9 @@ use Bcn\Component\Serializer\Definition;
 interface FormatInterface
 {
     /**
-     * @return string
+     * @return array
      */
-    public function getName();
+    public function getNames();
 
     /**
      * @param mixed      $origin

@@ -56,10 +56,10 @@ class JsonFormat implements FormatInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getName()
+    public function getNames()
     {
-        return 'json';
+        return array('json', 'application/json', 'text/json');
     }
 }
