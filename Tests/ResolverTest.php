@@ -24,7 +24,7 @@ class ResolverTest extends TestCase
         $resolver = new Resolver();
         $resolver->addType($type);
 
-        $resolver->getType('foo');
+        $this->assertTrue($resolver->hasType('foo'));
     }
 
     public function testAddTypeTwiceException()

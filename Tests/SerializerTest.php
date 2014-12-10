@@ -116,7 +116,7 @@ class SerializerTest extends TestCase
      */
     public function testDocumentArrayUnserialize($format, $content)
     {
-        $stream    = $this->getDataStream($content);
+        $stream = $this->getDataStream($content);
 
         $documents = $this->getSerializer()
             ->unserialize($stream, $format, 'document_array');
@@ -129,12 +129,44 @@ class SerializerTest extends TestCase
      */
     public function testAttributesUnserialize($format, $content)
     {
-        $stream    = $this->getDataStream($content);
+        $stream = $this->getDataStream($content);
 
         $documents = $this->getSerializer()
             ->unserialize($stream, $format, 'attributes');
 
         $this->assertEquals($this->getAttributes(), $documents);
+    }
+
+    public function testSuuportFormat()
+    {
+        $resolver = $this->getResolverMock();
+        $normalizer = $this->getNormalizerMock();
+
+        $encoder = $this->getEncoderMock();
+        $encoder->expects($this->once())
+            ->method('hasFormat')
+            ->with('foo')
+            ->will($this->returnValue(true));
+
+        $serializer = new Serializer($resolver, $normalizer, $encoder);
+
+        $this->assertTrue($serializer->supportFormat('foo'));
+    }
+
+    public function testSuuportType()
+    {
+        $normalizer = $this->getNormalizerMock();
+        $encoder = $this->getEncoderMock();
+
+        $resolver = $this->getResolverMock();
+        $resolver->expects($this->once())
+            ->method('hasType')
+            ->with('foo')
+            ->will($this->returnValue(true));
+
+        $serializer = new Serializer($resolver, $normalizer, $encoder);
+
+        $this->assertTrue($serializer->supportType('foo'));
     }
 
     /**

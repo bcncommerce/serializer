@@ -38,7 +38,7 @@ class Resolver
      * @param  TypeInterface|string $type
      * @return bool
      */
-    protected function hasType($type)
+    public function hasType($type)
     {
         return isset($this->types[$this->resolveTypeName($type)]);
     }

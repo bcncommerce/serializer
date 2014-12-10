@@ -235,6 +235,16 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Normalizer
+     */
+    public function getEncoderMock()
+    {
+        return $this->getMockBuilder('Bcn\Component\Serializer\Encoder')
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
      * @param  string $file
      * @return string
      */

@@ -89,6 +89,24 @@ class Serializer
     }
 
     /**
+     * @param  string $format
+     * @return bool
+     */
+    public function supportFormat($format)
+    {
+        return $this->encoder->hasFormat($format);
+    }
+
+    /**
+     * @param  string $type
+     * @return bool
+     */
+    public function supportType($type)
+    {
+        return $this->resolver->hasType($type);
+    }
+
+    /**
      * @param  ExtensionInterface $extension
      * @throws \Exception
      */
