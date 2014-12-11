@@ -10,7 +10,7 @@ namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Definition\Builder;
 use Bcn\Component\Serializer\Definition\Transformer\NumberTransformer;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NumberType extends AbstractType
 {
@@ -29,9 +29,9 @@ class NumberType extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $optionsResolver
+     * @param OptionsResolver $optionsResolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    public function setDefaultOptions(OptionsResolver $optionsResolver)
     {
         $optionsResolver
             ->setDefaults(array(

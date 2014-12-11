@@ -9,7 +9,7 @@
 namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Definition\Builder;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Bcn\Component\Serializer\Definition\Transformer\DatetimeTransformer;
 
 class DatetimeType extends AbstractType
@@ -25,9 +25,9 @@ class DatetimeType extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $optionsResolver
+     * @param OptionsResolver $optionsResolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    public function setDefaultOptions(OptionsResolver $optionsResolver)
     {
         $optionsResolver
             ->setDefaults(array('format' => \DateTime::ISO8601))

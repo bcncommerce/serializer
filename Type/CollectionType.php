@@ -9,7 +9,7 @@
 namespace Bcn\Component\Serializer\Type;
 
 use Bcn\Component\Serializer\Definition\Builder;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CollectionType extends AbstractType
 {
@@ -30,9 +30,9 @@ class CollectionType extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $optionsResolver
+     * @param OptionsResolver $optionsResolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    public function setDefaultOptions(OptionsResolver $optionsResolver)
     {
         $optionsResolver
             ->setRequired(array(

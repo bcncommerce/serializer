@@ -8,14 +8,14 @@
 
 namespace Bcn\Component\Serializer\Type;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractType implements TypeInterface
 {
     /**
-     * @param OptionsResolverInterface $optionsResolver
+     * @param OptionsResolver $optionsResolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    public function setDefaultOptions(OptionsResolver $optionsResolver)
     {
     }
 }

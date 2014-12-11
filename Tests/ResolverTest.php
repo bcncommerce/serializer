@@ -10,7 +10,7 @@ namespace Bcn\Component\Serializer\Tests;
 
 use Bcn\Component\Serializer\Definition\Builder;
 use Bcn\Component\Serializer\Resolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResolverTest extends TestCase
 {
@@ -85,7 +85,7 @@ class ResolverTest extends TestCase
             ->will($this->returnValue('foo'));
         $type->expects($this->once())
             ->method('setDefaultOptions')
-            ->will($this->returnCallback(function (OptionsResolverInterface $resolver) {
+            ->will($this->returnCallback(function (OptionsResolver $resolver) {
                 $resolver->setDefaults(array('foo' => 'baz'));
             }));
         $type->expects($this->once())
@@ -110,7 +110,7 @@ class ResolverTest extends TestCase
         $type = $this->getTypeMock();
         $type->expects($this->once())
             ->method('setDefaultOptions')
-            ->will($this->returnCallback(function (OptionsResolverInterface $resolver) {
+            ->will($this->returnCallback(function (OptionsResolver $resolver) {
                 $resolver->setDefaults(array('foo' => 'baz'));
             }));
         $type->expects($this->once())
