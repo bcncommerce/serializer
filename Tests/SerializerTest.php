@@ -180,4 +180,16 @@ class SerializerTest extends TestCase
 
         return $serializer;
     }
+
+    public function testGetTypeSerializer()
+    {
+        $stream = $this->getDataStream();
+
+        $serializer = $this->getSerializer();
+
+        $typeSerializer = $serializer->getTypeSerializer('text', array(), 'json');
+        $typeSerializer->serialize("foo", $stream);
+
+        $this->assertJsonStringEqualsJsonString(json_encode("foo"), $this->getStreamContent($stream));
+    }
 }

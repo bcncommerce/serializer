@@ -120,4 +120,15 @@ class Serializer
             $this->encoder->addFormat($encoder);
         }
     }
+
+    /**
+     * @param  string         $type
+     * @param  array          $options
+     * @param  string         $format
+     * @return TypeSerializer
+     */
+    public function getTypeSerializer($type, array $options = array(), $format = null)
+    {
+        return new TypeSerializer($this, $type, $options, $format);
+    }
 }
