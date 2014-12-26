@@ -274,12 +274,13 @@ class Definition
     }
 
     /**
+     * @param  mixed $origin
      * @return mixed
      */
-    public function create()
+    public function create($origin)
     {
         if ($factory = $this->factory) {
-            return $factory();
+            return $factory($origin);
         }
 
         return $this->isArray() ? array() : null;

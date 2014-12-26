@@ -96,11 +96,11 @@ class Normalizer
      */
     protected function denormalizeArray($data, Definition $definition, &$origin)
     {
-        $collection = ($origin !== null) ? $definition->extract($origin) : $definition->create();
+        $collection = ($origin !== null) ? $definition->extract($origin) : $definition->create($origin);
         $prototype = $definition->getPrototype();
 
         foreach ($data as $index => $entry) {
-            $item = isset($collection[$index]) ? $collection[$index] : $prototype->create();
+            $item = isset($collection[$index]) ? $collection[$index] : $prototype->create($origin);
             $definition->settleKey($item, $index);
             $collection[$index] = $this->denormalize($entry, $prototype, $item);
         }
@@ -122,7 +122,7 @@ class Normalizer
             return;
         }
 
-        $object = $definition->extract($origin) ?: $definition->create();
+        $object = $definition->extract($origin) ?: $definition->create($origin);
 
         foreach ($definition->getProperties() as $propertyName => $propertyDefinition) {
             $propertyData = isset($data[$propertyName]) ? $data[$propertyName] : null;

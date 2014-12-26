@@ -68,7 +68,7 @@ class DefinitionContext implements ContextInterface
             }
 
             if (!isset($this->collection[$this->key])) {
-                $this->collection[$this->key] = $prototype->create();
+                $this->collection[$this->key] = $prototype->create($this->origin);
             }
 
             $this->definition->settleKey($this->collection[$this->key], $this->key);
@@ -163,7 +163,7 @@ class DefinitionContext implements ContextInterface
             $this->object = &$this->definition->extract($this->origin);
 
             if ($this->object === null) {
-                $this->object = $this->definition->create();
+                $this->object = $this->definition->create($this->origin);
             }
         }
     }

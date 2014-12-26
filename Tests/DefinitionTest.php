@@ -112,17 +112,17 @@ class DefinitionTest extends TestCase
     {
         $definition = new Definition();
 
-        $this->assertNull($definition->create());
+        $this->assertNull($definition->create(null));
     }
 
     public function testCreateWithFactory()
     {
         $definition = new Definition();
-        $definition->setFactory(function () {
-            return 'foo';
+        $definition->setFactory(function ($origin) {
+            return $origin;
         });
 
-        $this->assertEquals('foo', $definition->create());
+        $this->assertEquals('foo', $definition->create('foo'));
     }
 
     public function testExtract()
