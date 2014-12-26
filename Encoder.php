@@ -93,9 +93,23 @@ class Encoder
      * @param  mixed      $origin
      * @return mixed
      */
-    public function decode(&$stream, $format, Definition $definition, $origin = null)
+    public function decode($stream, $format, Definition $definition, $origin = null)
     {
-        return $this->getFormat($format)
+        $fromContent = is_string($stream);
+        if ($fromContent) {
+            $content = $stream;
+            $stream = fopen('php://temp', 'rw+');
+            fputs($stream, $content);
+            rewind($stream);
+        }
+
+        $object = $this->getFormat($format)
             ->decode($stream, $definition, $origin);
+
+        if ($fromContent) {
+            fclose($stream);
+        }
+
+        return $object;
     }
 }

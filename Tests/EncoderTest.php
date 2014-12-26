@@ -123,4 +123,24 @@ class EncoderTest extends TestCase
 
         $this->assertEquals('bar', $content);
     }
+
+    public function testDecodeFromString()
+    {
+        $format = $this->getFormatMock();
+        $format->expects($this->any())
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
+        $format->expects($this->once())
+            ->method('decode')
+            ->will($this->returnCallback(function ($stream) {
+                return stream_get_contents($stream);
+            }));
+
+        $encoder = new Encoder();
+        $encoder->addFormat($format);
+
+        $result = $encoder->decode('baz', 'foo', $this->getDefinitionMock());
+
+        $this->assertSame('baz', $result);
+    }
 }
