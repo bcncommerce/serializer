@@ -37,9 +37,9 @@ class TypeSerializer
     }
 
     /**
-     * @param  mixed    $object
-     * @param  resource $stream
-     * @param  string   $format
+     * @param  mixed         $object
+     * @param  resource|bool $stream
+     * @param  string        $format
      * @return mixed
      */
     public function serialize($object, $stream, $format = null)
@@ -48,9 +48,9 @@ class TypeSerializer
     }
 
     /**
-     * @param  resource $stream
-     * @param  mixed    $object
-     * @param  string   $format
+     * @param  resource|string $stream
+     * @param  mixed           $object
+     * @param  string          $format
      * @return mixed
      */
     public function unserialize($stream, &$object = null, $format = null)

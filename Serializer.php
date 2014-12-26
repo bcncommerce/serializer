@@ -31,12 +31,12 @@ class Serializer
     }
 
     /**
-     * @param  mixed  $object
-     * @param  string $type
-     * @param  mixed  $stream
-     * @param  string $format
-     * @param  array  $options
-     * @return mixed
+     * @param  mixed         $object
+     * @param  string        $type
+     * @param  resource|bool $stream
+     * @param  string        $format
+     * @param  array         $options
+     * @return string|bool
      */
     public function serialize($object, $type, $stream, $format, array $options = array())
     {
@@ -46,11 +46,11 @@ class Serializer
     }
 
     /**
-     * @param  mixed  $stream
-     * @param  string $format
-     * @param  string $type
-     * @param  array  $options
-     * @param  mixed  $object
+     * @param  resource|string $stream
+     * @param  string          $format
+     * @param  string          $type
+     * @param  array           $options
+     * @param  mixed           $object
      * @return mixed
      */
     public function unserialize($stream, $format, $type, array $options = array(), &$object = null)
