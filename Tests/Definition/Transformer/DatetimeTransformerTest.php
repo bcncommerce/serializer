@@ -19,7 +19,7 @@ class DatetimeTransformerTest extends TestCase
     public function testNormalize($denormalized, $normalized, $format)
     {
         $transformer = new DatetimeTransformer($format);
-        $this->assertEquals($normalized, $transformer->normalize($denormalized));
+        $this->assertEquals($normalized, $transformer->normalize($denormalized, null));
     }
     /**
      * @dataProvider provideNormalizedAndDenormalized
@@ -27,7 +27,7 @@ class DatetimeTransformerTest extends TestCase
     public function testDenormalize($denormalized, $normalized, $format)
     {
         $transformer = new DatetimeTransformer($format);
-        $this->assertEquals($denormalized, $transformer->denormalize($normalized));
+        $this->assertEquals($denormalized, $transformer->denormalize($normalized, null));
     }
 
     /**

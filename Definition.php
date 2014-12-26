@@ -241,7 +241,7 @@ class Definition
     public function &extract(&$data)
     {
         $value = &$this->getAccessor($data)->get();
-        $value = $this->transformer ? $this->transformer->normalize($value) : $value;
+        $value = $this->transformer ? $this->transformer->normalize($value, $data) : $value;
 
         return $value;
     }
@@ -253,7 +253,7 @@ class Definition
      */
     public function settle(&$object, $data)
     {
-        $data = $this->transformer ? $this->transformer->denormalize($data) : $data;
+        $data = $this->transformer ? $this->transformer->denormalize($data, $object) : $data;
         $this->getAccessor($object)->set($data);
 
         return $object;

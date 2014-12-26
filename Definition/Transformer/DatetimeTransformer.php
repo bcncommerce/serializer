@@ -24,10 +24,11 @@ class DatetimeTransformer implements TransformerInterface
     }
 
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function normalize($value)
+    public function normalize($value, $origin)
     {
         if (!$value instanceof \DateTime) {
             return null;
@@ -37,10 +38,11 @@ class DatetimeTransformer implements TransformerInterface
     }
 
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function denormalize($value)
+    public function denormalize($value, $origin)
     {
         if ($value === null) {
             return $value;

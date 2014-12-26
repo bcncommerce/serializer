@@ -16,24 +16,24 @@ class CallbackTransformerTest extends TestCase
     public function testNormalize()
     {
         $transformer = new CallbackTransformer(function ($x) { return $x.'foo'; }, function ($x) { return $x.'baz'; });
-        $this->assertEquals('barfoo', $transformer->normalize('bar'));
+        $this->assertEquals('barfoo', $transformer->normalize('bar', null));
     }
 
     public function testNormalizeNull()
     {
         $transformer = new CallbackTransformer();
-        $this->assertEquals('bar', $transformer->normalize('bar'));
+        $this->assertEquals('bar', $transformer->normalize('bar', null));
     }
 
     public function testDenormalize()
     {
         $transformer = new CallbackTransformer(function ($x) { return $x.'foo'; }, function ($x) { return $x.'baz'; });
-        $this->assertEquals('barbaz', $transformer->denormalize('bar'));
+        $this->assertEquals('barbaz', $transformer->denormalize('bar', null));
     }
 
     public function testDenormalizeNull()
     {
         $transformer = new CallbackTransformer();
-        $this->assertEquals('bar', $transformer->denormalize('bar'));
+        $this->assertEquals('bar', $transformer->denormalize('bar', null));
     }
 }

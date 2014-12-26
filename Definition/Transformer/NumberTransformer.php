@@ -34,10 +34,11 @@ class NumberTransformer implements TransformerInterface
     }
 
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function normalize($value)
+    public function normalize($value, $origin)
     {
         $value = number_format($value, $this->decimals, $this->decimalPoint, $this->thousandSeparator);
 
@@ -49,10 +50,11 @@ class NumberTransformer implements TransformerInterface
     }
 
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function denormalize($value)
+    public function denormalize($value, $origin)
     {
         $value = str_replace($this->thousandSeparator, '', $value);
         $value = str_replace($this->decimalPoint, '.', $value);

@@ -11,14 +11,16 @@ namespace Bcn\Component\Serializer\Definition;
 interface TransformerInterface
 {
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function normalize($value);
+    public function normalize($value, $origin);
 
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function denormalize($value);
+    public function denormalize($value, $origin);
 }

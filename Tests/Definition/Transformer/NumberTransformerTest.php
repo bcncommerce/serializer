@@ -24,7 +24,7 @@ class NumberTransformerTest extends TestCase
     public function testNormalize($denormalized, $normalized, $decimals, $point, $thousand)
     {
         $transformer = new NumberTransformer($decimals, $point, $thousand);
-        $this->assertEquals($normalized, $transformer->normalize($denormalized));
+        $this->assertEquals($normalized, $transformer->normalize($denormalized, null));
     }
     /**
      * @param $denormalized
@@ -37,7 +37,7 @@ class NumberTransformerTest extends TestCase
     public function testDenormalize($denormalized, $normalized, $decimals, $point, $thousand)
     {
         $transformer = new NumberTransformer($decimals, $point, $thousand);
-        $this->assertEquals($denormalized, $transformer->denormalize($normalized));
+        $this->assertEquals($denormalized, $transformer->denormalize($normalized, null));
     }
 
     /**

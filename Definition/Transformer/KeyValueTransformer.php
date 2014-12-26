@@ -30,9 +30,10 @@ class KeyValueTransformer implements TransformerInterface
 
     /**
      * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function normalize($value)
+    public function normalize($value, $origin)
     {
         $pairs = array();
         foreach ($value as $key => $entry) {
@@ -44,9 +45,10 @@ class KeyValueTransformer implements TransformerInterface
 
     /**
      * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function denormalize($value)
+    public function denormalize($value, $origin)
     {
         $items = array();
         foreach ($value as $entry) {

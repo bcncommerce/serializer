@@ -19,7 +19,7 @@ class KeyValueTransformerTest extends TestCase
     public function testNormalize($denormalized, $normalized)
     {
         $transformer = new KeyValueTransformer();
-        $this->assertEquals($normalized, $transformer->normalize($denormalized));
+        $this->assertEquals($normalized, $transformer->normalize($denormalized, null));
     }
     /**
      * @dataProvider provideNormalizedAndDenormalized
@@ -27,7 +27,7 @@ class KeyValueTransformerTest extends TestCase
     public function testDenormalize($denormalized, $normalized)
     {
         $transformer = new KeyValueTransformer();
-        $this->assertEquals($denormalized, $transformer->denormalize($normalized));
+        $this->assertEquals($denormalized, $transformer->denormalize($normalized, null));
     }
 
     /**

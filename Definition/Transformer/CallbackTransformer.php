@@ -29,26 +29,28 @@ class CallbackTransformer implements TransformerInterface
     }
 
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function normalize($value)
+    public function normalize($value, $origin)
     {
         if ($callback = $this->normalizer) {
-            return $callback($value);
+            return $callback($value, $origin);
         }
 
         return $value;
     }
 
     /**
-     * @param $value
+     * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function denormalize($value)
+    public function denormalize($value, $origin)
     {
         if ($callback = $this->denormalizer) {
-            return $callback($value);
+            return $callback($value, $origin);
         }
 
         return $value;

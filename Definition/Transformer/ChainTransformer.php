@@ -28,12 +28,13 @@ class ChainTransformer implements TransformerInterface
 
     /**
      * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function normalize($value)
+    public function normalize($value, $origin)
     {
         foreach ($this->transformers as $transformer) {
-            $value = $transformer->normalize($value);
+            $value = $transformer->normalize($value, $origin);
         }
 
         return $value;
@@ -41,12 +42,13 @@ class ChainTransformer implements TransformerInterface
 
     /**
      * @param  mixed $value
+     * @param  mixed $origin
      * @return mixed
      */
-    public function denormalize($value)
+    public function denormalize($value, $origin)
     {
         foreach ($this->transformers as $transformer) {
-            $value = $transformer->denormalize($value);
+            $value = $transformer->denormalize($value, $origin);
         }
 
         return $value;

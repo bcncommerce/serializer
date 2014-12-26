@@ -31,7 +31,7 @@ class ChainTransformerTest extends TestCase
         $transformer->addTransformer($transformerA);
         $transformer->addTransformer($transformerB);
 
-        $result = $transformer->normalize('original');
+        $result = $transformer->normalize('original', null);
 
         $this->assertEquals('transformed', $result);
     }
@@ -54,7 +54,7 @@ class ChainTransformerTest extends TestCase
         $transformer->addTransformer($transformerA);
         $transformer->addTransformer($transformerB);
 
-        $result = $transformer->denormalize('original');
+        $result = $transformer->denormalize('original', null);
 
         $this->assertEquals('transformed', $result);
     }
