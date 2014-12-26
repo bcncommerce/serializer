@@ -58,16 +58,32 @@ class Encoder
     }
 
     /**
-     * @param  mixed      $origin
-     * @param  Definition $definition
-     * @param  mixed      $stream
-     * @param  string     $format
-     * @return mixed
+     * @param  mixed       $origin
+     * @param  Definition  $definition
+     * @param  mixed       $stream
+     * @param  string      $format
+     * @return string|bool
      */
-    public function encode($origin, Definition $definition, &$stream, $format)
+    public function encode($origin, Definition $definition, $stream, $format)
     {
-        return $this->getFormat($format)
-            ->encode($origin, $definition, $stream);
+        $returnContent = $stream === false;
+        $encoder = $this->getFormat($format);
+
+        if ($returnContent) {
+            $stream = fopen("php://temp", "rw+");
+        }
+
+        $encoder->encode($origin, $definition, $stream);
+
+        if (!$returnContent) {
+            return false;
+        }
+
+        rewind($stream);
+        $content = stream_get_contents($stream);
+        fclose($stream);
+
+        return $content;
     }
 
     /**

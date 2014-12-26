@@ -103,4 +103,24 @@ class EncoderTest extends TestCase
 
         $this->assertSame($decoded, $result);
     }
+
+    public function testEncodeAndReturn()
+    {
+        $format = $this->getFormatMock();
+        $format->expects($this->any())
+            ->method('getNames')
+            ->will($this->returnValue(array('foo')));
+        $format->expects($this->once())
+            ->method('encode')
+            ->will($this->returnCallback(function ($origin, $definition, $stream) {
+                fputs($stream, "bar");
+            }));
+
+        $encoder = new Encoder();
+        $encoder->addFormat($format);
+
+        $content = $encoder->encode(null, $this->getDefinitionMock(), false, 'foo');
+
+        $this->assertEquals('bar', $content);
+    }
 }

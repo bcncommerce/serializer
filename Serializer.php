@@ -38,7 +38,7 @@ class Serializer
      * @param  array  $options
      * @return mixed
      */
-    public function serialize($object, $type, &$stream, $format, array $options = array())
+    public function serialize($object, $type, $stream, $format, array $options = array())
     {
         $definition = $this->resolver->getDefinition($type, $options);
 

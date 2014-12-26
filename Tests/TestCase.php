@@ -235,7 +235,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Normalizer
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Bcn\Component\Serializer\Encoder
      */
     public function getEncoderMock()
     {
