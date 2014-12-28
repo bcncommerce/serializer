@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <attributes>
-    <attribute code="name"><![CDATA[Foo]]></attribute>
-    <attribute code="description"><![CDATA[Baz]]></attribute>
+    <attribute code="name">Foo</attribute>
+    <attribute code="description">Baz</attribute>
     <attribute code="rating">100</attribute>
 </attributes>

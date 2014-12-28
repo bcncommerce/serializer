@@ -132,7 +132,7 @@ class XmlWriter
     protected function writeScalar(\XMLWriter $writer, $origin, Definition $definition)
     {
         $content = $definition->extract($origin);
-        if (is_numeric($content)) {
+        if (strpbrk($content, '></&![]\\') === false) {
             $writer->writeRaw($content);
         } else {
             $writer->writeCdata($content);

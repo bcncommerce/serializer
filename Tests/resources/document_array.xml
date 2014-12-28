@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <documents>
     <document>
-        <name><![CDATA[Test name one]]></name>
-        <description><![CDATA[Test description one]]></description>
+        <name>Test name one</name>
+        <description>Test description one</description>
         <rank>11</rank>
         <rating>93.31</rating>
         <parent/>
     </document>
     <document>
-        <name><![CDATA[Test name two]]></name>
-        <description><![CDATA[Test description two]]></description>
+        <name>Test name two</name>
+        <description>Test description two</description>
         <rank>11</rank>
         <rating>93.31</rating>
         <parent/>

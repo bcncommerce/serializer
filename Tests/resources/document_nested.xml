@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-    <name><![CDATA[Test name ]]></name>
-    <description><![CDATA[Test description ]]></description>
+    <name>Test name </name>
+    <description>Test description </description>
     <rank>11</rank>
     <rating>93.31</rating>
     <parent>
-        <name><![CDATA[Test name parent]]></name>
-        <description><![CDATA[Test description parent]]></description>
+        <name>Test name parent</name>
+        <description>Test description parent</description>
         <rank>11</rank>
         <rating>93.31</rating>
     </parent>
