@@ -58,6 +58,10 @@ class Normalizer
     {
         $collection = $definition->extract($origin);
 
+        if (!is_array($collection) && !$collection instanceof \Traversable) {
+            $collection = array();
+        }
+
         $normalized = array();
         foreach ($collection as $index => $entry) {
             $normalized[$index] = $this->normalize($entry, $definition->getPrototype());
@@ -98,6 +102,10 @@ class Normalizer
     {
         $collection = ($origin !== null) ? $definition->extract($origin) : $definition->create($origin);
         $prototype = $definition->getPrototype();
+
+        if (!is_array($data) && !$data instanceof \Traversable) {
+            $data = array();
+        }
 
         foreach ($data as $index => $entry) {
             $item = isset($collection[$index]) ? $collection[$index] : $prototype->create($origin);
